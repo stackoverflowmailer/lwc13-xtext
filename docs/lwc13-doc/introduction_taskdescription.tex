@@ -1,0 +1,84 @@
+The tasks to solve for the Language Workbench Competition is relatively trivial.
+But it has been designed to illustrate as many properties of language
+workbenches as possible. As such, it can serve as a good introduction to the
+respective tools.
+
+This tutorial expects that you are somehow familiar with Java and Eclipse and
+have heard about \url{EMF} and how it works in general before. We start almost at the
+beginning, but not quite :-)
+
+For this tutorial we will use Xtext 2.0, which is at the moment of writing not
+finalized, but in its latest stage. Xtext 2.0 will be released with Eclipse
+Indigo in June
+2011\footnote{\url{http://wiki.eclipse.org/Indigo/Simultaneous_Release_Plan}}.
+All tasks could also be solved with Xtext 1.0, but for some of the advanced
+tasks Xtext 2.0 will have better support and different approaches. All examples
+here will already work with the current builds of Xtext 2.0 and
+release will be soon after the first publication of LWC11.
+
+\subsection{Task Description}
+The LWC11 task is divided into the following phases, and the structure of this
+document follows them:
+
+\subsubsection{Phase 0 - Basics}
+
+\begin{compactitem}
+    \item 0.1 Simple (structural) DSL without any fancy expression language or
+    such. Build a simple data definition language to define entities with
+    properties. Properties have a name and a type. It should be possible to use
+    primitive types for properties, as well as other Entities.
+    \item 0.2 Code generation to GPL such as Java, C\#, C++ or XML. Generate
+    Java Beans (or some equivalent data structure in C\#, Scala, etc.) with
+    setters, getters and fields for the properties.
+    \item 0.3 Simple constraint checks such as name-uniqueness For example,
+    check the name uniqueness of the properties in the entities.
+    \item 0.4 Show how to break down a (large) model into several parts, while
+    still cross-referencing between the parts.
+\end{compactitem}
+
+\subsubsection{Phase 1 - Advanced}
+
+This phase demonstrates advanced features not necessarily available to the same
+extent in every LWB.
+
+\begin{compactitem}
+    \item 1.1 Show the integration of several languages. Define a second
+    language to define instances of the entities, including assignment of values
+    to the properties. This should ideally really be a second language that
+    integrates with the first one, not just ``more syntax'' in the same grammar.
+    We want to showcase language modularity and composition here.
+    \item 1.2 Demonstrate how to implement runtime type systems. The
+    initialization values in the instance-DSL must be of the same type as the
+    types of the properties.
+    \item 1.3 Show how to do a model-to-model transformation. Define an ER-meta
+    model (Database, Table, Column) and transform the entity model into an
+    instance of this ER meta model.
+    \item 1.4 Some kind of visibility/namespaces/scoping for references.
+    Integrate namespaces/packages into the entity DSL and make sure in the
+    instance DSL you can only assign values to the properties of the respective
+    entity.
+    \item 1.5 Integrating manually written code (again in Java, C\# or C++).
+    Integrate derived attributes to entities. Note that if you want, you can
+    also define or reuse an expression language that allows defining the
+    algorithm for calculating the age directly in the model. Ideally, you will
+    show both (manually written 3GL code as well as an expression language).
+    \item 1.6 Multiple generators. Generate some kind of XML structure from the
+    entity model.
+\end{compactitem}
+
+\subsubsection{Phase 2 - Non-Functional}
+
+Phase 2 is intended to show a couple of non-functional properties of the LWB.
+The task outlined below does not elaborate on how to do this.
+
+\begin{compactitem}
+    \item 2.1 How to evolve the DSL without breaking existing models
+    \item 2.2 How to work with the models efficiently in the team
+    \item 2.3 Demonstrate Scalability of the tools
+\end{compactitem}
+
+\subsubsection{Phase 3 - Freestyle}
+
+Every LWB has its own special ``cool features''. In phase three we want the
+participants to show off these features. Please make sure, though, that the
+features are built on top of the task described below, if possible.

@@ -1,0 +1,1 @@
+This directory contains the code snippets that are included in the docs.
