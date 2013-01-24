@@ -1,0 +1,14 @@
+grammar org.eclipse.xtext.example.qls.QlsDsl with org.eclipse.xtext.common.Terminals
+
+generate qlsDsl "http://www.eclipse.org/xtext/example/qls/QlsDsl"
+import "http://www.eclipse.org/xtext/example/ql/QlDsl" as ql
+
+QuestionnaireStyleModel:
+	groups+=Group*;
+	
+Group:
+	"group" name=ID "{"
+		("question" question+=[ql::Question])*
+	"}"
+;
+
