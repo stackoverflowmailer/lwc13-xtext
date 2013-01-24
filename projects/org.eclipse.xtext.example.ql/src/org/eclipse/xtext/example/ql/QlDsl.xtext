@@ -1,0 +1,16 @@
+grammar org.eclipse.xtext.example.ql.QlDsl with org.eclipse.xtext.xbase.Xbase
+
+generate qlDsl "http://www.eclipse.org/xtext/example/ql/QlDsl"
+
+Questionnare:
+	forms+=Form*;
+	
+Form:
+	"form" name=ID "{"
+		question += Question*
+	"}";
+
+Question:
+	name=ID ":" label=STRING type=JvmTypeReference
+;
+
