@@ -3,3 +3,5 @@
 *.out
 *.toc
 
+/tmp
+/LWC13-XtextSubmission.synctex.gz

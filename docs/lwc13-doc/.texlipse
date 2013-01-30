@@ -1,13 +1,14 @@
 #TeXlipse project settings
-#Tue Apr 26 15:38:39 CEST 2011
+#Mon Jan 28 19:52:20 CET 2013
+markTmpDer=true
 builderNum=2
 outputDir=
 makeIndSty=
 bibrefDir=
 outputFormat=pdf
 tempDir=tmp
-mainTexFile=document.tex
-outputFile=document.pdf
+mainTexFile=LWC13-XtextSubmission.tex
+outputFile=LWC13-XtextSubmission.pdf
 langSpell=en
 markDer=true
 srcDir=
