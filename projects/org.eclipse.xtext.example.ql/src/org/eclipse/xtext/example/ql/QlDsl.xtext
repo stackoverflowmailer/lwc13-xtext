@@ -11,6 +11,6 @@ Form:
 	"}";
 
 Question:
-	name=ID ":" label=STRING type=JvmTypeReference
+	name=ID ":" label=STRING type=JvmTypeReference expression=XBlockExpression?
 ;
 

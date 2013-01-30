@@ -45,19 +45,14 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 	 *            <code>true</code>.
 	 */
    	def dispatch void infer(Questionnare element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
-   		// Here you explain how your model is mapped to Java elements, by writing the actual translation code.
-   		
-   		// An implementation for the initial hello world example could look like this:
-//   		acceptor.accept(element.toClass("my.company.greeting.MyGreetings"))
-//   			.initializeLater([
-//   				for (greeting : element.greetings) {
-//   					members += greeting.toMethod("hello" + greeting.name, greeting.newTypeRef(typeof(String))) [
-//   						body = [
-//   							append('''return "Hello ?greeting.name?";''')
-//   						]
-//   					]
-//   				}
-//   			])
+		for (form: element.forms) {
+			acceptor.accept(element.toClass("forms."+form.name))
+			.initializeLater[
+				for (question: form.question) {
+					members += question.toField(question.name, question.type)
+				}
+			]
+		}
    	}
 }
 
