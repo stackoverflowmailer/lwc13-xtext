@@ -2,14 +2,28 @@ grammar org.eclipse.xtext.example.ql.QlDsl with org.eclipse.xtext.xbase.Xbase
 
 generate qlDsl "http://www.eclipse.org/xtext/example/ql/QlDsl"
 
+/* The top-most container of QL files is a Questionnaire */
 Questionnare:
+	imports+=Import*
 	forms+=Form*;
-	
+
+/* Allows importing of qualified names of types */
+Import:
+    'import' importedNamespace=QualifiedName;
+    
+/* QL consists of questions grouped in a top-level form construct. */
 Form:
 	"form" name=ID "{"
 		question += Question*
 	"}";
 
+/**
+ * - Each question identified by a name that at the same time represents the result of the question.
+ * - A question has a label that contains the actual question text presented to the user.
+ * - Every question has a type.
+ * - A question can optionally be associated to an expression:
+ *   this makes the question computed
+ */
 Question:
 	name=ID ":" label=STRING type=JvmTypeReference expression=XBlockExpression?
 ;

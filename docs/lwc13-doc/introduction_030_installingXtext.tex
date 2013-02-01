@@ -1,6 +1,6 @@
-\subsection{Installing Xtext}
+\subsection{Installing Eclipse & Xtext}
 
-Xtext is a feature for the \href{http://www.eclipse.org/}{Eclipse} IDE. To
+Xtext is a SDK for the \href{http://www.eclipse.org/}{Eclipse} IDE. To
 install it you have two options:
 
 \begin{compactitem}
@@ -14,27 +14,25 @@ We will take the latter approach here and describe the individual steps:
 
 \begin{compactenum}
     \item Go to the \href{http://download.itemis.com/distros/}{Xtext download
-    page}. Here you can get Eclipse 3.6.2 (Helios) containing a nightly build of Xtext 2.0 along with some tools Xtext
-    depends on. The latter are subsumed here under
+    page}. Here you can get Eclipse 4.2.x (Helios) including Xtext 2.3.1
+    along with some tools Xtext depends on. The latter are subsumed here under
     ``Xtext'' for simplicity.
     If you want you can download also a distribution
-    which is already bundled with Eclipse 3.7.0 Indigo, but be aware that this
-    is not finalized until end of June 2011.
+    which is already bundled with Eclipse 4.3.0 Kepler, but be aware that this
+    is not finalized until end of June 2013.
     \item The Eclipse/Xtext distribution is available for multiple platforms.
 
     \begin{compactenum}
       \item
-      \href{http://download.itemis.com/distros/eclipse-SDK-3.6.2-xtext-nightly-HEAD-linux-gtk-x86_64.tar.gz}{Linux GTK x86 64 bit}
+      \href{http://download.itemis.com/distros/eclipse-SDK-4.2-Xtext-2.3.1-linux-gtk-x86_64.tar.gz}{Linux GTK x86 64 bit}
       \item
-      \href{http://download.itemis.com/distros/eclipse-SDK-3.6.2-xtext-nightly-HEAD-linux-gtk.tar.gz}{Linux GTK x86 32 bit}
+      \href{http://download.itemis.com/distros/eclipse-SDK-4.2-Xtext-2.3.1-linux-gtk.tar.gz}{Linux GTK x86 32 bit}
         \item
-        \href{http://download.itemis.com/distros/eclipse-SDK-3.6.2-xtext-nightly-HEAD-macosx-cocoa-x86_64.tar.gz}{Mac OSX x86 64 bit}
+        \href{http://download.itemis.com/distros/eclipse-SDK-4.2-Xtext-2.3.1-macosx-cocoa-x86_64.tar.gz}{Mac OSX x86 64 bit}
         \item
-        \href{http://download.itemis.com/distros/eclipse-SDK-3.6.2-xtext-nightly-HEAD-macosx-cocoa.tar.gz}{Mac OSX x86 32 bit}
+        \href{http://download.itemis.com/distros/eclipse-SDK-4.2-Xtext-2.3.1-win32-x86_64.zip}{Windows 64 bit}
         \item
-        \href{http://download.itemis.com/distros/eclipse-SDK-3.6.2-xtext-nightly-HEAD-win32-x86_64.zip}{Windows 64 bit}
-        \item
-        \href{http://download.itemis.com/distros/eclipse-SDK-3.6.2-xtext-nightly-HEAD-win32.zip}{Windows 32 bit}
+        \href{http://download.itemis.com/distros/eclipse-SDK-4.2-Xtext-2.3.1-win32.zip}{Windows 32 bit}
     \end{compactenum}
 
     \item Unpack the downloaded archive file in a directory of your choice.
@@ -43,16 +41,16 @@ We will take the latter approach here and describe the individual steps:
 
 \begin{lstlisting}
   cd /opt/local
-  gzip -dc /download/eclipse-SDK-3.6.2-xtext-1.0.2-linux-gtk-x86_64.tar.gz | tar
+  gzip -dc /download/eclipse-SDK-4.2-Xtext-2.3.1-linux-gtk-x86_64.tar.gz | tar
   xvfp -
 \end{lstlisting}
 
         The archive will be extracted to a new directory named \texttt{eclipse}. Before
         unpacking the archive, please ensure that there is no subdirectory named
-        eclipse yet! Different operating systems may require different unpacking
+        \texttt{eclipse} yet! Different operating systems may require different unpacking
         methods.\footnote{On Windows do not unpack it into a deep directory,
         since this might cause troubles with long path names.}
 
     \item Start Eclipse by running the \texttt{eclipse} executable in the newly-created
-    eclipse directory.
+    \texttt{eclipse} directory.
 \end{compactenum}
