@@ -5,6 +5,12 @@ import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.example.ql.qlDsl.Questionnare
+import org.eclipse.xtext.example.ql.qlDsl.Question
+import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
+import org.eclipse.emf.common.util.EList
+import org.eclipse.xtext.common.types.JvmMember
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.example.ql.qlDsl.QuestionElement
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -48,11 +54,18 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 		for (form: element.forms) {
 			acceptor.accept(element.toClass("forms."+form.name))
 			.initializeLater[
-				for (question: form.question) {
-					members += question.toField(question.name, question.type)
-				}
+				inferMembers(form.question, members)
 			]
 		}
+   	}
+   	
+   	def void inferMembers(EList<QuestionElement> questionElements, EList<JvmMember> members) {
+   		for (questionElement : questionElements) {
+   			switch (questionElement) {
+   				Question : members += questionElement.toField(questionElement.name, questionElement.type)
+   				ConditionalQuestionGroup : inferMembers(questionElement.question, members)
+   			}	
+   		}
    	}
 }
 

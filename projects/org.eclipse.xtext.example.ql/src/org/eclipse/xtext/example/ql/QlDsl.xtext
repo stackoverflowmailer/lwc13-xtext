@@ -14,7 +14,7 @@ Import:
 /* QL consists of questions grouped in a top-level form construct. */
 Form:
 	"form" name=ID "{"
-		question += Question*
+		question += QuestionElement*
 	"}";
 
 /**
@@ -25,6 +25,16 @@ Form:
  *   this makes the question computed
  */
 Question:
-	name=ID ":" label=STRING type=JvmTypeReference expression=XBlockExpression?
+	name=ID ":" label=STRING type=JvmTypeReference expression=XParenthesizedExpression?
+;
+
+ConditionalQuestionGroup:
+	"if" "(" (condition=XExpression) ")" "{"
+		question += QuestionElement*
+	"}"
+;
+
+QuestionElement:
+	Question | ConditionalQuestionGroup
 ;
 
