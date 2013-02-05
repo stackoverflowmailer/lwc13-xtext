@@ -8,10 +8,12 @@ import org.eclipse.xtext.xbase.compiler.JvmModelGenerator
 
 class Root implements IGenerator {
 	@Inject JvmModelGenerator jvmModelGenerator
+	@Inject JSFGenerator jsfGenerator
 
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
 		// dispatch to other generators
 		jvmModelGenerator.doGenerate(input, fsa)
+		jsfGenerator.doGenerate(input, fsa)
 		
 	}
 	

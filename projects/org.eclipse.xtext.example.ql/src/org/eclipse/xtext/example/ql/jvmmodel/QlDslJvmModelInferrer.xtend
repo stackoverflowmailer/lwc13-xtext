@@ -14,6 +14,8 @@ import org.eclipse.xtext.xbase.XExpression
 import java.util.ArrayList
 import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
 import org.eclipse.xtext.xbase.XbaseFactory
+import org.eclipse.xtext.xbase.compiler.output.TreeAppendable
+import org.eclipse.xtext.xbase.compiler.output.ITreeAppendable
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -102,17 +104,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
    	 */
    	def JvmOperation createIsEnabledMethod (Question question) {
    		question.toMethod("is"+question.name.toFirstUpper+"Enabled", typeReferences.getTypeForName("boolean", question, null)) [
-	   		if(question.expression != null) {
-			   	val trueLiteral = XbaseFactory::eINSTANCE.createXBooleanLiteral
-	   			// no expression => always true
-		   		trueLiteral.isTrue = false
-		   		body = trueLiteral
-	   		} else {
-			   	val trueLiteral = XbaseFactory::eINSTANCE.createXBooleanLiteral
-	   			// no expression => always true
-		   		trueLiteral.isTrue = true
-		   		body = trueLiteral
-	   		}
+   			body = [it.append('''return «question.expression == null»;''')]
 		]
    	}
    	
@@ -124,10 +116,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 	   		if(group.condition != null) {
 	   			body = group.condition
 	   		} else {
-			   	val trueLiteral = XbaseFactory::eINSTANCE.createXBooleanLiteral
-	   			// no expression => always true
-		   		trueLiteral.isTrue = true
-		   		body = trueLiteral
+   				body = [it.append('''return true;''')]
 	   		}
    		]
    	}
