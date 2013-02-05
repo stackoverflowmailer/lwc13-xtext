@@ -13,10 +13,11 @@ public class Money {
 		this.amount = amount;
 	}
 	
-	public Money operator_minus (Money m1, Money m2) {
+	public static Money operator_minus (Money m1, Money m2) {
 		Money result = new Money();
 		result.amount = m1.amount.subtract(m2.amount);
 		return result;
 	}
 	
+	// TODO: Implement other operators
 }

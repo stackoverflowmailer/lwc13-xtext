@@ -28,8 +28,11 @@ Question:
 	name=ID ":" label=STRING type=JvmTypeReference expression=XParenthesizedExpression?
 ;
 
-ConditionalQuestionGroup:
-	"if" "(" (condition=XExpression) ")" "{"
+/**
+ * Groups questions within a block, optionally made conditional with an if-condition.
+ */
+ConditionalQuestionGroup: {ConditionalQuestionGroup}
+	("if" "(" (condition=XExpression) ")")? "{"
 		question += QuestionElement*
 	"}"
 ;

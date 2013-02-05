@@ -1,16 +1,19 @@
 package org.eclipse.xtext.example.ql.jvmmodel
 
 import com.google.inject.Inject
+import org.eclipse.xtext.common.types.JvmOperation
+import org.eclipse.xtext.common.types.util.TypeReferences
+import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
+import org.eclipse.xtext.example.ql.qlDsl.Question
+import org.eclipse.xtext.example.ql.qlDsl.Questionnare
+import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import org.eclipse.xtext.example.ql.qlDsl.Questionnare
-import org.eclipse.xtext.example.ql.qlDsl.Question
+import org.eclipse.xtext.xbase.XExpression
+import java.util.ArrayList
 import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
-import org.eclipse.emf.common.util.EList
-import org.eclipse.xtext.common.types.JvmMember
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.xtext.example.ql.qlDsl.QuestionElement
+import org.eclipse.xtext.xbase.XbaseFactory
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -24,6 +27,11 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
      * convenience API to build and initialize JVM types and their members.
      */
 	@Inject extension JvmTypesBuilder
+	/**
+	 * Grants access to JVM Types
+	 */
+	@Inject TypeReferences typeReferences
+	@Inject extension IQualifiedNameConverter
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -52,20 +60,92 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 	 */
    	def dispatch void infer(Questionnare element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
 		for (form: element.forms) {
-			acceptor.accept(element.toClass("forms."+form.name))
+			acceptor.accept(form.toClass("forms."+form.name))
 			.initializeLater[
-				inferMembers(form.question, members)
+				// Questions can be either direct in the form, or part of ConditionalQuestionGroup
+				// toList: make the collection iterable twice
+				val allQuestions = form.eAllContents.filter(typeof(Question)).toIterable.toList
+				// first add fields
+				for (question: allQuestions) {
+					members += question.toField(question.name, question.type)
+				}
+				// now accessor methods
+				for (question: allQuestions) {
+					if (question.expression == null) {
+						// no computation expression => simple Getter/Setter methods
+						members += question.toGetter(question.name, question.type)
+						members += question.toSetter(question.name, question.type)
+					} else {
+						// field value is computed => no Setter, computed getter
+						val getter = question.toGetter(question.name, question.type)
+						getter.body = question.expression
+						members += getter
+					}
+					
+					members += question.createIsEnabledMethod
+				}
+				
+				val allQuestionGroups = form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toIterable.toList
+				var i=0;
+				for (questionGroup: allQuestionGroups) {
+					members += questionGroup.createIsGroupVisibleMethod(i)
+					i = i+1
+				}
+				
 			]
 		}
    	}
    	
-   	def void inferMembers(EList<QuestionElement> questionElements, EList<JvmMember> members) {
-   		for (questionElement : questionElements) {
-   			switch (questionElement) {
-   				Question : members += questionElement.toField(questionElement.name, questionElement.type)
-   				ConditionalQuestionGroup : inferMembers(questionElement.question, members)
-   			}	
+   	/**
+   	 * Create a method <code>public boolean is[QUESTION]Enabled ()</code>.
+   	 * @param question Source Question instance 
+   	 */
+   	def JvmOperation createIsEnabledMethod (Question question) {
+   		question.toMethod("is"+question.name.toFirstUpper+"Enabled", typeReferences.getTypeForName("boolean", question, null)) [
+	   		if(question.expression != null) {
+			   	val trueLiteral = XbaseFactory::eINSTANCE.createXBooleanLiteral
+	   			// no expression => always true
+		   		trueLiteral.isTrue = false
+		   		body = trueLiteral
+	   		} else {
+			   	val trueLiteral = XbaseFactory::eINSTANCE.createXBooleanLiteral
+	   			// no expression => always true
+		   		trueLiteral.isTrue = true
+		   		body = trueLiteral
+	   		}
+		]
+   	}
+   	
+   	/**
+   	 * Create a method <code>public boolean isGroup[groupIndex]Visible ()</code>.
+   	 */
+   	def JvmOperation createIsGroupVisibleMethod (ConditionalQuestionGroup group, int groupIndex) {
+   		group.toMethod("isGroup"+groupIndex+"Visible", typeReferences.getTypeForName("boolean", group, null)) [
+	   		if(group.condition != null) {
+	   			body = group.condition
+	   		} else {
+			   	val trueLiteral = XbaseFactory::eINSTANCE.createXBooleanLiteral
+	   			// no expression => always true
+		   		trueLiteral.isTrue = true
+		   		body = trueLiteral
+	   		}
+   		]
+   	}
+
+	/**
+	 * Computes the expression that must be evaluated to determines whether a question is visible.
+	 * Visibility can be influenced by conditionally grouping  
+	 */   	
+   	def XExpression getVisibleExpression (Question question) {
+   		if (question.eContainer instanceof ConditionalQuestionGroup) {
+   			return (question.eContainer as ConditionalQuestionGroup).condition
+   		} else {
+	   		val booleanLiteral = XbaseFactory::eINSTANCE.createXBooleanLiteral
+	   		booleanLiteral.isTrue = true
+	   		return booleanLiteral
    		}
    	}
+   	
+   	
 }
 
