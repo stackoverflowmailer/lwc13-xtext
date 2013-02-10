@@ -3,3 +3,5 @@ xtend-gen
 bin
 target
 plugin.xml_gen
+
+*.gz*
