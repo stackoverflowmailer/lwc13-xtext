@@ -5,19 +5,24 @@ import java.math.BigDecimal;
 public class Money {
 	private BigDecimal amount;
 
+	public Money (BigDecimal amount) {
+		this.amount = amount;
+	}
 	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
+	// Implement operators
+	public Money operator_minus (Money other) {
+		return new Money(this.amount.subtract(other.amount));
 	}
-	
-	public static Money operator_minus (Money m1, Money m2) {
-		Money result = new Money();
-		result.amount = m1.amount.subtract(m2.amount);
-		return result;
+	public Money operator_plus (Money other) {
+		return new Money(this.amount.add(other.amount));
 	}
-	
-	// TODO: Implement other operators
+	public Money operator_multiply (Money other) {
+		return new Money(this.amount.multiply(other.amount));
+	}
+	public Money operator_divide (Money other) {
+		return new Money(this.amount.divide(other.amount));
+	}
 }
