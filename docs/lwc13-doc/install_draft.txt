@@ -1,0 +1,49 @@
+Eclipse Xtext/Xtend 2.3.1 Distribution (Juno)
+
+http://xtext.itemis.com/xtext/language=en/36553/downloads
+
+
+workspace anlegen
+
+install new software
+
+http://download.eclipse.org/releases/juno/
+
+Collaboration	
+-     Eclipse EGit	2.1.0.201209190230-r
+
+Web, XML, Java EE and OSGi Enterprise Development	
+-   Eclipse Java EE Developer Tools	3.4.0.v201107072300-7b7JIM0FSK2WM1PS9Ar7AKUz0TrWn
+-   JavaServer Faces Tools (JSF) Project	3.4.1.v201208241503-7E7JFBjF9JgLWgMhh4X6Ps
+-   JST Server Adapters	3.2.200.v20120517_1442-20A77w31231628a2553
+-   JST Server UI	3.4.0.v20120503_1042-7A77FHr9xFcC2CFLZBCJMHLg7D64
+-   JST Server Adapters Extensions	3.3.101.v20120821_1416-777HFL6CcNBDmBjKOFHIEB
+	
+-   Eclipse Web Developer Tools	3.4.1.v201208170345-7O7MFsPEMkBJz0wtb-ccsarPSceUIHO9iKk6XVPV
+-   Eclipse Java Web Developer Tools	3.4.1.v201208231800-7F7DFSlC25UrkX5qvgnXz0LZDA6kiWwylC3uxsWk
+
+import project from git
+
+project home: http://code.google.com/a/eclipselabs.org/p/lwc13-xtext/
+
+see url: https://code.google.com/a/eclipselabs.org/p/lwc13-xtext/source/checkout
+
+
+run as MWE2 Workflow
+
+1. /org.eclipse.xtext.example.ql/src/org/eclipse/xtext/example/ql/GenerateQlDsl.mwe2
+
+2. /org.eclipse.xtext.example.qls/src/org/eclipse/xtext/example/qls/GenerateQlsDsl.mwe2
+
+Run configuration
+
+- LWC13 Runtime
+
+import existing project
+- \lwc13-xtext\examples\QLTest
+
+add new server:
+- tomcat v7
+
+create new Dynamic Web Project
+jsf library 

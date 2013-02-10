@@ -81,6 +81,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 						// field value is computed => no Setter, computed getter
 						val getter = question.toGetter(question.name, question.type)
 						getter.body = question.expression
+						members += question.toSetter(question.name, question.type)
 						members += getter
 					}
 					

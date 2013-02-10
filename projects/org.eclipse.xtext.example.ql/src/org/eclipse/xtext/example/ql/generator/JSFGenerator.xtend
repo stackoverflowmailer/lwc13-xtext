@@ -5,6 +5,10 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.example.ql.qlDsl.Form
 import org.eclipse.xtext.example.ql.qlDsl.Questionnare
+import org.eclipse.xtext.example.ql.qlDsl.Question
+import org.eclipse.xtext.example.ql.qlDsl.QuestionElement
+import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
+import org.eclipse.emf.ecore.EObject
 
 class JSFGenerator implements IGenerator{
 	
@@ -16,14 +20,130 @@ class JSFGenerator implements IGenerator{
 		val questionnaire = input.contents.head as Questionnare
 		for (form: questionnaire.forms) {
 			val content = generate_JSFPage(form)
-			val fileName = "WebContent/"+form.name+".xhtml"
+			val fileName = "WebContent/generated/forms/"+form.name+".xhtml"
 			fsa.generateFile(fileName, content)
 		}
+		
+			//TODO generate index.xhtml (referencing default layout, can be used in forms)
+			//TODO generate faces-config (entry per form)
+			//TODO generate web.xml (naming patterns for jsf request)
+			//TODO generate defaultLayout (WebContent/resources/default/(css|img||templates))
+		
 	}
 	
-	def generate_JSFPage (Form form) '''
-		<html>
+	
+	def getTextInputPrefixed(String name){'''
+		in«name»
+	'''
 		
-		</html>
+	}
+	def getCheckBoxPrefixed(String name){'''
+		chk«name»
+	'''
+	}
+	
+	def generateQuestion(Question question){
+'''
+		<!-- generateQuestion «question.name» «question.type» (SimpleName: «question.type.simpleName»)-->
+			<h:outputLabel value="«question.label»" />
+			'''+
+			if (question.type.simpleName == "boolean"){
+				'''«generateQuestionBoolean(question)»'''
+			}else if (question.type.simpleName == "Money"){
+				'''«generateQuestionMoney(question)»'''
+			}
+			+ '''<!-- end generateQuestion «question.name» «question.type» (SimpleName: «question.type.simpleName») -->'''}
+	
+	def generateQuestionBoolean(Question question){'''
+				<h:selectBooleanCheckbox id="«getCheckBoxPrefixed(question.name)»"
+						value="#{«getFormName(question)».«question.name»}">
+						<f:ajax execute="«getCheckBoxPrefixed(question.name)»"
+							«getUpdateConditionalQuestionRenderAttribute(question)»/>
+					</h:selectBooleanCheckbox>
+					<br />'''}
+	
+	//TODO Money type?
+	def generateQuestionMoney(Question question){'''					
+							<h:inputText id="«getTextInputPrefixed(question.name)»"
+								value="#{«getFormName(question)».«question.name».amount}">
+								<f:ajax event="keyup" execute="«getTextInputPrefixed(question.name)»"
+									«getUpdateConditionalQuestionRenderAttribute(question)» />
+							</h:inputText>
+							<br />
+'''
+	}
+	
+	
+	
+	//TODO wenn keine ConditionalQuestionGroup abhängig dann garnichts
+	def getUpdateConditionalQuestionRenderAttribute(Question question){'''render="«getConditionalQuestionSectionId(question)»"'''
+	}
+	
+	//TODO in allen ConditionalQuestionGroup, wenn expression.parts.contains.question.name, dann return (ConditionalQuestionGroup.parts, seperator _,as String id for ajax rendering)		
+	//TODO ajax support, ids to render on change, sample: grp_state grp_ValueReside
+	def getConditionalQuestionSectionId(Question question){
+		'''COND_ID_	«for (condQuestion: question.eContainer.eContents.filter(typeof(ConditionalQuestionGroup))) {condQuestion.condition}»'''
+	}
+	
+	def generateConditionalQuestionGroup(ConditionalQuestionGroup conditionalQuestionGroup)'''
+		<!-- B E G I N _ generateConditionalQuestionGroup_ S E C T I O N  -->
+					<!-- rendering will be triggered by components bounded to conditions which are used in expressions (group0Visible = box1HouseOwning.hasSoldHouse && box1HouseOwning.hasBoughtHouse)-->
+					<h:panelGroup id="grp_hasSoldHouse_hasBoughtHouse">
+						<!-- evaluation part, every expression has one -->
+						<h:panelGroup id="grp_group0Visible"
+							rendered="#{box1HouseOwning.groupHasSoldHouseAndHasBoughtHouseVisible}">
+		«FOR i:0..conditionalQuestionGroup.question.size-1»
+			«generateQuestionElement(conditionalQuestionGroup.question.get(i))»
+		«ENDFOR»
+						</h:panelGroup>
+					</h:panelGroup>
+		<!-- E N D _ generateConditionalQuestionGroup _ S E C T I O N  -->
+	'''
+	
+	
+	def getFormName(Question question){//TODO get form.name
+		'''Box1HouseOwning'''}
+	
+
+	
+	def generateQuestionElement(QuestionElement questioNElement){
+	switch questioNElement{
+		Question : generateQuestion(questioNElement)
+		ConditionalQuestionGroup : generateConditionalQuestionGroup(questioNElement)
+		default : '''generateQuestionElement QuestionElement «questioNElement.eClass»'''
+	}
+	}
+	 //TODO extract dynamic content
+	def generate_JSFPage (Form form) '''
+	<!-- @generated -->
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/index.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="«form.name.toFirstLower»Form">
+	 	<!-- B E G I N _ generate_JSFPage _ S E C T I O N  -->
+			<h:panelGroup id="grp«form.name»Form">
+				<!-- evaluation part, every expression has one -->
+				<h:panelGroup id="grp«form.name»Form_nested">
+		
+		«FOR i:0..form.question.size-1»
+			«generateQuestionElement(form.question.get(i))»
+		«ENDFOR»
+				</h:panelGroup>
+			</h:panelGroup>
+			<!-- E N D _ generate_JSFPage _ S E C T I O N  -->
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>
+</html>
 	'''
 }
