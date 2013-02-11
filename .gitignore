@@ -5,3 +5,4 @@ target
 plugin.xml_gen
 
 *.gz*
+*.class

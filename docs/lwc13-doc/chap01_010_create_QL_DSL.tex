@@ -53,3 +53,159 @@ important files in the \texttt{/src} folder.
   definition itself. It is called the \emph{Grammar} of the language.
 \end{itemize}
 
+\subsection{Defining the Grammar}
+
+Open the Grammar file, \texttt{QlDsl.xtext}. In a first step, we will leave out
+the expression part in the syntax for simplicity. Enter the following text into
+the Grammar file\footnote{\url{https://gist.github.com/kthoms/4758255}}:
+
+\begin{lstlisting}[language=Xtext]
+grammar org.eclipse.xtext.example.ql.QlDsl with org.eclipse.xtext.xbase.Xbase
+
+generate qlDsl "http://www.eclipse.org/xtext/example/ql/QlDsl"
+
+/* The top-most container of QL files is a Questionnaire */
+Questionnare:
+  imports+=Import*
+  forms+=Form*;
+
+/* Allows importing of qualified names of types */
+Import:
+  'import' importedNamespace=QualifiedName;
+
+/* QL consists of questions grouped in a top-level form construct. */
+Form:
+  "form" name=ID "{"
+    element += FormElement*
+  "}";
+
+/* Abstract rule for elements contained in a Form */
+FormElement:
+  Question
+;
+
+/**
+ * - Each question identified by a name that at the same time represents the result of the question.
+ * - A question has a label that contains the actual question text presented to the user.
+ * - Every question has a type.
+ */
+Question:
+  name=ID ":" label=STRING type=JvmTypeReference
+;
+\end{lstlisting}
+
+Now let us explain the grammar in more detail:
+
+\begin{lstlisting}[language=Xtext]
+grammar org.eclipse.xtext.example.ql.QlDsl with org.eclipse.xtext.xbase.Xbase
+\end{lstlisting}
+
+The grammar has a unique identifier named
+\texttt{org.eclipse.xtext.example.ql.QlDsl}\footnote{That's what has been
+entered in the project wizard}. It is derived from another grammar,
+\texttt{org.eclipse.xtext.xbase.Xbase}. Xbase defines a grammar for expressions,
+but more on this later. Xtext supports \emph{single inheritance} for grammars.
+
+\begin{lstlisting}[language=Xtext]
+generate qlDsl "http://www.eclipse.org/xtext/example/ql/QlDsl"
+\end{lstlisting}
+
+This is an instruction for the metamodel used for the language. The
+\texttt{generate} statement means that Xtext generates an Ecore metamodel for
+this
+grammar\footnote{\url{http://www.eclipse.org/Xtext/documentation.html#metamodelInference}}.
+The metamodel will represent the language's Abstract Syntax Tree
+(AST). Xtext creates the following structure in the Ecore metamodel:
+\begin{itemize}
+  \item an
+  \href{http://download.eclipse.org/modeling/emf/emf/javadoc/2.7.0/org/eclipse/emf/ecore/EPackage.html}{EPackage}
+  for each \texttt{generate} statement. The name of the EPackage is the first
+  argument (\texttt{qlDsl}), the package's nsURI the second argument
+  \newline(\texttt{"http://www.eclipse.org/xtext/example/ql/QlDsl"}).
+  \item an
+  \href{http://download.eclipse.org/modeling/emf/emf/javadoc/2.7.0/org/eclipse/emf/ecore/EClass.html}{EClass}
+	\begin{itemize}
+		\item for each return type of a parser rule. 
+		If a parser rule does not define a return type, an implicit one with the same name as the rule itself is assumed. You can specify more than one rule that return the same type but only one EClass will be generated.
+		\item for each type defined in an action or a cross-reference.
+	\end{itemize}
+  \item an
+  \href{http://download.eclipse.org/modeling/emf/emf/javadoc/2.7.0/org/eclipse/emf/ecore/EEnum.html}{EEnum}
+	\begin{itemize}
+		\item for each return type of an enum rule. 
+	\end{itemize}
+  \item an
+  \href{http://download.eclipse.org/modeling/emf/emf/javadoc/2.7.0/org/eclipse/emf/ecore/EDataType.html}{EDataType}
+	\begin{itemize}
+		\item for each return type of a terminal rule or a data type rule. 
+	\end{itemize}
+\end{itemize}
+
+Alternatively an Xtext grammar could be mapped to an existing Ecore metamodel
+\footnote{http://www.eclipse.org/Xtext/documentation.html#grammarMixins}.
+
+
+\begin{lstlisting}[language=Xtext]
+Questionnare:
+  imports+=Import*
+  forms+=Form*;
+\end{lstlisting}
+
+The top-most container rule is \texttt{Questionnaire}. Per model resource
+exactly one instance of this type will be contained in the root content of the
+resource. Any other element will be contained directly or indirectly in this
+instance.
+
+Each QL model will contain zero to many Import statements: 
+\begin{lstlisting}[language=QL]
+import java.math.BigDecimal
+import types.Money
+\end{lstlisting}
+
+We will use them to
+import types used as a Question's type. The \texttt{``+=``} operator means, that
+a to-many containment reference with name \texttt{imports} is added as EReference to the
+\texttt{Questionnaire} EClass. The \texttt{``*''} means that this rule can be
+repeated zero to many times.\footnote{To enforce at least one rule call, the
+\texttt{``+''} operator would be used instead.}
+After \texttt{import} statements the QL model can contain multiple \texttt{Form}
+declarations.
+
+\begin{lstlisting}[language=Xtext]
+Import:
+  'import' importedNamespace=QualifiedName;
+\end{lstlisting}
+
+The \texttt{Import} rule is defined to start with the keyword
+\texttt{``import''}, followed by a QualifiedName. The QualifiedName rule is not
+defined in the QlDsl.xtext grammar itself, it is inherited from the Xbase
+grammar. This rule defines a so-called Datatype Rule, which maps to datatype,
+in this case EString.
+
+\begin{lstlisting}[language=Java]
+Import:
+  'import' importedNamespace=QualifiedName;
+\end{lstlisting}
+
+After the imports section QL forms are defined:
+
+\begin{lstlisting}[language=Xtext]
+Form:
+  "form" name=ID "{"
+    element += FormElement*
+  "}";
+\end{lstlisting}
+
+Forms have an attribute called \texttt{name}. ID is a \texttt{terminal rule},
+which is defined in Xtext's root grammar \texttt{Terminals}. 
+
+
+\begin{lstlisting}[language=Xtext]
+FormElement:
+  Question
+;
+
+Question:
+  name=ID ":" label=STRING type=JvmTypeReference
+;
+\end{lstlisting}

@@ -1,14 +1,13 @@
 package org.eclipse.xtext.example.ql.generator
 
-import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.generator.IFileSystemAccess
-import org.eclipse.xtext.example.ql.qlDsl.Form
-import org.eclipse.xtext.example.ql.qlDsl.Questionnare
-import org.eclipse.xtext.example.ql.qlDsl.Question
-import org.eclipse.xtext.example.ql.qlDsl.QuestionElement
 import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
-import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.example.ql.qlDsl.Form
+import org.eclipse.xtext.example.ql.qlDsl.FormElement
+import org.eclipse.xtext.example.ql.qlDsl.Question
+import org.eclipse.xtext.example.ql.qlDsl.Questionnare
+import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IGenerator
 
 class JSFGenerator implements IGenerator{
 	
@@ -92,8 +91,8 @@ class JSFGenerator implements IGenerator{
 						<!-- evaluation part, every expression has one -->
 						<h:panelGroup id="grp_group0Visible"
 							rendered="#{box1HouseOwning.groupHasSoldHouseAndHasBoughtHouseVisible}">
-		«FOR i:0..conditionalQuestionGroup.question.size-1»
-			«generateQuestionElement(conditionalQuestionGroup.question.get(i))»
+		«FOR i:0..conditionalQuestionGroup.element.size-1»
+			«generateQuestionElement(conditionalQuestionGroup.element.get(i))»
 		«ENDFOR»
 						</h:panelGroup>
 					</h:panelGroup>
@@ -106,7 +105,7 @@ class JSFGenerator implements IGenerator{
 	
 
 	
-	def generateQuestionElement(QuestionElement questioNElement){
+	def generateQuestionElement(FormElement questioNElement){
 	switch questioNElement{
 		Question : generateQuestion(questioNElement)
 		ConditionalQuestionGroup : generateConditionalQuestionGroup(questioNElement)
@@ -133,8 +132,8 @@ class JSFGenerator implements IGenerator{
 				<!-- evaluation part, every expression has one -->
 				<h:panelGroup id="grp«form.name»Form_nested">
 		
-		«FOR i:0..form.question.size-1»
-			«generateQuestionElement(form.question.get(i))»
+		«FOR i:0..form.element.size-1»
+			«generateQuestionElement(form.element.get(i))»
 		«ENDFOR»
 				</h:panelGroup>
 			</h:panelGroup>

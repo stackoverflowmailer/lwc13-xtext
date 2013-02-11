@@ -4,18 +4,23 @@ generate qlDsl "http://www.eclipse.org/xtext/example/ql/QlDsl"
 
 /* The top-most container of QL files is a Questionnaire */
 Questionnare:
-	imports+=Import*
-	forms+=Form*;
+  imports+=Import*
+  forms+=Form*;
 
 /* Allows importing of qualified names of types */
 Import:
-    'import' importedNamespace=QualifiedName;
-    
+  'import' importedNamespace=QualifiedName;
+
 /* QL consists of questions grouped in a top-level form construct. */
 Form:
-	"form" name=ID "{"
-		question += QuestionElement*
-	"}";
+  "form" name=ID "{"
+    element += FormElement*
+  "}";
+
+/* Abstract rule for elements contained in a Form */
+FormElement:
+  Question | ConditionalQuestionGroup
+;
 
 /**
  * - Each question identified by a name that at the same time represents the result of the question.
@@ -25,19 +30,15 @@ Form:
  *   this makes the question computed
  */
 Question:
-	name=ID ":" label=STRING type=JvmTypeReference expression=XParenthesizedExpression?
+  name=ID ":" label=STRING type=JvmTypeReference expression=XParenthesizedExpression?
 ;
 
 /**
  * Groups questions within a block, optionally made conditional with an if-condition.
  */
 ConditionalQuestionGroup: {ConditionalQuestionGroup}
-	("if" "(" (condition=XExpression) ")")? "{"
-		question += QuestionElement*
-	"}"
-;
-
-QuestionElement:
-	Question | ConditionalQuestionGroup
+  ("if" condition=XParenthesizedExpression)? "{"
+    element += FormElement*
+  "}"
 ;
 
