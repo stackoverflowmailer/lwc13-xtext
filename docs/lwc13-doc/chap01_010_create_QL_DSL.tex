@@ -94,6 +94,25 @@ Question:
 ;
 \end{lstlisting}
 
+With the grammar above the QL language won't fulfill all requirements of the
+CG2013 task. We will extend the grammar later to meet all requirements. With
+this grammar a valid model file would look like this:
+
+\begin{lstlisting}[language=QL]
+import types.Money
+
+form Box1HouseOwning {
+  hasSoldHouse:   "Did you sell a house in 2010?" boolean
+  hasBoughtHouse: "Did you by a house in 2010?" boolean
+  hasMaintLoan:   "Did you enter a loan for maintenance/reconstruction?" boolean
+	
+  sellingPrice:   "Price the house was sold for    :" Money 
+  privateDebt:    "Private debts for the sold house: " Money
+  valueResidue:   "Value residue: " Money 
+}
+\end{lstlisting}
+
+
 Now let us explain the grammar in more detail:
 
 \begin{lstlisting}[language=Xtext]
@@ -113,7 +132,7 @@ generate qlDsl "http://www.eclipse.org/xtext/example/ql/QlDsl"
 This is an instruction for the metamodel used for the language. The
 \texttt{generate} statement means that Xtext generates an Ecore metamodel for
 this
-grammar\footnote{\url{http://www.eclipse.org/Xtext/documentation.html#metamodelInference}}.
+grammar\footnote{\url{http://www.eclipse.org/Xtext/documentation.html\#metamodelInference}}.
 The metamodel will represent the language's Abstract Syntax Tree
 (AST). Xtext creates the following structure in the Ecore metamodel:
 \begin{itemize}
@@ -142,7 +161,7 @@ The metamodel will represent the language's Abstract Syntax Tree
 \end{itemize}
 
 Alternatively an Xtext grammar could be mapped to an existing Ecore metamodel
-\footnote{http://www.eclipse.org/Xtext/documentation.html#grammarMixins}.
+\footnote{http://www.eclipse.org/Xtext/documentation.html\#grammarMixins}.
 
 
 \begin{lstlisting}[language=Xtext]
@@ -177,10 +196,10 @@ Import:
 \end{lstlisting}
 
 The \texttt{Import} rule is defined to start with the keyword
-\texttt{``import''}, followed by a QualifiedName. The QualifiedName rule is not
-defined in the QlDsl.xtext grammar itself, it is inherited from the Xbase
+\texttt{``import''}, followed by a \texttt{QualifiedName}. The \texttt{QualifiedName} rule is not
+defined in the \texttt{QlDsl.xtext} grammar itself, it is inherited from the Xbase
 grammar. This rule defines a so-called Datatype Rule, which maps to datatype,
-in this case EString.
+in this case \texttt{EString}.
 
 \begin{lstlisting}[language=Java]
 Import:
@@ -196,16 +215,35 @@ Form:
   "}";
 \end{lstlisting}
 
-Forms have an attribute called \texttt{name}. ID is a \texttt{terminal rule},
-which is defined in Xtext's root grammar \texttt{Terminals}. 
+Forms have an attribute called \texttt{name}. ID is a \emph{terminal rule},
+which is defined in Xtext's root grammar \texttt{Terminals}. It allows typical
+Java-style Identifiers (beginning with character followed by any character,
+number and underscores).
 
+The next step is to define the rule \texttt{FormElement}. It is an abstract rule which
+will collect the different alternatives of elements that can be contained in a
+Form. In our first step, the rule \texttt{Question} will be the only alternative. We will
+introduce a second alternative later in the grammar, and in order to reduce the
+refactoring effort we are introducing the \texttt{FormElement} already now.
 
 \begin{lstlisting}[language=Xtext]
 FormElement:
   Question
 ;
+\end{lstlisting}
 
+Finally, the Question rule is defined. In a first step, Questions are identified
+by a name, followed by a label string and a reference to a type. Later we will
+add expressions to compute the value.
+
+\begin{lstlisting}[language=Xtext]
 Question:
   name=ID ":" label=STRING type=JvmTypeReference
 ;
 \end{lstlisting}
+
+A Question's type is a reference to a JVM Type. Think of this for now that we
+refer to Java types. The JvmTypeReference rule is also inherited through Xbase,
+actually Xbase derives itself from another grammar, Xtype, which declares these
+rules.
+
