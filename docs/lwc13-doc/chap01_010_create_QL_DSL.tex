@@ -13,7 +13,7 @@ On the project wizard page enter:
   a lowercase, dot-separated name.
   \item Language name: \texttt{org.eclipse.xtext.example.ql.QlDsl}. This is an
   identifier for the language, which must be unique and follows a Java
-  full qualified Identifier name pattern.
+  full qualified identifier name pattern.
   \item Language Extensions: \texttt{ql}. This will be the file extension for
   DSL files.
   \item Uncheck the option ``Create SDK feature project''. It would not harm to
@@ -22,14 +22,14 @@ On the project wizard page enter:
   Project}, which we do not handle in this tutorial any further.
 \end{enumerate}
 
-Now press ``Finish''. Xtext will generate you 3 projects into your workspace:
+Now press ``Finish''. Xtext will generate for you 3 projects into your workspace:
 
 \includegraphics{./images/chapter01/WorkspaceAfterWizard.png}
 
 \begin{itemize}
   \item \texttt{org.eclipse.xtext.example.ql}: This is the Runtime Project,
   which holds the language definition and any implementation which is not UI
-  dependend. Most of the implementation details of this tutorial will be done in
+  dependent. Most of the implementation details of this tutorial will be done in
   this project.
   \item \texttt{org.eclipse.xtext.example.ql.tests}: This project is intended to
   hold test code for the language. Tests are implemented with JUnit. Xtext will
@@ -65,7 +65,7 @@ grammar org.eclipse.xtext.example.ql.QlDsl with org.eclipse.xtext.xbase.Xbase
 generate qlDsl "http://www.eclipse.org/xtext/example/ql/QlDsl"
 
 /* The top-most container of QL files is a Questionnaire */
-Questionnare:
+Questionnaire:
   imports+=Import*
   forms+=Form*;
 
@@ -94,8 +94,8 @@ Question:
 ;
 \end{lstlisting}
 
-With the grammar above the QL language won't fulfill all requirements of the
-CG2013 task. We will extend the grammar later to meet all requirements. With
+With the grammar above, the QL language won't fulfill all requirements of the
+LWC2013 task. We will extend the grammar later to meet all requirements. With
 this grammar a valid model file would look like this:
 
 \begin{lstlisting}[language=QL]
@@ -139,13 +139,13 @@ The metamodel will represent the language's Abstract Syntax Tree
   \item an
   \href{http://download.eclipse.org/modeling/emf/emf/javadoc/2.7.0/org/eclipse/emf/ecore/EPackage.html}{EPackage}
   for each \texttt{generate} statement. The name of the EPackage is the first
-  argument (\texttt{qlDsl}), the package's nsURI the second argument
+  argument (\texttt{qlDsl}), the package's nsURI is the second argument
   \newline(\texttt{"http://www.eclipse.org/xtext/example/ql/QlDsl"}).
   \item an
   \href{http://download.eclipse.org/modeling/emf/emf/javadoc/2.7.0/org/eclipse/emf/ecore/EClass.html}{EClass}
 	\begin{itemize}
 		\item for each return type of a parser rule. 
-		If a parser rule does not define a return type, an implicit one with the same name as the rule itself is assumed. You can specify more than one rule that return the same type but only one EClass will be generated.
+		If a parser rule does not define a return type, an implicit one with the same name as the rule itself is assumed. You can specify multiple rules that return the same type but only one EClass will be generated.
 		\item for each type defined in an action or a cross-reference.
 	\end{itemize}
   \item an
@@ -165,29 +165,29 @@ Alternatively an Xtext grammar could be mapped to an existing Ecore metamodel
 
 
 \begin{lstlisting}[language=Xtext]
-Questionnare:
+Questionnaire:
   imports+=Import*
   forms+=Form*;
 \end{lstlisting}
 
 The top-most container rule is \texttt{Questionnaire}. Per model resource
 exactly one instance of this type will be contained in the root content of the
-resource. Any other element will be contained directly or indirectly in this
+resource. Any other element will be contained directly or indirectly within this
 instance.
 
-Each QL model will contain zero to many Import statements: 
+Each QL model will contain zero to many \texttt{import} statements, e.g.: 
 \begin{lstlisting}[language=QL]
 import java.math.BigDecimal
 import types.Money
 \end{lstlisting}
 
 We will use them to
-import types used as a Question's type. The \texttt{``+=``} operator means, that
+import types used as a question's answer type. The \texttt{``+=``} operator means, that
 a to-many containment reference with name \texttt{imports} is added as EReference to the
 \texttt{Questionnaire} EClass. The \texttt{``*''} means that this rule can be
 repeated zero to many times.\footnote{To enforce at least one rule call, the
 \texttt{``+''} operator would be used instead.}
-After \texttt{import} statements the QL model can contain multiple \texttt{Form}
+After the \texttt{import} statements, the QL model can contain multiple \texttt{form}
 declarations.
 
 \begin{lstlisting}[language=Xtext]
@@ -217,12 +217,12 @@ Form:
 
 Forms have an attribute called \texttt{name}. ID is a \emph{terminal rule},
 which is defined in Xtext's root grammar \texttt{Terminals}. It allows typical
-Java-style Identifiers (beginning with character followed by any character,
-number and underscores).
+Java-style identifiers (beginning with a word character followed by arbitrary many characters,
+numbers or underscores).
 
 The next step is to define the rule \texttt{FormElement}. It is an abstract rule which
 will collect the different alternatives of elements that can be contained in a
-Form. In our first step, the rule \texttt{Question} will be the only alternative. We will
+form. In our first step, the rule \texttt{Question} will be the only alternative. We will
 introduce a second alternative later in the grammar, and in order to reduce the
 refactoring effort we are introducing the \texttt{FormElement} already now.
 
@@ -232,7 +232,7 @@ FormElement:
 ;
 \end{lstlisting}
 
-Finally, the Question rule is defined. In a first step, Questions are identified
+Finally, the \texttt{Question} rule is defined. In a first step, Questions are identified
 by a name, followed by a label string and a reference to a type. Later we will
 add expressions to compute the value.
 
@@ -243,7 +243,7 @@ Question:
 \end{lstlisting}
 
 A Question's type is a reference to a JVM Type. Think of this for now that we
-refer to Java types. The JvmTypeReference rule is also inherited through Xbase,
+refer to Java types. The \texttt{JvmTypeReference} rule is also inherited through Xbase,
 actually Xbase derives itself from another grammar, Xtype, which declares these
 rules.
 

@@ -5,7 +5,7 @@ the language. Xtext ships with a code generator which generates all the glue
 code needed for the language implementation.
 
 To generate the code, we need to execute the generator workflow
-\texttt{GenerateQlDsl.mwe2}. Therefore select this file, open the context menu
+\texttt{GenerateQlDsl.mwe2}. For this, select the workflow file, open the context menu
 and select \emph{Run As / MWE2 Workflow}.
 
 The generator will print some information to the Console, and finally it should
@@ -20,7 +20,7 @@ uri ....
 
 After successful execution the projects will be filled with implementation code.
 Code that will be regenerated each time the generator is executed will go to the
-source folder \texttt{/src-gen} (in all three projects), while code generated to
+source folder \texttt{/src-gen} (in all three projects), whereas code generated to
 \texttt{/src} will be generated only once as skeleton. It is safe to edit these
 classes.
 
@@ -42,8 +42,8 @@ if necessary, without the need to change the framework itself.
 \item Class \texttt{QlDslStandaloneSetup} is needed when using the language in
 ``standalone mode'', i.e. without an Eclipse environment. Eclipse plugins, like
 Xtext and the language plugin, usually need an OSGi container as execution
-environment. Xtext is designed in order to be executable without the need to be
-deployed into an OSGi container, but therefore certain registrations are
+environment. Xtext is designed to be executable without the need to be
+deployed into an OSGi container, but for this certain registrations are
 required which an OSGi container would usually provide automatically. This is
 especially useful when Xtext based languages are used in build environments or
 other IDEs.
@@ -59,7 +59,7 @@ for the DSL.
 
 \paragraph{Runtime Project - folder \texttt{src-gen}}
 \begin{itemize}
-  \item The Ecore metamodel is generated to file QlDsl.ecore.
+  \item The Ecore metamodel is generated to file \texttt{QlDsl.ecore}.
 
 \includegraphics[width=16cm]{./images/chapter01/QlDsl_ecore.png}
 

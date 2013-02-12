@@ -1,20 +1,18 @@
 package org.eclipse.xtext.example.ql.generator
 
+import javax.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.xtext.common.types.JvmField
 import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
 import org.eclipse.xtext.example.ql.qlDsl.Form
 import org.eclipse.xtext.example.ql.qlDsl.FormElement
 import org.eclipse.xtext.example.ql.qlDsl.Question
-import org.eclipse.xtext.example.ql.qlDsl.Questionnare
+import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import org.eclipse.emf.ecore.EObject
-import javax.inject.Inject
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
-import org.eclipse.xtext.common.types.JvmField
-import org.eclipse.xtext.xbase.XExpression
-import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.xbase.XFeatureCall
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 
 class JSFGenerator implements IGenerator{
 	@Inject extension IJvmModelAssociations
@@ -23,7 +21,7 @@ class JSFGenerator implements IGenerator{
 		if (input.URI.fileExtension!="ql")
 			return
 		
-		val questionnaire = input.contents.head as Questionnare
+		val questionnaire = input.contents.head as Questionnaire
 		for (form: questionnaire.forms) {
 			val content = generate_JSFPage(form)
 			val fileName = "WebContent/generated/forms/"+form.name+".xhtml"

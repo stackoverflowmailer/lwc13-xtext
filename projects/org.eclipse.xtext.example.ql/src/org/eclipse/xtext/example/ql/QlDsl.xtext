@@ -3,7 +3,7 @@ grammar org.eclipse.xtext.example.ql.QlDsl with org.eclipse.xtext.xbase.Xbase
 generate qlDsl "http://www.eclipse.org/xtext/example/ql/QlDsl"
 
 /* The top-most container of QL files is a Questionnaire */
-Questionnare:
+Questionnaire:
   imports+=Import*
   forms+=Form*;
 

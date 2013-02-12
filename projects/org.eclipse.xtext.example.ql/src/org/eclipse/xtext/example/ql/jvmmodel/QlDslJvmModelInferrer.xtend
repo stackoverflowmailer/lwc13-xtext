@@ -5,17 +5,13 @@ import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
 import org.eclipse.xtext.example.ql.qlDsl.Question
-import org.eclipse.xtext.example.ql.qlDsl.Questionnare
+import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
 import org.eclipse.xtext.naming.IQualifiedNameConverter
+import org.eclipse.xtext.xbase.XExpression
+import org.eclipse.xtext.xbase.XbaseFactory
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import org.eclipse.xtext.xbase.XExpression
-import java.util.ArrayList
-import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
-import org.eclipse.xtext.xbase.XbaseFactory
-import org.eclipse.xtext.xbase.compiler.output.TreeAppendable
-import org.eclipse.xtext.xbase.compiler.output.ITreeAppendable
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -60,7 +56,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 	 *            rely on linking using the index if isPreIndexingPhase is
 	 *            <code>true</code>.
 	 */
-   	def dispatch void infer(Questionnare element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
+   	def dispatch void infer(Questionnaire element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
 		for (form: element.forms) {
 			acceptor.accept(form.toClass("forms."+form.name))
 			.initializeLater[
