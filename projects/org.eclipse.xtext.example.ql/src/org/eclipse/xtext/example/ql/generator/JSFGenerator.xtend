@@ -8,9 +8,16 @@ import org.eclipse.xtext.example.ql.qlDsl.Question
 import org.eclipse.xtext.example.ql.qlDsl.Questionnare
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
+import org.eclipse.emf.ecore.EObject
+import javax.inject.Inject
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
+import org.eclipse.xtext.common.types.JvmField
+import org.eclipse.xtext.xbase.XExpression
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.xbase.XFeatureCall
 
 class JSFGenerator implements IGenerator{
-	
+	@Inject extension IJvmModelAssociations
 
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
 		if (input.URI.fileExtension!="ql")
@@ -51,7 +58,12 @@ class JSFGenerator implements IGenerator{
 			}else if (question.type.simpleName == "Money"){
 				'''«generateQuestionMoney(question)»'''
 			}
-			+ '''<!-- end generateQuestion «question.name» «question.type» (SimpleName: «question.type.simpleName») -->'''}
+			+ '''<!-- end generateQuestion «question.name» «question.type» (SimpleName: «question.type.simpleName») -->
+			<!-- «question.getDependentElementsWithExpression.map[id]» -->
+			'''
+			}
+
+			
 	
 	def generateQuestionBoolean(Question question){'''
 				<h:selectBooleanCheckbox id="«getCheckBoxPrefixed(question.name)»"
@@ -59,7 +71,9 @@ class JSFGenerator implements IGenerator{
 						<f:ajax execute="«getCheckBoxPrefixed(question.name)»"
 							«getUpdateConditionalQuestionRenderAttribute(question)»/>
 					</h:selectBooleanCheckbox>
-					<br />'''}
+					<br />
+					<!-- «question.getDependentElementsWithExpression.map[id]» -->
+					'''}
 	
 	//TODO Money type?
 	def generateQuestionMoney(Question question){'''					
@@ -82,6 +96,40 @@ class JSFGenerator implements IGenerator{
 	//TODO ajax support, ids to render on change, sample: grp_state grp_ValueReside
 	def getConditionalQuestionSectionId(Question question){
 		'''COND_ID_	«for (condQuestion: question.eContainer.eContents.filter(typeof(ConditionalQuestionGroup))) {condQuestion.condition}»'''
+		
+	}
+	
+	def String getId (EObject o) {
+		switch (o) {
+			Question: o.name
+			ConditionalQuestionGroup: "grp"+allConditionalGroups(o).indexOf(o)
+		}
+	}
+	
+	def Iterable<FormElement> getDependentElementsWithExpression (Question q) {
+		val JvmField field = q.jvmElements.filter(typeof(JvmField)).head
+		
+		val Iterable<FormElement> allFormElementsWithExpression = field.eResource.allContents.filter(typeof(FormElement)).filter[it.expression!=null].toIterable
+		val result = allFormElementsWithExpression.filter[
+				val featureCalls = it.expression.eAllContents.filter(typeof(XFeatureCall))
+				featureCalls.exists[feature==field]
+		].toSet
+		return result
+		// val crossref = field.eCrossReferences
+		// val expressionsReferringTheQuestion = field.eCrossReferences.filter[it instanceof XExpression]
+		
+		// expressionsReferringTheQuestion.map[EcoreUtil2::getContainerOfType(it, typeof(FormElement))].toSet	
+	}
+	
+	def getExpression (FormElement elem) {
+		switch (elem) {
+			Question: elem.expression
+			ConditionalQuestionGroup: elem.condition
+		}
+	}
+	
+	def private allConditionalGroups (EObject ctx) {
+		ctx.eResource.allContents.filter(typeof(ConditionalQuestionGroup)).toList
 	}
 	
 	def generateConditionalQuestionGroup(ConditionalQuestionGroup conditionalQuestionGroup)'''
@@ -97,6 +145,7 @@ class JSFGenerator implements IGenerator{
 						</h:panelGroup>
 					</h:panelGroup>
 		<!-- E N D _ generateConditionalQuestionGroup _ S E C T I O N  -->
+		
 	'''
 	
 	
