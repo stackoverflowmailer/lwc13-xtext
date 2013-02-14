@@ -3,12 +3,47 @@ grammar org.eclipse.xtext.example.qls.QlsDsl with org.eclipse.xtext.common.Termi
 generate qlsDsl "http://www.eclipse.org/xtext/example/qls/QlsDsl"
 import "http://www.eclipse.org/xtext/example/ql/QlDsl" as ql
 
+
+/**
+ * Following requirements should to be fulfilled:
+ * - grouping of related questions (ordering implicit by definition order)
+ * - font style (italic, bold, underlined) and color for labels
+ * - widget selection (checkbox and textfield are default)
+ *   - radiobutton, dropdown list, slider etc.
+ *   - possibilities depending on question type (=> proposal provider) 
+ */
+
 QuestionnaireStyleModel:
 	groups+=Group*;
 	
 Group:
 	"group" name=ID "{"
-		("question" question+=[ql::Question])*
+		element+=GroupElement*
 	"}"
 ;
 
+GroupElement:
+	"question" question=[ql::Question|QualifiedName] styling+=StyleInformation?
+;
+
+
+StyleInformation:
+	"["
+	(
+		("fontStyle:" fontStyle+=FontStyle(fontStyle+=FontStyle)*) |
+		("fontColor:" fontColor+=STRING) | 
+		("widget:" widget+=Widget)
+	)+
+	"]"
+;
+
+enum Widget:
+	Radio|DropDown|Slider
+;
+enum FontStyle:
+	italic|bold|underlined
+;
+
+QualifiedName:
+  ID ('.' ID)*;
+  

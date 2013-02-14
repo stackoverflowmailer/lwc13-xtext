@@ -1,0 +1,15 @@
+group SomeGroup {
+	question Box1HouseOwning.hasBoughtHouse [
+		fontColor: "#FFDD99"
+		fontStyle: bold italic
+		widget: Radio
+	]
+	question Box1HouseOwning.hasSoldHouse
+	question Box1HouseOwning.valueResidue [fontColor: "#AA2233"]
+	question Box1HouseOwning.privateDebt 
+}
+
+group SomeOtherGroup {
+	question Box1HouseOwning.hasMaintLoan [fontStyle: italic]
+	question Box1HouseOwning.sellingPrice
+}
