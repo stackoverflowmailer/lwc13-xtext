@@ -19,9 +19,9 @@ content assistance and navigation via hyperlinks. In the following we will first
 some language concepts of Xbase, and afterwards we will describe how to integrate Xbase
 into the Questionnaire DSL.
 
-In Xbase everything is an expression which always has a return type which might be \emph{nul} 
-for some expressions. Variables are defined with the \emph{var} keyword, whereas for 
-constant values the \emph{val} keyword is used. Types are derived automatically, so they 
+In Xbase everything is an expression which always has a return type which might be \texttt{null} 
+for some expressions. Variables are defined with the \texttt{var} keyword, whereas for 
+constant values the \texttt{val} keyword is used. Types are derived automatically, so they 
 don't need to be defined explicitly:
 
 \begin{lstlisting}[language=Xbase]
@@ -31,8 +31,8 @@ val Integer myConstant = 42
 
 Xbase ships with a library extending existing Java types like String or Integer with further 
 functionality. So besides the already known String operations from Java like 
-\emph{toUpperCase} or \emph{toLowerCase}, in Xbase expressions you can also use \emph{toFirstUpper}
-and \emph{toFirstLower} changing only the first letter's case which might come in handy 
+\texttt{toUpperCase} or \texttt{toLowerCase}, in Xbase expressions you can also use \texttt{toFirstUpper}
+and \texttt{toFirstLower} changing only the first letter's case which might come in handy 
 in some situations. Large numbers can be written more readable by using underscores to
 separate digits:
 
@@ -41,8 +41,8 @@ separate digits:
 // results in: A day has 86400000 milliseconds.
 \end{lstlisting}
 
-As in Java, Xbase provides \emph{if-else}-expressions for defining conditions. Since each expression
-has a return type, it is valid to use  \emph{if-else}-blocks similar to the ternary operator in Java:
+As in Java, Xbase provides \texttt{if-else}-expressions for defining conditions. Since each expression
+has a return type, it is valid to use  \texttt{if-else}-blocks similar to the ternary operator in Java:
 
 \begin{lstlisting}[language=Xbase]
 var x = if (condition) 42 else 43
@@ -50,7 +50,7 @@ var x = if (condition) 42 else 43
 
 There are further concepts in Xbase which we will not cover here in more detail, since they have
 not much relevance for the questionnaire language. So e.g. it is possible to use loops for
-iterating over a collection of element; there is a \emph{switch-case}-expression
+iterating over a collection of element; there is a \texttt{switch-case}-expression
 with type guards allowing for defining behavior depending on the type of a parameter; and last but
 not least, Xbase allows the definition of closures. For more details, please look up the reference
 documentation\footnote{\url{http://www.eclipse.org/Xtext/documentation.html#xbaseLanguageRef_Introduction}}
