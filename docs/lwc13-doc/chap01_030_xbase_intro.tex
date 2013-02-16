@@ -1,7 +1,74 @@
-\section{Xbase}
+\subsection{Xbase}
 
-- Describe Xbase
-- Examples for Expressions
-- Hint: Xbase Tutorial Projects
+The language developed in section \ref{sec:DefiningGrammar} does not yet meet all 
+demands on the LWC2013 task. Two core features are missing: First, a question's 
+answer can be computed, i.e. its answer can be derived from an expression referring 
+to previous questions' answers. Second, questions can be optional depending on the 
+previous answers. For this, also the possibility to define expressions is needed. This
+is where Xbase comes into play.
 
-Extending Xbase: http://koehnlein.blogspot.de/2011/07/extending-xbase.html
+Xbase is an expression language which can be reused in your own Xtext DSL. Its language
+concepts are similar to Java, but with some syntactical derivations improving readability.
+The Xbase grammar is defined in Xtext, thus its elements can be used in any other Xtext grammar
+by importing or directly extending Xbase via Xtext's possibility for grammar inheritance.
+In addition to the grammar, Xbase ships with further infrastructural parts like a compiler, 
+interpreter, linker or static analyzer which all can be adapted to your own needs. In
+the background, Xbase produces plain Java code which is run on the JVM. Like
+other DSLs defined with Xtext, Xbase provides also editor features like syntax highlighting, 
+content assistance and navigation via hyperlinks. In the following we will first introduce
+some language concepts of Xbase, and afterwards we will describe how to integrate Xbase
+into the Questionnaire DSL.
+
+In Xbase everything is an expression which always has a return type which might be \emph{nul} 
+for some expressions. Variables are defined with the \emph{var} keyword, whereas for 
+constant values the \emph{val} keyword is used. Types are derived automatically, so they 
+don't need to be defined explicitly:
+
+\begin{lstlisting}[language=Xbase]
+var myVariable = 'some modifiable value'
+val Integer myConstant = 42  
+\end{lstlisting}
+
+Xbase ships with a library extending existing Java types like String or Integer with further 
+functionality. So besides the already known String operations from Java like 
+\emph{toUpperCase} or \emph{toLowerCase}, in Xbase expressions you can also use \emph{toFirstUpper}
+and \emph{toFirstLower} changing only the first letter's case which might come in handy 
+in some situations. Large numbers can be written more readable by using underscores to
+separate digits:
+
+\begin{lstlisting}[language=Xbase]
+"a day has ".toFirstUpper() + 86_400_000 + " milliseconds."
+// results in: A day has 86400000 milliseconds.
+\end{lstlisting}
+
+As in Java, Xbase provides \emph{if-else}-expressions for defining conditions. Since each expression
+has a return type, it is valid to use  \emph{if-else}-blocks similar to the ternary operator in Java:
+
+\begin{lstlisting}[language=Xbase]
+var x = if (condition) 42 else 43
+\end{lstlisting}
+
+There are further concepts in Xbase which we will not cover here in more detail, since they have
+not much relevance for the questionnaire language. So e.g. it is possible to use loops for
+iterating over a collection of element; there is a \emph{switch-case}-expression
+with type guards allowing for defining behavior depending on the type of a parameter; and last but
+not least, Xbase allows the definition of closures. For more details, please look up the reference
+documentation\footnote{\url{http://www.eclipse.org/Xtext/documentation.html#xbaseLanguageRef_Introduction}}
+or the Xbase tutorials directly in Eclipse (\emph{File / New / Other.. / Xbase Tutorial}). 
+
+With these capabilities integrated in the Questionnaire language it is feasible to define complex
+domain logic e.g. for the result of a questionnaire directly in its definition. For example, when
+designing a questionnaire for a test, let's say to define a person's stress level, you can write
+some Xbase code as expression for the last ``result'' question:
+
+\begin{lstlisting}[language=Xbase]
+stressLevelResult: "Your Stress-Level: " String (
+	{
+		var Integer stressPoints = if (hasTimePressureAtWork) 30 else 0
+		stressPoints = stressPoints + daysSleepingBadPerWeek * 3
+		stressPoints = stressPoints + glassesOfAlcoholPerDay * 12
+		stressPoints = stressPoints - daysWithSportPerWeek * 2
+		if (stressPoints>80) "High" else if (stressPoints>40) "Medium" else "Low"
+	}
+) 
+\end{lstlisting}
