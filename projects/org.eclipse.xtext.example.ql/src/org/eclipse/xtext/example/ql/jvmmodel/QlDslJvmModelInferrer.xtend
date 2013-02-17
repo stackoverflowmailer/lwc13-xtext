@@ -62,7 +62,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 			.initializeLater[
 				// Questions can be either direct in the form, or part of ConditionalQuestionGroup
 				// toList: make the collection iterable twice
-				val allQuestions = form.eAllContents.filter(typeof(Question)).toIterable.toList
+				val allQuestions = form.eAllContents.filter(typeof(Question)).toList
 				// first add fields
 				for (question: allQuestions) {
 					members += question.toField(question.name, question.type)
@@ -77,18 +77,17 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 						// field value is computed => no Setter, computed getter
 						val getter = question.toGetter(question.name, question.type)
 						getter.body = question.expression
-						members += question.toSetter(question.name, question.type)
 						members += getter
 					}
 					
 					members += question.createIsEnabledMethod
 				}
 				
-				val allQuestionGroups = form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toIterable.toList
-				var i=0;
+				val allQuestionGroups = form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
+				var groupIndex=0;
 				for (questionGroup: allQuestionGroups) {
-					members += questionGroup.createIsGroupVisibleMethod(i)
-					i = i+1
+					members += questionGroup.createIsGroupVisibleMethod(groupIndex)
+					groupIndex = groupIndex+1
 				}
 				
 			]
