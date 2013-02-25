@@ -1,10 +1,10 @@
 package forms;
 
-import java.io.Serializable;
+import java.math.BigDecimal;
 
 import types.Money;
 
-public class Box1HouseOwning implements Serializable {
+public class Box1HouseOwning {
 	private boolean hasSoldHouse;
 
 	private boolean hasBoughtHouse;
@@ -17,18 +17,20 @@ public class Box1HouseOwning implements Serializable {
 
 	private Money valueResidue;
 
-	public Box1HouseOwning() {
-		sellingPrice = new Money();
-		privateDebt = new Money();
-		valueResidue = new Money();
-	}
+	private boolean x;
+
+	private boolean y;
 
 	public boolean isHasSoldHouse() {
-		return this.hasBoughtHouse;
+		return this.hasSoldHouse;
+	}
+
+	public void setHasSoldHouse(final boolean hasSoldHouse) {
+		this.hasSoldHouse = hasSoldHouse;
 	}
 
 	public boolean isHasSoldHouseEnabled() {
-		return false;
+		return true;
 	}
 
 	public boolean isHasBoughtHouse() {
@@ -79,15 +81,32 @@ public class Box1HouseOwning implements Serializable {
 		return true;
 	}
 
-	public void setValueResidue(final Money valueResidue) {
-		this.valueResidue = valueResidue;
+	public Money getValueResidue() {
+		this.valueResidue = this.sellingPrice.operator_minus(this.privateDebt);
+		return this.valueResidue;
 	}
 
 	public boolean isValueResidueEnabled() {
-		return true;
+		return getValueResidue() != null;
 	}
 
-	public boolean isGroupHasSoldHouseAndHasBoughtHouseVisible() {
+	public boolean isX() {
+		return this.y;
+	}
+
+	public boolean isXEnabled() {
+		return false;
+	}
+
+	public boolean isY() {
+		return this.x;
+	}
+
+	public boolean isYEnabled() {
+		return false;
+	}
+
+	public boolean isGroup0Visible() {
 		boolean _and = false;
 		if (!this.hasSoldHouse) {
 			_and = false;
@@ -97,22 +116,17 @@ public class Box1HouseOwning implements Serializable {
 		return _and;
 	}
 
-	// TODO undecided
+	// TODO manually written
 	public boolean isGroupValueResidueVisible() {
 
 		return (this.valueResidue != null)
 				&& this.valueResidue.getAmount().intValue() != 0;
 	}
 
-	public void setHasSoldHouse(boolean hasSoldHouse) {
-		this.hasSoldHouse = hasSoldHouse;
+	// TODO initialization
+	public Box1HouseOwning() {
+		sellingPrice = new Money(new BigDecimal(0));
+		privateDebt = new Money(new BigDecimal(0));
+		valueResidue = new Money(new BigDecimal(0));
 	}
-
-	public Money getValueResidue() {
-		// TODO general, not jsf specific
-		this.valueResidue = Money.operator_minus(getSellingPrice(),
-				getPrivateDebt());
-		return valueResidue;
-	}
-
 }

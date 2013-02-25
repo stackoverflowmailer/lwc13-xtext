@@ -1,16 +1,12 @@
 package types;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Money implements Serializable {
-
-	public static Money DEFAULT = new Money();
-
+public class Money {
 	private BigDecimal amount;
 
-	public Money() {
-		this.amount = BigDecimal.ZERO;
+	public Money(BigDecimal amount) {
+		this.amount = amount;
 	}
 
 	public BigDecimal getAmount() {
@@ -21,14 +17,20 @@ public class Money implements Serializable {
 		this.amount = amount;
 	}
 
-	public static Money operator_minus(Money m1, Money m2) {
-		// TODO added nullcheck,... :)
-		if (m1 == null || m2 == null)
-			return DEFAULT;
-		Money result = new Money();
-		result.amount = m1.amount.subtract(m2.amount);
-		return result;
+	// Implement operators
+	public Money operator_minus(Money other) {
+		return new Money(this.amount.subtract(other.amount));
 	}
 
-	// TODO: Implement other operators
+	public Money operator_plus(Money other) {
+		return new Money(this.amount.add(other.amount));
+	}
+
+	public Money operator_multiply(Money other) {
+		return new Money(this.amount.multiply(other.amount));
+	}
+
+	public Money operator_divide(Money other) {
+		return new Money(this.amount.divide(other.amount));
+	}
 }
