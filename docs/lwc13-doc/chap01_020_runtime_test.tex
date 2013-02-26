@@ -28,7 +28,17 @@ empty workspace. Close the Welcome window.
 
 \subsubsection{Create Test Project}
 
-In the Runtime Workspace create a new Java Project with name ``QLTest''.
+In the Runtime Workspace create a new Plug-in Project with name
+``QLTest''.\footnote{As before, uncheck the options on the second wizard page.}
+
+First, we will create a dependency to the library plugin. Open the
+\texttt{META-INF/MANIFEST.MF} file and switch to page Dependencies. In the \emph{Required
+Plug-ins} section, add a dependency to \texttt{org.eclipse.xtext.example.ql.lib}.
+
+\includegraphics[width=8cm]{./images/chapter01/AddDependency_01.png}
+
+\includegraphics[width=10cm]{./images/chapter01/AddDependency_02.png}
+
 
 Select the \texttt{/src} folder and create a new file
 \texttt{``housepurchase.ql''}. Once you have created the file a popup dialog
@@ -44,3 +54,36 @@ Builder indexes the Xtext based resources, links the cross-references in the
 editor, and validates the model files. On errors, resource markers are created
 which can be seen in the editor and the \emph{Problems View}.
 
+Enter the content for
+\texttt{``housepurchase.ql''}\footnote{\url{https://gist.github.com/kthoms/5036304}}:
+\begin{lstlisting}[language=QL]
+import types.Money
+
+form Box1HouseOwning {
+  hasSoldHouse: "Did you sell a house in 2010?" boolean
+  hasBoughtHouse: "Did you by a house in 2010?" boolean
+  hasMaintLoan: "Did you enter a loan for maintenance/reconstruction?" boolean
+
+  sellingPrice: "Price the house was sold for    :" Money
+  privateDebt: "Private debts for the sold house: " Money
+  valueResidue: "Value residue: " Money
+}
+\end{lstlisting}
+
+You see now that the editor has recognized our DSL. The language's keywords are
+highlighted. Xtext offers far more than just syntax coloring for the language,
+it created a fully integrated editor. You may explore some of the features now.
+
+\begin{itemize}
+  \item If you make errors, error markers are created and resolved while
+you type.
+\item Content assist is offered with CTRL+SPACE.
+\item The Outline view \footnote{if not present, open with \emph{Window / Show View /
+Outline}} presents the structure of the document, and allows quick navigation.
+\item F3 allows jumping to the definition of an element, which is defined
+somewhere else. You could try this by selecting ``Money'' and press F3. At the
+moment, only the type information of questions is cross-referenced.
+\end{itemize}
+
+From now on, we will extend the DSL a bit further. This usually requires to
+restart the test environment. So close it and proceed reading.

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: QLTest
+Bundle-SymbolicName: QLTest
+Bundle-Version: 1.0.0.qualifier
+Export-Package: WebContent,
+ WebContent.generated.forms,
+ forms
+Require-Bundle: org.eclipse.xtext.example.ql.lib;bundle-version="1.0.0"
