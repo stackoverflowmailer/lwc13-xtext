@@ -1,15 +1,36 @@
-group SomeGroup {
-	question Box1HouseOwning.hasBoughtHouse [
-		fontColor: "#FFDD99"
-		fontStyle: bold italic
-		widget: Radio
-	]
-	question Box1HouseOwning.hasSoldHouse
-	question Box1HouseOwning.valueResidue [fontColor: "#AA2233"]
-	question Box1HouseOwning.privateDebt 
+// Forms can be defined on level page and section
+// If form is defined on parent level, no child can refer to a form
+// If parent has no form, all childs must declare their form 
+
+page Page1 uses Box1HouseOwning {
+	section s1 /*uses Box1HouseOwning*/ {
+		question hasBoughtHouse [
+			font-color: "#FFDD99"
+			font-style: "bold italic"
+			font-type: "Comic"
+			widget: Radio ["yes","no"]
+		]
+		
+		section s1_1 {
+			question hasSoldHouse
+			question valueResidue [fontColor: "#AA2233"]
+			question privateDebt
+		}
+	}
+	
+	navigation {
+	    // previous: implicit
+		Page2 (cond) // isLinkToPage2Enabled()
+		Page3
+	}
+	
 }
 
-group SomeOtherGroup {
-	question Box1HouseOwning.hasMaintLoan [fontStyle: italic]
-	question Box1HouseOwning.sellingPrice
+page Page2 next=Page3 {
+	question hasMaintLoan [fontStyle: italic]
+	question sellingPrice
+}
+
+page Page3 {
+ // TODO
 }
