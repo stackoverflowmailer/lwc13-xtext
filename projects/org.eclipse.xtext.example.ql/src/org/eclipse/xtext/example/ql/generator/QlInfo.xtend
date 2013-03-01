@@ -30,7 +30,8 @@ class QlInfo {
 	
 	def String getId (EObject o) {
 		switch (o) {
-			Question: o.name
+			Question: "q"+o.name.toFirstUpper
+			Form: "form"+o.name.toFirstUpper
 			ConditionalQuestionGroup: "group"+allConditionalGroups(o).indexOf(o)
 		}
 	}
