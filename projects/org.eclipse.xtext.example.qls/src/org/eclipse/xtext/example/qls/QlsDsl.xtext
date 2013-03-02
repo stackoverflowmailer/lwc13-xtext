@@ -6,44 +6,59 @@ import "http://www.eclipse.org/xtext/example/ql/QlDsl" as ql
 
 /**
  * Following requirements should to be fulfilled:
- * - grouping of related questions (ordering implicit by definition order)
+ * - grouping of related questions into pages, sections, subsection
  * - font style (italic, bold, underlined) and color for labels
  * - widget selection (checkbox and textfield are default)
- *   - radiobutton, dropdown list, slider etc.
- *   - possibilities depending on question type (=> proposal provider) 
+ *   - radiobutton, dropdown list, slider etc. 
  */
 
 QuestionnaireStyleModel:
-	groups+=Group*;
+	pages+=Page*;
 	
-Group:
-	"group" name=ID "{"
-		element+=GroupElement*
+Page:
+	"page" name=ID ("uses" form=[ql::Form|ID])? "{"
+		element+=PageElement*
+		navigation=Navigation?
 	"}"
 ;
 
-GroupElement:
-	"question" question=[ql::Question|QualifiedName] styling+=StyleInformation?
+Navigation: {Navigation}
+	"navigation" "{" (nextPage+=NextPage)* "}"
+;
+
+NextPage:
+	page=[Page|ID] // TODO enable xbase's expressions here
 ;
 
 
-StyleInformation:
+PageElement:
+	Question | Section
+;
+
+Section:
+	"section" name=ID ("uses" form=[ql::Form|ID])? "{"
+		element+=PageElement*
+	"}"
+;
+
+
+Question:
+	"question" question=[ql::Question] styling+=StyleInformation?	
+;
+
+
+StyleInformation: {StyleInformation}
 	"["
 	(
-		("fontStyle:" fontStyle+=FontStyle(fontStyle+=FontStyle)*) |
-		("fontColor:" fontColor+=STRING) | 
-		("widget:" widget+=Widget)
-	)+
+		("font-style:" fontStyle=STRING)? &
+		("font-color:" fontColor=STRING)? &
+		("font-type:" fontType=STRING)? &
+		("widget:" widget=Widget)?
+	)
 	"]"
 ;
 
-enum Widget:
-	Radio|DropDown|Slider
+Widget: {Widget}
+	widgetType=("Radio"|"DropDown"|"CheckBox"|"Text"|"Slider") ("[" labels+=STRING ("," labels+=STRING)* "]")?
 ;
-enum FontStyle:
-	italic|bold|underlined
-;
-
-QualifiedName:
-  ID ('.' ID)*;
   

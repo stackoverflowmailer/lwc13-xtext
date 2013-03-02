@@ -3,15 +3,50 @@
  */
 package org.eclipse.xtext.example.qls.scoping;
 
+import java.util.List;
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.example.ql.qlDsl.Form;
+import org.eclipse.xtext.example.ql.qlDsl.Question;
+import org.eclipse.xtext.example.qls.qlsDsl.Page;
+import org.eclipse.xtext.example.qls.qlsDsl.Section;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 
 /**
  * This class contains custom scoping description.
  * 
- * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#scoping
- * on how and when to use it 
- *
+ * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#scoping on
+ * how and when to use it
+ * 
  */
 public class QlsDslScopeProvider extends AbstractDeclarativeScopeProvider {
 
+  public IScope scope_Question_question(EObject context, EReference reference) {
+    Form usedForm = getUsedForm(context);
+    List<Question> allQuestions = EcoreUtil2.getAllContentsOfType(usedForm,
+        Question.class);
+    return Scopes.scopeFor(allQuestions);
+  }
+
+  private Form getUsedForm(EObject context) {
+    if (context instanceof Section) {
+      Section section = (Section) context;
+      if (section.getForm() != null) {
+        return section.getForm();
+      }
+    } else if (context instanceof Page) {
+      Page page = (Page) context;
+      if (page.getForm() != null) {
+        return page.getForm();
+      }
+    }
+    if (context != null) {
+      return getUsedForm(context.eContainer());
+    }
+    return null;
+  }
 }

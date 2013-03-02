@@ -13,22 +13,22 @@ page Page1 uses Box1HouseOwning {
 		
 		section s1_1 {
 			question hasSoldHouse
-			question valueResidue [fontColor: "#AA2233"]
+			question valueResidue [font-color: "#AA2233"]
 			question privateDebt
 		}
 	}
 	
 	navigation {
 	    // previous: implicit
-		Page2 (cond) // isLinkToPage2Enabled()
+		Page2 // (true) // isLinkToPage2Enabled()
 		Page3
 	}
 	
 }
 
-page Page2 next=Page3 {
-	question hasMaintLoan [fontStyle: italic]
-	question sellingPrice
+page Page2 uses Box1HouseOwning {
+	question hasMaintLoan [font-style:"italic"]
+	question sellingPrice [font-type:"Arial"]
 }
 
 page Page3 {
