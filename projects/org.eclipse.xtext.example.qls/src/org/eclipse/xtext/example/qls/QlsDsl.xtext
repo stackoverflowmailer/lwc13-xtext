@@ -22,25 +22,9 @@ Page:
 	"}"
 ;
 
-Navigation: {Navigation}
-	"navigation" "{" (nextPage+=NextPage)* "}"
-;
-
-NextPage:
-	page=[Page|ID] // TODO enable xbase's expressions here
-;
-
-
 PageElement:
 	Question | Section
 ;
-
-Section:
-	"section" name=ID ("uses" form=[ql::Form|ID])? "{"
-		element+=PageElement*
-	"}"
-;
-
 
 Question:
 	"question" question=[ql::Question] styling+=StyleInformation?	
@@ -62,3 +46,16 @@ Widget: {Widget}
 	widgetType=("Radio"|"DropDown"|"CheckBox"|"Text"|"Slider") ("[" labels+=STRING ("," labels+=STRING)* "]")?
 ;
   
+Section:
+	"section" name=ID ("uses" form=[ql::Form|ID])? "{"
+		element+=PageElement*
+	"}"
+;
+
+Navigation: {Navigation}
+	"navigation" "{" (nextPage+=NextPage)* "}"
+;
+
+NextPage:
+	page=[Page|ID] // TODO enable xbase's expressions here
+;
