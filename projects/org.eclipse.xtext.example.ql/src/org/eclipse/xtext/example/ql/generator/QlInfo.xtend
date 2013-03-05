@@ -56,10 +56,9 @@ class QlInfo {
 	def getConditionalGroupVisibleFeatureId(ConditionalQuestionGroup group) {
 		'''«getId(group)»Visible'''}
 		
-		//TODO get form.name
-	def getFormName(Question question){'''Box1HouseOwning'''}
-	def getFormName(ConditionalQuestionGroup questionGroup){'''Box1HouseOwning'''}
-	
+    //TODO isNaive = true, 
+    def getFormName(Question question){'''«(question.eContainer as Form).name.toFirstLower»'''}
+    def getFormName(ConditionalQuestionGroup questionGroup){'''«(questionGroup.eContainer as Form).name.toFirstLower»'''}
 	
 	
 	def Iterable<FormElement> getDependentElementsWithExpression (Question q) {

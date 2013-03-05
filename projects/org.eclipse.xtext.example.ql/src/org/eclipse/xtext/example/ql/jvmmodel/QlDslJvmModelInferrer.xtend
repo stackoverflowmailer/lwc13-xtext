@@ -65,7 +65,8 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 				//implements Serializable				
 				it.superTypes +=typeReferences.getTypeForName(typeof(Serializable),element,null) 
 				
-				it.members += toField("serialVersionUID",typeReferences.getTypeForName("long",element),[final = true ^static = true ])
+				//TODO initialize, final = true, static = true
+				it.members += toField("serialVersionUID",typeReferences.getTypeForName("long",element),[final = false ^static = false ])
 				
 				// Questions can be either direct in the form, or part of ConditionalQuestionGroup
 				// toList: make the collection iterable twice
