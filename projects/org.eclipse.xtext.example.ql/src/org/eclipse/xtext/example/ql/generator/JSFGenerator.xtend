@@ -9,28 +9,33 @@ import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 import types.Money
+import java.util.List
 
 class JSFGenerator implements IGenerator{
-	@Inject extension QlInfo info
-
+	@Inject extension QlInfo 
+	@Inject extension JsfOutputConfigurationProvider
+ 
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
-		if (input.URI.fileExtension!="ql")
-			return
-		
-		val questionnaire = input.contents.head as Questionnaire
-		for (form: questionnaire.forms) {
-			val content = generate_JSFPage(form)
-			val fileName = "WebContent/generated/forms/"+form.name+".xhtml"
-			fsa.generateFile(fileName, content)
-		}
-		
-			//TODO generate index.xhtml (referencing default layout, can be used in forms)
-			//TODO generate faces-config (entry per form)
-			//TODO generate web.xml (naming patterns for jsf request)
-			//TODO generate defaultLayout (WebContent/resources/default/(css|img||templates))
-		
-	}
-	
+        if (input.URI.fileExtension!="ql")
+            return
+         
+        //generate forms
+        val questionnaire = input.contents.head as Questionnaire
+        for (form: questionnaire.forms) {
+            val content = generate_JSFPage(form)
+            val fileName = "forms/"+form.name+".xhtml"
+            fsa.generateFile(fileName,WEB_CONTENT, content)
+        }
+        
+        //generate index page with links to generated forms
+        val contentIndex  = generate_JSFIndexPage(questionnaire.forms)
+        fsa.generateFile("form_index.xhtml",WEB_CONTENT, contentIndex)
+        
+        //generate the bean configuration for generated forms
+        val contentConfig  = generate_JSFFacesConfig(questionnaire.forms)
+        fsa.generateFile("form_config.xml",WEB_INF, contentConfig)
+        
+    }
 		 //TODO extract dynamic content
 	def generate_JSFPage (Form form) '''
 		<!-- @generated -->
@@ -96,5 +101,40 @@ class JSFGenerator implements IGenerator{
 				<f:ajax event="keyup" render="«question.referingElementIds»"/>"
 			<h:inputText/>'''
 	}
+	
+	
+    def generate_JSFFacesConfig(List<Form> forms)
+    '''<?xml version="1.0" encoding="UTF-8"?>
+    <!-- @generated -->
+    <faces-config
+       xmlns="http://java.sun.com/xml/ns/javaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
+       version="2.1">
+       «FOR elem : forms»
+           <managed-bean>
+              <managed-bean-name>«elem.name.toFirstLower»</managed-bean-name>
+              <managed-bean-class>forms.«elem.name»</managed-bean-class>
+              <managed-bean-scope>session</managed-bean-scope>
+           </managed-bean>
+                «ENDFOR»
+    </faces-config>
+    '''
+    
+    def generate_JSFIndexPage (List<Form> forms)
+    '''<?xml version='1.0' encoding='UTF-8' ?>
+       <!-- @generated -->
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+            <html xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+            <ui:composition template="/index.xhtml">
+                <ui:define name="content">      
+                «FOR elem: forms SEPARATOR "<br/>"»
+                    <h:outputLink value="forms/«elem.name».jsf">«elem.name»</h:outputLink>
+                «ENDFOR»
+                </ui:define>
+            </ui:composition>
+            </html>'''
 }
 

@@ -5,13 +5,14 @@ import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
 import org.eclipse.xtext.example.ql.qlDsl.Question
-import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.xbase.XExpression
 import org.eclipse.xtext.xbase.XbaseFactory
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import java.io.Serializable
+import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -59,12 +60,18 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
    	def dispatch void infer(Questionnaire element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
 		for (form: element.forms) {
 			acceptor.accept(form.toClass("forms."+form.name))
-			.initializeLater[
+			.initializeLater[ 
+				
+				//implements Serializable				
+				it.superTypes +=typeReferences.getTypeForName(typeof(Serializable),element,null) 
+				
+				it.members += toField("serialVersionUID",typeReferences.getTypeForName("long",element),[final = true ^static = true ])
+				
 				// Questions can be either direct in the form, or part of ConditionalQuestionGroup
 				// toList: make the collection iterable twice
 				val allQuestions = form.eAllContents.filter(typeof(Question)).toList
 				// first add fields
-				for (question: allQuestions) {
+				for (question: allQuestions) { 
 					members += question.toField(question.name, question.type)
 				}
 				// now accessor methods
