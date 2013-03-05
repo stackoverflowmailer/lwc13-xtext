@@ -46,7 +46,7 @@ class QlInfo {
 
 	//TODO this id is used for the element which implements ConditionalQuestionGroups. it should just be human readable and is not used for mappings currently
 	def getConditionalGroupRenderingId(ConditionalQuestionGroup group) {
-		'''grp_group0Visible'''}
+		'''grp_«group.id»Visible'''}
 		
 	//TODO this condition will be added to the render attribute for ConditionalQuestionGroup elements
 	def getConditionalGroupRenderingCondition(ConditionalQuestionGroup group) {
