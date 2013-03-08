@@ -1,4 +1,25 @@
-\subsection{JVM Model Inferrence}
+\subsection{JVM Model Inference}
+
+For languages using Xbase it is necessary to tell Xtext, how to map concepts of a language to a Java model. In our example,
+a Form could be mapped to the Type concept, while Questions are the fields of a class. By doing this, elements of the language
+can be made available in expressions. Further, it allows that model elements are linkable where Java types are expected, without
+necessarily generate a Java class.
+
+The derivation of the Java model for language concepts is the responsibility of the JVM Model Inferrer, which is a class that implements
+the \href{http://download.eclipse.org/modeling/tmf/xtext/javadoc/2.3/org/eclipse/xtext/xbase/jvmmodel/IJvmModelInferrer.html}{IJvmModelInferrer} interface.
+A skeleton has already been generated into package org.eclipse.xtext.example.ql.jvmmodel. The file QlDslJvmModelInferrer.xtend is a class
+written with Xtend.
+
+
+The mapping that has to be implemented for the Questionnaire DSL should be as follows:
+\begin{enumerate}
+  \item Each Form instance is mapped to a JvmDeclaredType (which is the common concept for Java classes and interfaces).
+  The type's name is simply the form name, and the target package is forms.
+  \item Each Question of a Form is mapped to a JvmField, which is added as member of the declared type
+  \item For each Question accessor methods for the field are generated. The field gets only a Setter, when the value of the Question is
+  not computed by an expression. If the field is computed, the content of the getter has to compute the result.
+  \item For
+\end{enumerate}
 
 - Describe the role of JVM Types
 - Describe the role of the JVM Model Inferrer
