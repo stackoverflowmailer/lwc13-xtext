@@ -23,6 +23,7 @@ statement to express optional questions (see line 8) and (2) the capability for 
 deriving a question's answer from previously answered questions (see line 11). As explained in section
 \ref{sec:DefiningGrammar}, our grammar inherits from Xbase making its rules reusable in the 
 questionnaire language. To fulfill the missing requirements our grammar needs to be extended to the following:
+\footnote{\url{https://gist.github.com/kthoms/5114439}}
 
 \begin{lstlisting}[language=Xtext]
 grammar org.eclipse.xtext.example.ql.QlDsl with org.eclipse.xtext.xbase.Xbase
@@ -103,13 +104,20 @@ Question:
 ;
 \end{lstlisting}
 
+After changing the grammar, the implementation has to be regenerated. Run the
+GenerateQlDsl.mwe2 workflow again. Then restart the runtime workbench.
+\footnote{Select it from the Run / Run Configurations dialog or from the drop
+down menu next to the green ``play'' button in the tool bar.}
+
 Xbase comes out of the box with the support for standard Java types like like Strings or Integers inside expressions .
 However, in the questionnaire language own data types, like the Money type from the example, need also to be
 integrated. Such data types will be typically defined in a Java class. When importing such a type via the \texttt{import}
-statement, it will be available in the questionnaire definition. However, Xbase needs to know how to handle
+statement, it will be available in the questionnaire definition. Xbase needs to know how to handle
 these types when they are used in expressions with operators like '+'. '-', '*' and '/'. The logic for these
 operators need to be implemented in special methods in the data type itself. As example, let's see how this
-is achieved for the Money type:
+is achieved for the Money
+type:\footnote{\url{http://code.google.com/a/eclipselabs.org/p/lwc13-xtext/source/browse/examples/QLTest/src/types/Money.java}}
+
 
 \begin{lstlisting}[language=Java]
 package types;

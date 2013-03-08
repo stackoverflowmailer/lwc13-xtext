@@ -39,6 +39,27 @@ Plug-ins} section, add a dependency to \texttt{org.eclipse.xtext.example.ql.lib}
 
 \includegraphics[width=10cm]{./images/chapter01/AddDependency_02.png}
 
+The DSL has to support custom datatypes like \texttt{Money}, which must be
+defined. Select the \texttt{/src} folder and create a new Java class \texttt{Money} in package
+\texttt{types}:
+\begin{lstlisting}[language=Java]
+package types;
+
+import java.math.BigDecimal;
+
+public class Money {
+  private BigDecimal amount;
+
+  public Money(BigDecimal amount) {
+    this.amount = amount;
+  }
+
+  public BigDecimal getAmount() {
+    return amount;
+  }
+}
+\end{lstlisting}
+ 
 
 Select the \texttt{/src} folder and create a new file
 \texttt{``housepurchase.ql''}. Once you have created the file a popup dialog
