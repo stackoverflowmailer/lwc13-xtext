@@ -11,6 +11,7 @@ A skeleton has already been generated into package org.eclipse.xtext.example.ql.
 written with Xtend.
 
 
+
 The mapping that has to be implemented for the Questionnaire DSL should be as follows:
 \begin{enumerate}
   \item Each Form instance is mapped to a JvmDeclaredType (which is the common concept for Java classes and interfaces).
@@ -18,9 +19,251 @@ The mapping that has to be implemented for the Questionnaire DSL should be as fo
   \item Each Question of a Form is mapped to a JvmField, which is added as member of the declared type
   \item For each Question accessor methods for the field are generated. The field gets only a Setter, when the value of the Question is
   not computed by an expression. If the field is computed, the content of the getter has to compute the result.
-  \item For
+  \item For each Question a method is<QUESTIONNAME>Enabled is inferred.
+  Questions with computed values are not enabled.
+  \item For each Question Group a method is produced that computes whether the
+  group is visible. 
 \end{enumerate}
 
-- Describe the role of JVM Types
-- Describe the role of the JVM Model Inferrer
-- Implement JVM Model Inferrer
+Now place the content into the inferrer class\footnote{\url{https://gist.github.com/kthoms/5132153}}
+: 
+\begin{lstlisting}[language=Xtend]
+package org.eclipse.xtext.example.ql.jvmmodel
+
+import com.google.inject.Inject
+import java.io.Serializable
+import org.eclipse.xtext.common.types.JvmOperation
+import org.eclipse.xtext.common.types.util.TypeReferences
+import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
+import org.eclipse.xtext.example.ql.qlDsl.Question
+import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
+import org.eclipse.xtext.xbase.XExpression
+import org.eclipse.xtext.xbase.XbaseFactory
+import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
+import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+
+class QlDslJvmModelInferrer extends AbstractModelInferrer {
+  @Inject extension JvmTypesBuilder
+  @Inject TypeReferences typeReferences
+
+def dispatch void infer(Questionnaire element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
+    for (form: element.forms) {
+      acceptor.accept(form.toClass("forms."+form.name))
+      .initializeLater[
+        //implements Serializable
+        it.superTypes +=typeReferences.getTypeForName(typeof(Serializable),element,null)
+
+        it.members += toField("serialVersionUID",typeReferences.getTypeForName("long",element),[final = false ^static = false ])
+
+        val allQuestions = form.eAllContents.filter(typeof(Question)).toList
+        
+        for (question: allQuestions) {
+          members += question.toField(question.name, question.type)
+        }
+
+        for (question: allQuestions) {
+          if (question.expression == null) {
+            members += question.toGetter(question.name, question.type)
+            members += question.toSetter(question.name, question.type)
+          } else {
+            val getter = question.toGetter(question.name, question.type)
+            getter.body = question.expression
+            members += getter
+          }
+          members += question.createIsEnabledMethod
+        }
+
+        val allQuestionGroups = form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
+        var groupIndex=0;
+        for (questionGroup: allQuestionGroups) {
+          members += questionGroup.createIsGroupVisibleMethod(groupIndex)
+          groupIndex = groupIndex+1
+        }
+
+      ]
+    }
+  }
+
+   def JvmOperation createIsEnabledMethod (Question question) {
+     question.toMethod("is"+question.name.toFirstUpper+"Enabled", typeReferences.getTypeForName("boolean", question, null)) [
+       body = [it.append('''return «question.expression == null»;''')]
+    ]
+   }
+
+   /** Create a method <code>public boolean isGroup[groupIndex]Visible ()</code>.*/
+   def JvmOperation createIsGroupVisibleMethod (ConditionalQuestionGroup group, int groupIndex) {
+     group.toMethod("isGroup"+groupIndex+"Visible", typeReferences.getTypeForName("boolean", group, null)) [
+       if(group.condition != null) {
+         body = group.condition
+       } else {
+         body = [it.append('''return true;''')]
+       }
+     ]
+   }
+
+}
+\end{lstlisting}
+
+Now lets take a deeper look at the implementation:
+
+\begin{lstlisting}[language=Xtend]
+class QlDslJvmModelInferrer extends AbstractModelInferrer {
+  @Inject extension JvmTypesBuilder
+  @Inject TypeReferences typeReferences
+  def dispatch void infer(Questionnaire element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
+     ...
+  }
+}
+\end{lstlisting}
+
+The inferrer class implements IJvmModelInferrer, but for convenience we derive
+from its abstract implementation AbstractModelInferrer. The main method to
+implement is infer(). In the case of QL models, the root element
+of model resources is a Questionnaire. The base implementation uses polymorphic dispatching on
+the root element of a model resource, and the infer() method of our
+implementation hooks into the dispatching by using the dispatch keyword. That is
+also why the first argument can be of type Questionnaire, and not of the base
+type EObject, like defined in the infer() method that is definied in
+IJvmModelInferrer.
+
+The implementation uses two services, which are injected as members into the
+class:
+\begin{itemize}
+\item The JvmTypesBuilder offers factory and builder functions to create
+instances of JVM Model types. The additional keyword extension has the effect,
+that the methods of the JvmTypesBuilder become so-called extension methods.
+This means, the functions become available implicitly available as additional
+methods on the first argument of the function. We will see extensive use of this
+nice feature of Xtend in the implementation of the Xtend based code generator in
+the next chapter.
+\item TypeReferences is used to retrieve the respective JvmModel instances for
+given qualified Java class names through its getTypeForName() methods. 
+\end{itemize}
+
+\begin{lstlisting}[language=Xtend]
+    for (form: element.forms) {
+      acceptor.accept(form.toClass("forms."+form.name))
+      .initializeLater[
+         ...
+      ]
+    }
+\end{lstlisting}
+
+We loop over the Form instances of the Questionnaire elem and derive a Class
+instance for them in package forms. JVM Model Inference is executed in two
+phases: In the first phase all types are derived, without any content. In the
+second phase, the content of the types is derived. This is done by the closure
+passed to initializeLater(). The reason why this has to happen this way is that
+during inference of type members, they could refer again to types that are
+derived by the inferrer. The two phases prevent circular calls
+
+\begin{lstlisting}[language=Xtend]
+it.superTypes +=typeReferences.getTypeForName(typeof(Serializable),element,null)
+
+it.members += toField("serialVersionUID",typeReferences.getTypeForName("long",element),[final = false ^static = false ])
+\end{lstlisting}
+        
+We want to make the resulting Java class serializable. This is optional, but
+better style. Therefore the class has to implement the java.io.Serializable
+interface, whose JVM Model representative is retrieved from the TypeReferences
+instance and added to the superTypes collection. The identifier it denotes the
+implicit variable of type Form of the closure. It is not necessary to qualify it
+here, it could be left out.
+
+\begin{lstlisting}[language=Xtend]
+val allQuestions = form.eAllContents.filter(typeof(Question)).toList
+
+for (question: allQuestions) {
+  members += question.toField(question.name, question.type)
+}
+\end{lstlisting}
+
+All Question instances from the resource are bound to the final variable
+allQuestions. Since Questions can be nested into groups, the content has to
+searched recursively. eAllContents will traverse over all elements.
+
+Next, for each Question a JvmField instance is inferred. Here the
+JvmTypesBuilder is helping us with the method toField, which gets the name and
+type of the derived field. Here we see the effect of the extension keyword: It
+seems that toField is actually a method of type Question, but it is a method of
+the JvmTypesBuilder class.
+
+\begin{lstlisting}[language=Xtend]
+for (question: allQuestions) {
+  if (question.expression == null) {
+    members += question.toGetter(question.name, question.type)
+    members += question.toSetter(question.name, question.type)
+  } else {
+    val getter = question.toGetter(question.name, question.type)
+    getter.body = question.expression
+    members += getter
+  }
+  ...
+}
+\end{lstlisting}
+
+The next loop creates the accessor methods for the fields. We could have done
+this in the previous loop also, but it is better style to declare the fields
+first, and methods next in the class. The inferred JvmDeclaredType will be
+translated to Java later, so it is better to have that clean from the beginning.
+
+Within the loop, we decide if the question has a computation expression or not.
+If it hasn't one, it is a simple field with getter and setter, where we call the
+toGetter()/toSetter() builder functions. If the question value is computed by an
+expression, it does not make sense to offer a setter method. The field needs to
+be read-only. The getter method does not simply return the value of a field.
+Instead, the method has to evaluate the expression. Thus, we assign the
+expression as body of the method.
+
+\begin{lstlisting}[language=Xtend]
+for (question: allQuestions) {
+  ...
+  members += question.createIsEnabledMethod
+}
+
+...
+def JvmOperation createIsEnabledMethod (Question question) {
+  question.toMethod("is"+question.name.toFirstUpper+"Enabled",
+ typeReferences.getTypeForName("boolean", question, null)) [ body = [it.append('''return «question.expression == null»;''')]
+  ]
+}
+\end{lstlisting}
+
+For each question a method boolean \texttt{is<QUESTIONNAME>Enabled()} is
+inferred. The body of the method does simpley return true if the Question does
+not have an computation expression assigned, or false otherwise.
+
+In this case we assign to the body a closure that computes the method
+implementation text. This is the first example where we make use of Xtend's Rich
+String (the text between the three single quotes ''') feature, which is later
+heavily used in the code generator templates.
+
+\begin{lstlisting}[language=Xtend]
+val allQuestionGroups = form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
+var groupIndex=0;
+for (questionGroup: allQuestionGroups) {
+  members += questionGroup.createIsGroupVisibleMethod(groupIndex)
+  groupIndex = groupIndex+1
+}
+
+def JvmOperation createIsGroupVisibleMethod (ConditionalQuestionGroup group, int groupIndex) {
+ group.toMethod("isGroup"+groupIndex+"Visible", typeReferences.getTypeForName("boolean", group, null)) [
+   if(group.condition != null) {
+     body = group.condition
+   } else {
+     body = [it.append('''return true;''')]
+   }
+ ]
+}
+\end{lstlisting}
+
+We now filter all ConditionalQuestionGroup instances from the Questionnaire and
+loop over them. For each of them, a method is<QUESTIONGROUPINDEX>Visible()
+method is produced. Unfortunately, question groups are anonymous, thus we
+maintain an index counter and name the methods isGroup<IDX>Visible().
+
+Since condition expressions for groups are optional, the method body has to
+return simply true in the case that no expression is assigned. When groups have
+a condition, the condition expression is assigned as the method body.
+

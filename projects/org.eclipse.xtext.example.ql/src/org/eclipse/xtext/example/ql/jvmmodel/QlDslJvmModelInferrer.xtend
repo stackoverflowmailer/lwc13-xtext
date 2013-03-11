@@ -70,6 +70,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
         val allQuestions = form.eAllContents.filter(typeof(Question)).toList
         // first add fields
         for (question: allQuestions) {
+          // TODO: Do we need a field for computed questions? Questions with expressions to compute their values do not need a field.
           members += question.toField(question.name, question.type)
         }
         // now accessor methods
@@ -121,18 +122,5 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
      ]
    }
 
-  /**
-   * Computes the expression that must be evaluated to determines whether a question is visible.
-   * Visibility can be influenced by conditionally grouping
-   */
-   def XExpression getVisibleExpression (Question question) {
-     if (question.eContainer instanceof ConditionalQuestionGroup) {
-       return (question.eContainer as ConditionalQuestionGroup).condition
-     } else {
-       val booleanLiteral = XbaseFactory::eINSTANCE.createXBooleanLiteral
-       booleanLiteral.isTrue = true
-       return booleanLiteral
-     }
-   }
 }
 
