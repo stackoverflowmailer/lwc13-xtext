@@ -8,7 +8,6 @@ import org.eclipse.xtext.example.ql.qlDsl.Question
 import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import types.Money
 import java.util.List
 
 class JSFGenerator implements IGenerator{
@@ -86,8 +85,7 @@ class JSFGenerator implements IGenerator{
 			'''+
 			switch(question.type){
 				case typeof(boolean): '''«generateQuestionBoolean(question)»'''
-				case typeof(Money) : '''«generateQuestionMoney(question)»'''
-				default: '''UNKNOWN Question type : '''+question.type.simpleName
+				default : '''«generateQuestionText(question)»'''
 			}
 	}
 	
@@ -96,7 +94,7 @@ class JSFGenerator implements IGenerator{
 				<f:ajax render="«question.referingElementIds»"/>"
 			</h:selectBooleanCheckbox>'''}
 	
-	def generateQuestionMoney(Question question) {
+	def generateQuestionText(Question question) {
 		'''<h:inputText id="txt«question.id»" value="#{«question.formName+'.'+question.name»}">
 				<f:ajax event="keyup" render="«question.referingElementIds»"/>"
 			<h:inputText/>'''
