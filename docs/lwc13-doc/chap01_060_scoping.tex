@@ -1,3 +1,17 @@
+\subsection{Scoping}
+
+Scoping is, roughly said, the computation of referrable names in a given context. It is a quite complex topic, and we won't cover it here into deep. 
+The topic itself is heavily documented by the Xtext user
+manual\footnote{\href{http://www.eclipse.org/Xtext/documentation.html#scoping}{Xtext
+manual:Scoping}}, several articles\footnote{e.g.
+\url{http://blogs.itemis.de/stundzig/archives/776}} and implementation examples \footnote{e.g. \url{https://github.com/LorenzoBettini/xtext-scoping}}.
+
+The Xtext framework already provides default implementations to solve scoping and linking. In the case of Xbase based languages the \texttt{XbaseScopeProvider} is configured by default as
+implementation of the \texttt{IScopeProvider} interface. We have to extend its behavior to recognize the current Form instance as variable "\texttt{this}" within an expression. By this, Question fields 
+are noticed as variables in expressions, which allows us to use the required expressions.
+
+Create the class \texttt{QlScopeProvider} in package \texttt{org.eclipse.xtext.example.ql.customizing}:\footnote{url{http://tinyurl.com/bd7kggk}}
+\begin{lstlisting}[language=Java]
 package org.eclipse.xtext.example.ql.customizing;
 
 import java.util.Iterator;
@@ -65,3 +79,19 @@ public class QlScopeProvider extends XbaseScopeProvider {
   }
 
 }
+\end{lstlisting}
+
+Whenever a default implementation must be exchanged by a custom one, this has to be added or overridden in the respective Guice module.
+In the case of the scope provider, this has to added to the \texttt{QlDslRuntimeModule} class. Open this class and add the binding:
+
+\begin{lstlisting}[language=Java]
+public class QlDslRuntimeModule extends
+    org.eclipse.xtext.example.ql.AbstractQlDslRuntimeModule {
+  @Override
+  public Class<? extends IScopeProvider> bindIScopeProvider() {
+    return QlScopeProvider.class;
+  }
+  ...
+}
+\end{lstlisting}
+

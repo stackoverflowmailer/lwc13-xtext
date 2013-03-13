@@ -7,10 +7,8 @@ necessarily generate a Java class.
 
 The derivation of the Java model for language concepts is the responsibility of the JVM Model Inferrer, which is a class that implements
 the \href{http://download.eclipse.org/modeling/tmf/xtext/javadoc/2.3/org/eclipse/xtext/xbase/jvmmodel/IJvmModelInferrer.html}{IJvmModelInferrer} interface.
-A skeleton has already been generated into package org.eclipse.xtext.example.ql.jvmmodel. The file QlDslJvmModelInferrer.xtend is a class
+A skeleton has already been generated into package \texttt{org.eclipse.xtext.example.ql.jvmmodel}. The file \texttt{QlDslJvmModelInferrer.xtend} is a class
 written with Xtend.
-
-
 
 The mapping that has to be implemented for the Questionnaire DSL should be as follows:
 \begin{enumerate}
@@ -117,22 +115,22 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 }
 \end{lstlisting}
 
-The inferrer class implements IJvmModelInferrer, but for convenience we derive
-from its abstract implementation AbstractModelInferrer. The main method to
-implement is infer(). In the case of QL models, the root element
+The inferrer class implements \texttt{IJvmModelInferrer}, but for convenience we derive
+from its abstract implementation \texttt{AbstractModelInferrer}. The main method to
+implement is \texttt{infer()}. In the case of QL models, the root element
 of model resources is a Questionnaire. The base implementation uses polymorphic dispatching on
-the root element of a model resource, and the infer() method of our
+the root element of a model resource, and the \texttt{infer()} method of our
 implementation hooks into the dispatching by using the dispatch keyword. That is
 also why the first argument can be of type Questionnaire, and not of the base
-type EObject, like defined in the infer() method that is definied in
-IJvmModelInferrer.
+type EObject, like defined in the \texttt{infer()} method that is definied in
+\texttt{IJvmModelInferrer}.
 
 The implementation uses two services, which are injected as members into the
 class:
 \begin{itemize}
-\item The JvmTypesBuilder offers factory and builder functions to create
+\item The \texttt{JvmTypesBuilder} offers factory and builder functions to create
 instances of JVM Model types. The additional keyword extension has the effect,
-that the methods of the JvmTypesBuilder become so-called extension methods.
+that the methods of the \texttt{JvmTypesBuilder} become so-called extension methods.
 This means, the functions become available implicitly available as additional
 methods on the first argument of the function. We will see extensive use of this
 nice feature of Xtend in the implementation of the Xtend based code generator in
@@ -154,7 +152,7 @@ We loop over the Form instances of the Questionnaire elem and derive a Class
 instance for them in package forms. JVM Model Inference is executed in two
 phases: In the first phase all types are derived, without any content. In the
 second phase, the content of the types is derived. This is done by the closure
-passed to initializeLater(). The reason why this has to happen this way is that
+passed to \texttt{initializeLater()}. The reason why this has to happen this way is that
 during inference of type members, they could refer again to types that are
 derived by the inferrer. The two phases prevent circular calls
 
@@ -165,9 +163,9 @@ it.members += toField("serialVersionUID",typeReferences.getTypeForName("long",el
 \end{lstlisting}
         
 We want to make the resulting Java class serializable. This is optional, but
-better style. Therefore the class has to implement the java.io.Serializable
-interface, whose JVM Model representative is retrieved from the TypeReferences
-instance and added to the superTypes collection. The identifier it denotes the
+better style. Therefore the class has to implement the \texttt{java.io.Serializable}
+interface, whose JVM Model representative is retrieved from the \texttt{TypeReferences}
+instance and added to the \texttt{superTypes} collection. The identifier it denotes the
 implicit variable of type Form of the closure. It is not necessary to qualify it
 here, it could be left out.
 
@@ -180,14 +178,14 @@ for (question: allQuestions) {
 \end{lstlisting}
 
 All Question instances from the resource are bound to the final variable
-allQuestions. Since Questions can be nested into groups, the content has to
-searched recursively. eAllContents will traverse over all elements.
+\texttt{allQuestions}. Since Questions can be nested into groups, the content has to
+searched recursively. \texttt{eAllContents} will traverse over all elements.
 
 Next, for each Question a JvmField instance is inferred. Here the
-JvmTypesBuilder is helping us with the method toField, which gets the name and
+\texttt{JvmTypesBuilder} is helping us with the method toField, which gets the name and
 type of the derived field. Here we see the effect of the extension keyword: It
-seems that toField is actually a method of type Question, but it is a method of
-the JvmTypesBuilder class.
+seems that \texttt{toField} is actually a method of type Question, but it is a method of
+the \texttt{JvmTypesBuilder} class.
 
 \begin{lstlisting}[language=Xtend]
 for (question: allQuestions) {
@@ -205,12 +203,12 @@ for (question: allQuestions) {
 
 The next loop creates the accessor methods for the fields. We could have done
 this in the previous loop also, but it is better style to declare the fields
-first, and methods next in the class. The inferred JvmDeclaredType will be
+first, and methods next in the class. The inferred \texttt{JvmDeclaredType} will be
 translated to Java later, so it is better to have that clean from the beginning.
 
 Within the loop, we decide if the question has a computation expression or not.
 If it hasn't one, it is a simple field with getter and setter, where we call the
-toGetter()/toSetter() builder functions. If the question value is computed by an
+\texttt{toGetter()}/\texttt{toSetter()} builder functions. If the question value is computed by an
 expression, it does not make sense to offer a setter method. The field needs to
 be read-only. The getter method does not simply return the value of a field.
 Instead, the method has to evaluate the expression. Thus, we assign the
@@ -259,9 +257,9 @@ def JvmOperation createIsGroupVisibleMethod (ConditionalQuestionGroup group, int
 \end{lstlisting}
 
 We now filter all ConditionalQuestionGroup instances from the Questionnaire and
-loop over them. For each of them, a method is<QUESTIONGROUPINDEX>Visible()
+loop over them. For each of them, a method \texttt{is<QUESTIONGROUPINDEX>Visible()}
 method is produced. Unfortunately, question groups are anonymous, thus we
-maintain an index counter and name the methods isGroup<IDX>Visible().
+maintain an index counter and name the methods \texttt{isGroup<IDX>Visible()}.
 
 Since condition expressions for groups are optional, the method body has to
 return simply true in the case that no expression is assigned. When groups have
