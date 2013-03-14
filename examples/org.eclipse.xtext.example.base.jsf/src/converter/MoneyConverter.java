@@ -1,5 +1,7 @@
 package converter;
 
+import java.math.BigDecimal;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -12,7 +14,7 @@ public class MoneyConverter implements Converter {
 
 	@Override
 	public Object getAsObject(FacesContext ctx, UIComponent ui, String value) {
-		Money money = new Money(value);
+		Money money = new Money(new BigDecimal(value));
 		return money;
 	}
 

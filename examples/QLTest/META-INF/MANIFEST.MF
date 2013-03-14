@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: QLTest
+Bundle-SymbolicName: QLTest
+Bundle-Version: 1.0.0.qualifier
+Export-Package: WebContent,
+ WebContent.generated.forms,
+ forms,
+ types
+Require-Bundle: org.eclipse.emf.mwe2.launch;bundle-version="2.3.0";resolution:=optional,
+ org.eclipse.xtext.example.ql;bundle-version="1.0.0";resolution:=optional
+Import-Package: org.apache.commons.logging,
+ org.apache.log4j

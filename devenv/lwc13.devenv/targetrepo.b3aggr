@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aggregator:Aggregation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:aggregator="http://www.eclipse.org/b3/2011/aggregator/1.1.0" label="QL DSL Target Platform Repository" buildRoot="./target/repository" packedStrategy="SKIP">
+  <validationSets label="Main">
+    <contributions label="DRX Domainmodel">
+      <repositories location="http://download.eclipse.org/releases/juno">
+        <bundles name="org.eclipse.ui.ide.application" versionRange="1.0.400.v20120523-1955"/>
+        <bundles name="org.eclipse.swt.win32.win32.x86_64" versionRange="3.100.1.v4234e"/>
+        <features name="org.eclipse.xtend.sdk.feature.group" versionRange="[2.3.1,2.3.2)"/>
+        <features name="org.eclipse.xtext.sdk.feature.group" versionRange="[2.3.1,2.3.2)"/>
+        <features name="org.eclipse.emf.sdk.feature.group" versionRange="[2.8.1,2.8.2)"/>
+        <features name="org.eclipse.equinox.p2.sdk.feature.group" versionRange="3.8.0.v20120524-0542-9N89H_mGMMn84Osz0TAoT279BRQD"/>
+      </repositories>
+      <repositories location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/" description="Eclipse Orbit">
+        <bundles name="javax.persistence" versionRange="1.0.0.v200905011740"/>
+        <bundles name="javax.persistence.source" versionRange="1.0.0.v200905011740"/>
+        <bundles name="javax.ejb" versionRange="3.1.1.v201204261316"/>
+        <bundles name="javax.ejb.source" versionRange="3.1.1.v201204261316"/>
+        <bundles name="javax.inject" versionRange="1.0.0.v20091030"/>
+        <bundles name="javax.inject.source" versionRange="1.0.0.v20091030"/>
+        <bundles name="org.junit" versionRange="4.8.2.v4_8_2_v20110321-1705"/>
+      </repositories>
+      <repositories location="http://download.eclipse.org/eclipse/updates/4.2">
+        <products name="org.eclipse.platform.ide" versionRange="4.2.1"/>
+      </repositories>
+    </contributions>
+    <validationRepositories location="http://download.eclipse.org/releases/juno"/>
+  </validationSets>
+  <configurations/>
+  <configurations architecture="x86_64"/>
+  <configurations operatingSystem="macosx" windowSystem="cocoa" architecture="x86_64"/>
+</aggregator:Aggregation>

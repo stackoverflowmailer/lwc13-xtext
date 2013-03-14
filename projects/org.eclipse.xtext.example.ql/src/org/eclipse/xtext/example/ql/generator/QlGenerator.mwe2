@@ -1,0 +1,35 @@
+module org.eclipse.xtext.example.ql.Generator
+
+import org.eclipse.emf.mwe.utils.*
+
+var srcDirModel = "src"
+var targetDirWeb = "WebContent"
+var targetDirJava = "src-gen"
+
+Workflow {
+    component = DirectoryCleaner {
+        directory = "${targetDirJava},${targetDirWeb}"
+    }
+    
+    component = org.eclipse.xtext.mwe.Reader {
+    	register = QlDslStandaloneSetup {}
+    	loadResource = {
+    		slot = "model"
+    	}
+    	path = srcDirModel
+    }
+    component = org.eclipse.xtext.generator.GeneratorComponent {
+    	register = QlDslStandaloneSetup {}
+    	slot = "model"
+    	outlet = {
+    		outletName = "DEFAULT_OUTPUT"
+    		path = targetDirJava
+    	}
+    	
+    	outlet = {
+    		outletName = "WebContent"
+    		path = targetDirWeb
+    	}
+    }
+
+}

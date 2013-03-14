@@ -9,6 +9,7 @@ import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 import java.util.List
+import org.eclipse.xtext.common.types.JvmPrimitiveType
 
 class JSFGenerator implements IGenerator{
 	@Inject extension QlInfo 
@@ -81,23 +82,31 @@ class JSFGenerator implements IGenerator{
 	//TODO a cleaner solution for providing extensibility of question types? 
 	//TODO special cases (readonly money, )
 	def dispatch generate (Question question){
-		'''<h:outputLabel id="lbl«question.id»" value="«question.label»/>
+		'''<h:outputLabel id="lbl«question.id»" value="«question.label»"/>
 			'''+
-			switch(question.type){
-				case typeof(boolean): '''«generateQuestionBoolean(question)»'''
+			switch(question.type.type){
+				JvmPrimitiveType: {
+					switch (question.type.simpleName){
+						case "boolean": '''«generateQuestionBoolean(question)»'''
+					}
+				}
 				default : '''«generateQuestionText(question)»'''
 			}
 	}
 	
 	def generateQuestionBoolean(Question question) {
 		'''<h:selectBooleanCheckbox id="«question.id»" value="#{«question.formName+'.'+question.name»}">
-				<f:ajax render="«question.referingElementIds»"/>"
+			«IF !question.referingElementIds.empty»
+				<f:ajax render="«question.referingElementIds»"/>
+			«ENDIF»
 			</h:selectBooleanCheckbox>'''}
 	
 	def generateQuestionText(Question question) {
 		'''<h:inputText id="txt«question.id»" value="#{«question.formName+'.'+question.name»}">
-				<f:ajax event="keyup" render="«question.referingElementIds»"/>"
-			<h:inputText/>'''
+			«IF !question.referingElementIds.empty»
+				<f:ajax event="keyup" render="«question.referingElementIds»"/>
+			«ENDIF»
+			</h:inputText>'''
 	}
 	
 	

@@ -6,3 +6,6 @@ plugin.xml_gen
 
 *.gz*
 *.class
+
+/devenv/lwc13.devenv/targetrepo/
+workspace

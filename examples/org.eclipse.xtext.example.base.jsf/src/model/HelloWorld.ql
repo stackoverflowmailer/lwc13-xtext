@@ -1,5 +1,5 @@
 import types.Money
 
 form HouseOwning {
-	kjadh:"ajsdh"boolean 
-}
+	hasSoldHouse: "Did you sell a house in 2010?" boolean      
+}    
