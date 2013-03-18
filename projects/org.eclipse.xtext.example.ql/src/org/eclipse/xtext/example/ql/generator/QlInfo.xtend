@@ -14,6 +14,7 @@ import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.xbase.XFeatureCall
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.common.types.util.TypeReferences
+import org.eclipse.xtext.EcoreUtil2
 
 /* provides methods for getting needed info from model (e.g. element ids) */
 class QlInfo {
@@ -57,8 +58,7 @@ class QlInfo {
 		'''«getId(group)»Visible'''}
 		
     //TODO isNaive = true, 
-    def getFormName(Question question){'''«(question.eContainer as Form).name.toFirstLower»'''}
-    def getFormName(ConditionalQuestionGroup questionGroup){'''«(questionGroup.eContainer as Form).name.toFirstLower»'''}
+    def getFormName(FormElement elem){'''«EcoreUtil2::getContainerOfType(elem, typeof(Form)).name.toFirstLower»'''}
 	
 	
 	def Iterable<FormElement> getDependentElementsWithExpression (Question q) {

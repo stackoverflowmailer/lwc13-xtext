@@ -23,17 +23,17 @@ class JSFGenerator implements IGenerator{
         val questionnaire = input.contents.head as Questionnaire
         for (form: questionnaire.forms) {
             val content = generate_JSFPage(form)
-            val fileName = "forms/"+form.name+".xhtml"
+            val fileName = "generated/forms/"+form.name+".xhtml"
             fsa.generateFile(fileName,WEB_CONTENT, content)
         }
         
         //generate index page with links to generated forms
         val contentIndex  = generate_JSFIndexPage(questionnaire.forms)
-        fsa.generateFile("form_index.xhtml",WEB_CONTENT, contentIndex)
+        fsa.generateFile("generated/forms/index.xhtml",WEB_CONTENT, contentIndex)
         
         //generate the bean configuration for generated forms
         val contentConfig  = generate_JSFFacesConfig(questionnaire.forms)
-        fsa.generateFile("form_config.xml",WEB_INF, contentConfig)
+        fsa.generateFile("WEB-INF/generated/form_config.xml",WEB_CONTENT, contentConfig)
         
     }
 		 //TODO extract dynamic content
@@ -130,18 +130,19 @@ class JSFGenerator implements IGenerator{
     
     def generate_JSFIndexPage (List<Form> forms)
     '''<?xml version='1.0' encoding='UTF-8' ?>
-       <!-- @generated -->
+        <!-- @generated -->
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-            <html xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:ui="http://java.sun.com/jsf/facelets">
-            <ui:composition template="/index.xhtml">
-                <ui:define name="content">      
-                «FOR elem: forms SEPARATOR "<br/>"»
-                    <h:outputLink value="forms/«elem.name».jsf">«elem.name»</h:outputLink>
-                «ENDFOR»
-                </ui:define>
-            </ui:composition>
-            </html>'''
+        <html xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+        <ui:composition template="/index.xhtml">
+          <ui:define name="content">      
+          «FOR elem: forms SEPARATOR "<br/>"»
+            <h:outputLink value="«elem.name».jsf">«elem.name»</h:outputLink>
+          «ENDFOR»
+          </ui:define>
+        </ui:composition>
+        </html>
+    '''
 }
 

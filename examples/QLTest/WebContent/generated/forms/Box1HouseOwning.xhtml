@@ -1,0 +1,54 @@
+<!-- @generated -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:composition template="/index.xhtml">
+		<ui:define name="content">
+			<h:form id="formBox1HouseOwning">
+		 	<!-- B E G I N _ generate_JSFPage _ S E C T I O N  -->
+				<h:panelGroup id="grpBox1HouseOwningForm">
+					<!-- evaluation part, every expression has one -->
+					<h:panelGroup id="grpBox1HouseOwningForm_nested">
+					<h:outputLabel id="lblqHasSoldHouse" value="Did you sell a house in 2010?"/>
+					<h:selectBooleanCheckbox id="qHasSoldHouse" value="#{box1HouseOwning.hasSoldHouse}">
+								<f:ajax render="group0
+								"/>
+								</h:selectBooleanCheckbox>
+					<h:outputLabel id="lblqHasBoughtHouse" value="Did you by a house in 2010?"/>
+					<h:selectBooleanCheckbox id="qHasBoughtHouse" value="#{box1HouseOwning.hasBoughtHouse}">
+								<f:ajax render="group0
+								"/>
+								</h:selectBooleanCheckbox>
+					<h:outputLabel id="lblqHasMaintLoan" value="Did you enter a loan for maintenance/reconstruction?"/>
+					<h:selectBooleanCheckbox id="qHasMaintLoan" value="#{box1HouseOwning.hasMaintLoan}">
+								</h:selectBooleanCheckbox>
+					<h:panelGroup id="group0">
+									<h:panelGroup id="grp_group0Visible"
+										rendered="#{box1HouseOwning.group0Visible}">
+									<h:outputLabel id="lblqSellingPrice" value="Price the house was sold for    :"/>
+									<h:inputText id="txtqSellingPrice" value="#{box1HouseOwning.sellingPrice}">
+												<f:ajax event="keyup" render="qValueResidue
+												"/>
+												</h:inputText>
+									<h:outputLabel id="lblqPrivateDebt" value="Private debts for the sold house: "/>
+									<h:inputText id="txtqPrivateDebt" value="#{box1HouseOwning.privateDebt}">
+												<f:ajax event="keyup" render="qValueResidue
+												"/>
+												</h:inputText>
+									<h:outputLabel id="lblqValueResidue" value="Value residue: "/>
+									<h:inputText id="txtqValueResidue" value="#{box1HouseOwning.valueResidue}">
+												</h:inputText>
+									</h:panelGroup>
+								</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+			<!-- E N D _ generate_JSFPage _ S E C T I O N  -->
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</html>

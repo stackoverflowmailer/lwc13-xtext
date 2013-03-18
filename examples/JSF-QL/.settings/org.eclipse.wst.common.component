@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="JSF-QL">
+    <wb-module deploy-name="org.eclipse.xtext.example.ql.referenceimpl">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="JSF-QL"/>
-        <property name="java-output-path" value="/JSF-QL/build/classes"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src-gen"/>
+        <property name="java-output-path" value="/org.eclipse.xtext.example.ql.referenceimpl/build/classes"/>
+        <property name="context-root" value="org.eclipse.xtext.example.ql.referenceimpl"/>
     </wb-module>
 </project-modules>
