@@ -43,35 +43,47 @@ class QlInfo {
 
   //TODO will be used in render attribute of jsf:ajax tag of question answer elements to refresh depending conditional parts
   def getConditionalGroupRenderingTriggerId(ConditionalQuestionGroup group) {
-    getId(group)}
+    getId(group)
+  }
 
   //TODO this id is used for the element which implements ConditionalQuestionGroups. it should just be human readable and is not used for mappings currently
-  def getConditionalGroupRenderingId(ConditionalQuestionGroup group) {
-    '''grp_«group.id»Visible'''}
+  def getConditionalGroupRenderingId(ConditionalQuestionGroup group) { '''grp_«group.id»Visible''' }
 
   //TODO this condition will be added to the render attribute for ConditionalQuestionGroup elements
   def getConditionalGroupRenderingCondition(ConditionalQuestionGroup group) {
-    '''#{«getFormName(group)».«getConditionalGroupVisibleFeatureId(group)»}'''}
+    '''#{«getFormName(group)».«getConditionalGroupVisibleFeatureId(group)»}'''
+  }
 
   //TODO the bean feature (boolean) name that implements the expression for ConditionalQuestionGroup visibility,
-  def getConditionalGroupVisibleFeatureId(ConditionalQuestionGroup group) {
-    '''«getId(group)»Visible'''}
+  def getConditionalGroupVisibleFeatureId(ConditionalQuestionGroup group) { '''«getId(group)»Visible''' }
 
     //TODO isNaive = true,
-    def getFormName(FormElement elem){'''«EcoreUtil2::getContainerOfType(elem, typeof(Form)).name.toFirstLower»'''}
+  def getFormName(FormElement elem){'''«EcoreUtil2::getContainerOfType(elem, typeof(Form)).name.toFirstLower»'''}
 
 
+  /**
+   * Computes the FormElements which are accessed by the expression of a Question.
+   */
   def Iterable<FormElement> getDependentElementsWithExpression (Question q) {
+    // The JvmField which is inferred from a Question
     val JvmField field = q.jvmElements.filter(typeof(JvmField)).head
 
-    val Iterable<FormElement> allFormElementsWithExpression = field.eResource.allContents.filter(typeof(FormElement)).filter[it.expression!=null].toIterable
+    // Get all FormElements which have an expression 
+    val Iterable<FormElement> allFormElementsWithExpression = field.eResource.allContents
+      .filter(typeof(FormElement))
+      .filter[it.expression!=null]
+      .toIterable
+    // search the expressions of the form elements which call the JvmField field in a feature call
     val result = allFormElementsWithExpression.filter[
         val featureCalls = it.expression.eAllContents.filter(typeof(XFeatureCall))
         featureCalls.exists[feature==field]
     ].toSet
     return result
-    }
+  }
 
+  /**
+   * Returns the expression assigned to a FormElement, dependent on subtype for FormElement. 
+   */
   def getExpression (FormElement elem) {
     switch (elem) {
       Question: elem.expression
