@@ -6,7 +6,7 @@ form Box1HouseOwning {
 	hasMaintLoan: "Did you enter a loan for maintenance/reconstruction?" boolean
 	
 	if (this.hasSoldHouse && this.hasBoughtHouse) {
-		sellingPrice: "Price the house was sold for    :" Money 
+		sellingPrice: "Price the house was sold for:" Money 
 		privateDebt: "Private debts for the sold house: " Money
 		valueResidue: "Value residue: " Money (sellingPrice - privateDebt) 
 	}

@@ -26,7 +26,7 @@
           <h:panelGroup id="group0">
                   <h:panelGroup id="group_group0Visible"
                     rendered="#{box1HouseOwning.group0Visible}">
-                  <h:outputLabel id="lblqSellingPrice" value="Price the house was sold for    :"/>
+                  <h:outputLabel id="lblqSellingPrice" value="Price the house was sold for:"/>
                   <h:inputText id="txtqSellingPrice" value="#{box1HouseOwning.sellingPrice}">
                         <f:ajax event="keyup" render="qSellingPrice"/>
                         <f:converter converterId="converter.Money"
