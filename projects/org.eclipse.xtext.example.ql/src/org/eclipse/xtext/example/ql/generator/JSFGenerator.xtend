@@ -17,11 +17,17 @@ import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.xbase.XFeatureCall
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.common.types.JvmPrimitiveType
+import java.util.Set
 
 class JSFGenerator implements IGenerator{
   @Inject extension IJvmModelAssociations
   @Inject extension JsfOutputConfigurationProvider
-
+  // enumeration of class names which do not need a converter
+  // see http://www.javabeat.net/2007/11/using-converters-in-jsf/
+  Set<String> defaultConverters = newHashSet ("BigDecimal","BigInteger",
+    "Boolean","Byte","Character","DateTime","Double","Enum","Float","Integer","Long",
+    "Number","Short","String"
+  )
   override doGenerate(Resource input, IFileSystemAccess fsa) {
         if (input.URI.fileExtension!="ql")
             return
@@ -118,7 +124,9 @@ class JSFGenerator implements IGenerator{
   }
   
   def generateConverter (Question question) {
-    val needsConversion = ! (question.type.type instanceof JvmPrimitiveType)
+    // primitive types and known classes do not require a special converter
+    val needsConversion = !(question.type.type instanceof JvmPrimitiveType) 
+       && !defaultConverters.contains(question.type.type.simpleName)
     if (needsConversion) {
       '''<f:converter converterId="converter.«question.type.type.simpleName»"'''
     } else
