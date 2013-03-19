@@ -8,6 +8,6 @@ form Box1HouseOwning {
 	if (this.hasSoldHouse && this.hasBoughtHouse) {
 		sellingPrice: "Price the house was sold for:" Money 
 		privateDebt: "Private debts for the sold house: " Money
-		valueResidue: "Value residue: " Money (sellingPrice - privateDebt) 
+		valueResidue: "Value residue: " Money (sellingPrice - privateDebt)
 	}
 }

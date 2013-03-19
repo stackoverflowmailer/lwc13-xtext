@@ -12,6 +12,11 @@ import org.eclipse.xtext.xbase.XbaseFactory
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.common.types.TypesFactory
+import org.eclipse.jdt.annotation.Nullable
+import org.eclipse.xtext.common.types.JvmAnnotationReference
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.common.types.JvmPrimitiveType
 
 /**
  * <p>Infers a JVM model from the source model.</p>
@@ -29,6 +34,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
    * Grants access to JVM Types
    */
   @Inject TypeReferences typeReferences
+  @Inject TypesFactory typesFactory;
 
   /**
    * The dispatch method {@code infer} is called for each instance of the
@@ -59,6 +65,9 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
     for (form: element.forms) {
       acceptor.accept(form.toClass("forms."+form.name))
       .initializeLater[
+        it.annotations +=  toAnnotation(element,"javax.faces.bean.ManagedBean", "name", form.name.toFirstLower)
+        it.annotations +=  toAnnotation(element,"javax.faces.bean.SessionScoped")
+        
         //implements Serializable
         it.superTypes +=typeReferences.getTypeForName(typeof(Serializable),element,null)
 
@@ -69,10 +78,12 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
         // Questions can be either direct in the form, or part of ConditionalQuestionGroup
         // toList: make the collection iterable twice
         val allQuestions = form.eAllContents.filter(typeof(Question)).toList
-        // first add fields
-        for (question: allQuestions) {
-          // TODO: Do we need a field for computed questions? Questions with expressions to compute their values do not need a field.
-          members += question.toField(question.name, question.type)
+        // first add fields for all non computed values
+        for (question: allQuestions.filter[expression==null]) {
+          members += question.toField(question.name, question.type, [
+            if (!(question.type.type instanceof JvmPrimitiveType))
+              setInitializer([append("types.TypeFactory.create"+question.type.type.simpleName+"()")])
+          ])
         }
         // now accessor methods
         for (question: allQuestions) {
@@ -98,6 +109,20 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 
       ]
     }
+  }
+
+  /**
+   * Creates and returns an annotation reference of the given annotation type's name.
+   * The annotation gets a String value.
+   */
+  @Nullable
+  def JvmAnnotationReference toAnnotation(@Nullable EObject sourceElement, @Nullable String annotationTypeName, String valueName, String value) {
+    val annotation = toAnnotation(sourceElement, annotationTypeName)
+    val annotationValue = typesFactory.createJvmStringAnnotationValue
+    annotationValue.operation = annotation.annotation.declaredOperations.findFirst[simpleName==valueName]
+    annotationValue.values += value
+    annotation.values += annotationValue    
+    return annotation
   }
 
    /**

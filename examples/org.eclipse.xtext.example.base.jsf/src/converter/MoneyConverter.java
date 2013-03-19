@@ -14,7 +14,7 @@ public class MoneyConverter implements Converter {
 
   @Override
   public Object getAsObject(FacesContext ctx, UIComponent ui, String value) {
-    Money money = new Money(new BigDecimal(value));
+    Money money = new Money(new BigDecimal(value.isEmpty() ? "0" : value));
     return money;
   }
 

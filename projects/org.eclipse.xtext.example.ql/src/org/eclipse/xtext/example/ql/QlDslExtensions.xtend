@@ -12,8 +12,11 @@ class QlDslExtensions {
 	@Inject extension IJvmModelAssociations
 
 	def Iterable<FormElement> getDependentElementsWithExpression (Question q) {
+	  if (q.expression != null)
+	   return emptyList
+	   
 		val JvmField field = q.jvmElements.filter(typeof(JvmField)).head
-		
+		  
 		val Iterable<FormElement> allFormElementsWithExpression = field.eResource.allContents.filter(typeof(FormElement)).filter[it.expression!=null].toIterable
 		val result = allFormElementsWithExpression.filter[
 				val featureCalls = it.expression.eAllContents.filter(typeof(XFeatureCall))

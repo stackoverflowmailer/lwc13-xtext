@@ -9,51 +9,51 @@
 
   <ui:composition template="/index.xhtml">
     <ui:define name="content">
-      <h:form id="box1HouseOwningForm">
+      <h:form id="box1houseowning">
        <!-- B E G I N _ M A I N _ S E C T I O N  -->
         <h:panelGroup id="grp_box1HouseOwningForm">
           <!-- evaluation part, every expression has one -->
-          <h:panelGroup id="grp_box1HouseOwningForm_nested">
+          <h:panelGroup id="grp_box1houseowning">
           <h:outputLabel value="Did you sell a house in 2010?"/>
           
-          <h:selectBooleanCheckbox id="chkhasSoldHouse" value="#{box1HouseOwning.hasSoldHouse}">
-          <f:ajax event="click" />
+          <h:selectBooleanCheckbox id="q_hassoldhouse" value="#{box1HouseOwning.hasSoldHouse}">
+            <f:ajax event="click" render="grp_box1houseowning "/>
           </h:selectBooleanCheckbox>
            <br/>
           <h:outputLabel value="Did you by a house in 2010?"/>
           
-          <h:selectBooleanCheckbox id="chkhasBoughtHouse" value="#{box1HouseOwning.hasBoughtHouse}">
-          <f:ajax event="click" />
+          <h:selectBooleanCheckbox id="q_hasboughthouse" value="#{box1HouseOwning.hasBoughtHouse}">
+            <f:ajax event="click" render="grp_box1houseowning "/>
           </h:selectBooleanCheckbox>
            <br/>
           <h:outputLabel value="Did you enter a loan for maintenance/reconstruction?"/>
           
-          <h:selectBooleanCheckbox id="chkhasMaintLoan" value="#{box1HouseOwning.hasMaintLoan}">
-          <f:ajax event="click" />
+          <h:selectBooleanCheckbox id="q_hasmaintloan" value="#{box1HouseOwning.hasMaintLoan}">
+            <f:ajax event="click" render="grp_box1houseowning "/>
           </h:selectBooleanCheckbox>
            <br/>
-          <h:panelGroup id="group0">
+          <h:panelGroup id="grp_group0">
             <h:panelGroup id="group_group0Visible"
               rendered="#{box1HouseOwning.group0Visible}">
             <h:outputLabel value="Price the house was sold for:"/>
             
-            <h:inputText id="txtsellingPrice" value="#{box1HouseOwning.sellingPrice}">
-              <f:ajax event="keyup" render="sellingPrice"/>
-            <f:converter converterId="converter.Money"/>
+            <h:inputText id="q_sellingprice" value="#{box1HouseOwning.sellingPrice}">
+              <f:ajax event="blur" render="grp_group0 q_valueresidue"/>
+              <f:converter converterId="converter.Money"/>
             </h:inputText>
              <br/>
             <h:outputLabel value="Private debts for the sold house: "/>
             
-            <h:inputText id="txtprivateDebt" value="#{box1HouseOwning.privateDebt}">
-              <f:ajax event="keyup" render="privateDebt"/>
-            <f:converter converterId="converter.Money"/>
+            <h:inputText id="q_privatedebt" value="#{box1HouseOwning.privateDebt}">
+              <f:ajax event="blur" render="grp_group0 q_valueresidue"/>
+              <f:converter converterId="converter.Money"/>
             </h:inputText>
              <br/>
             <h:outputLabel value="Value residue: "/>
             
-            <h:inputText id="txtvalueResidue" value="#{box1HouseOwning.valueResidue}">
-              <f:ajax event="keyup" />
-            <f:converter converterId="converter.Money"/>
+            <h:inputText id="q_valueresidue" value="#{box1HouseOwning.valueResidue}" readonly="true">
+              <f:ajax event="blur" render="grp_group0 "/>
+              <f:converter converterId="converter.Money"/>
             </h:inputText>
              <br/>
             </h:panelGroup>

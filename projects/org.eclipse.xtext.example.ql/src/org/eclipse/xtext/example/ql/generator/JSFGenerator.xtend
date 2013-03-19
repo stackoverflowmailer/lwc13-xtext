@@ -40,10 +40,6 @@ class JSFGenerator implements IGenerator{
         val contentIndex  = generate_JSFIndexPage(questionnaire.forms)
         fsa.generateFile("generated/forms/index.xhtml",WEB_CONTENT, contentIndex)
 
-        //generate the bean configuration for generated forms
-        val contentConfig  = generate_JSFFacesConfig(questionnaire.forms)
-        fsa.generateFile("WEB-INF/generated/form_config.xml",WEB_CONTENT, contentConfig)
-
     }
      //TODO extract dynamic content
   def generate_JSFPage (Form form) '''
@@ -62,7 +58,7 @@ class JSFGenerator implements IGenerator{
            <!-- B E G I N _ M A I N _ S E C T I O N  -->
             <h:panelGroup id="grp_«form.name.toFirstLower»Form">
               <!-- evaluation part, every expression has one -->
-              <h:panelGroup id="grp_«form.name.toFirstLower»Form_nested">
+              <h:panelGroup id="«form.renderGroupId»">
               «FOR elem: form.element»
                 «elem.generate»
               «ENDFOR»
@@ -79,7 +75,7 @@ class JSFGenerator implements IGenerator{
   //TODO ajax support, ids to render on change, sample: grp_state grp_ValueReside
 
   def dispatch generate (ConditionalQuestionGroup group) '''
-    <h:panelGroup id="«group.id»">
+    <h:panelGroup id="«group.renderGroupId»">
       <h:panelGroup id="group_«group.id»Visible"
         rendered="#{«group.formName».«group.id»Visible}">
       «FOR elem: group.element»
@@ -88,6 +84,7 @@ class JSFGenerator implements IGenerator{
       </h:panelGroup>
     </h:panelGroup>
    '''
+   
 
   //TODO a cleaner solution for providing extensibility of question types?
   //TODO special cases (readonly money, )
@@ -106,22 +103,20 @@ class JSFGenerator implements IGenerator{
   '''
 
   def generateQuestionBoolean(Question question) '''
-    <h:selectBooleanCheckbox id="chk«question.id»" value="#{«question.formName+'.'+question.name»}">
-    <f:ajax event="click" «question.ajaxRenderString»/>
+    <h:selectBooleanCheckbox id="q_«question.id»" value="#{«question.formName+'.'+question.name»}">
+      <f:ajax event="click" «question.ajaxRenderString»/>
     </h:selectBooleanCheckbox>
   '''
 
   def generateQuestionText(Question question) '''
-    <h:inputText id="txt«question.id»" value="#{«question.formName+'.'+question.name»}">
-      <f:ajax event="keyup" «question.ajaxRenderString»/>
-    «generateConverter(question)»
+    <h:inputText id="q_«question.id»" value="#{«question.formName+'.'+question.name»}"«IF question.expression!=null» readonly="true"«ENDIF»>
+      <f:ajax event="blur" «question.ajaxRenderString»/>
+      «generateConverter(question)»
     </h:inputText>
   '''
   
   def getAjaxRenderString (Question question) {
-    if (!question.dependentElementsWithExpression.empty) {
-      '''render="«FOR element : question.dependentElementsWithExpression SEPARATOR ' '»«question.id»«ENDFOR»"'''
-    }
+      '''render="«question.renderGroupId» «FOR element : question.dependentElementsWithExpression SEPARATOR ' '»q_«element.id»«ENDFOR»"'''
   }
   
   def generateConverter (Question question) {
@@ -139,24 +134,6 @@ class JSFGenerator implements IGenerator{
     "Number","Short","String"
   )
 
-
-  def generate_JSFFacesConfig(List<Form> forms)
-  '''<?xml version="1.0" encoding="UTF-8"?>
-  <!-- @generated -->
-  <faces-config
-     xmlns="http://java.sun.com/xml/ns/javaee"
-     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
-     version="2.1">
-     «FOR elem : forms»
-         <managed-bean>
-            <managed-bean-name>«elem.name.toFirstLower»</managed-bean-name>
-            <managed-bean-class>forms.«elem.name»</managed-bean-class>
-            <managed-bean-scope>session</managed-bean-scope>
-         </managed-bean>
-     «ENDFOR»
-  </faces-config>
-  '''
 
   def generate_JSFIndexPage (List<Form> forms)
   '''<?xml version='1.0' encoding='UTF-8' ?>
@@ -178,24 +155,36 @@ class JSFGenerator implements IGenerator{
   // --------------------------------------------------------------------------
   def String getId (EObject o) {
     switch (o) {
-      Question: o.name.toFirstLower
-      Form: o.name.toFirstLower + "Form"
       ConditionalQuestionGroup: "group"+allConditionalGroups(o).indexOf(o)
+      Question: o.name.toLowerCase
+      Form: o.name.toLowerCase
     }
   }
+
+  def String getRenderGroupId (EObject elem) {
+    switch (elem) {
+      Form: "grp_"+elem.id
+      ConditionalQuestionGroup: "grp_"+elem.id
+      FormElement: getRenderGroupId(elem.eContainer)
+    }
+  }
+
 
   def private allConditionalGroups (EObject ctx) {
     ctx.eResource.allContents.filter(typeof(ConditionalQuestionGroup)).toList
   }
 
-    //TODO isNaive = true,
-  def getFormName(FormElement elem){'''«EcoreUtil2::getContainerOfType(elem, typeof(Form)).name.toFirstLower»'''}
+  def getFormName(FormElement elem){ 
+    EcoreUtil2::getContainerOfType(elem, typeof(Form)).name.toFirstLower
+  }
 
 
   /**
    * Computes the FormElements which are accessed by the expression of a Question.
    */
   def Iterable<FormElement> getDependentElementsWithExpression (Question q) {
+    if (q.expression != null)
+      return emptyList
     // The JvmField which is inferred from a Question
     val JvmField field = q.jvmElements.filter(typeof(JvmField)).head
 
