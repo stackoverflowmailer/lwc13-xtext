@@ -24,10 +24,6 @@ class JSFGenerator implements IGenerator{
   @Inject extension JsfOutputConfigurationProvider
   // enumeration of class names which do not need a converter
   // see http://www.javabeat.net/2007/11/using-converters-in-jsf/
-  Set<String> defaultConverters = newHashSet ("BigDecimal","BigInteger",
-    "Boolean","Byte","Character","DateTime","Double","Enum","Float","Integer","Long",
-    "Number","Short","String"
-  )
   override doGenerate(Resource input, IFileSystemAccess fsa) {
         if (input.URI.fileExtension!="ql")
             return
@@ -63,10 +59,10 @@ class JSFGenerator implements IGenerator{
       <ui:composition template="/index.xhtml">
         <ui:define name="content">
           <h:form id="«form.id»">
-           <!-- B E G I N _ generate_JSFPage _ S E C T I O N  -->
-            <h:panelGroup id="grp«form.name»Form">
+           <!-- B E G I N _ M A I N _ S E C T I O N  -->
+            <h:panelGroup id="grp_«form.name.toFirstLower»Form">
               <!-- evaluation part, every expression has one -->
-              <h:panelGroup id="grp«form.name»Form_nested">
+              <h:panelGroup id="grp_«form.name.toFirstLower»Form_nested">
               «FOR elem: form.element»
                 «elem.generate»
               «ENDFOR»
@@ -82,45 +78,50 @@ class JSFGenerator implements IGenerator{
   //TODO in allen ConditionalQuestionGroup, wenn expression.parts.contains.question.name, dann return (ConditionalQuestionGroup.parts, seperator _,as String id for ajax rendering)
   //TODO ajax support, ids to render on change, sample: grp_state grp_ValueReside
 
-  def dispatch generate (ConditionalQuestionGroup group)
-    '''<h:panelGroup id="«group.id»">
-        <h:panelGroup id="group_«group.id»Visible"
-          rendered="#{«group.formName».«group.id»Visible}">
-        «FOR elem: group.element»
-          «elem.generate»
-        «ENDFOR»
-        </h:panelGroup>
-      </h:panelGroup>'''
+  def dispatch generate (ConditionalQuestionGroup group) '''
+    <h:panelGroup id="«group.id»">
+      <h:panelGroup id="group_«group.id»Visible"
+        rendered="#{«group.formName».«group.id»Visible}">
+      «FOR elem: group.element»
+        «elem.generate»
+      «ENDFOR»
+      </h:panelGroup>
+    </h:panelGroup>
+   '''
 
   //TODO a cleaner solution for providing extensibility of question types?
   //TODO special cases (readonly money, )
-  def dispatch generate (Question question){
-    '''<h:outputLabel id="lbl«question.id»" value="«question.label»"/>
-      '''+
-      switch(question.type.type){
+  def dispatch generate (Question question) '''
+    <h:outputLabel value="«question.label»"/>
+
+    «switch(question.type.type){
         JvmPrimitiveType: {
-          switch (question.type.simpleName){
+          switch (question.type.simpleName.toLowerCase){
             case "boolean": '''«generateQuestionBoolean(question)»'''
           }
         }
         default : '''«generateQuestionText(question)»'''
-      }
-  }
+      }»
+     <br/>
+  '''
 
-  def generateQuestionBoolean(Question question) {
-    '''<h:selectBooleanCheckbox id="«question.id»" value="#{«question.formName+'.'+question.name»}">
-      «IF !question.dependentElementsWithExpression.empty»
-        <f:ajax render="«FOR element : question.dependentElementsWithExpression SEPARATOR ' '»«question.id»«ENDFOR»"/>
-      «ENDIF»
-      </h:selectBooleanCheckbox>'''}
+  def generateQuestionBoolean(Question question) '''
+    <h:selectBooleanCheckbox id="chk«question.id»" value="#{«question.formName+'.'+question.name»}">
+    <f:ajax event="click" «question.ajaxRenderString»/>
+    </h:selectBooleanCheckbox>
+  '''
 
-  def generateQuestionText(Question question) {
-    '''<h:inputText id="txt«question.id»" value="#{«question.formName+'.'+question.name»}">
-      «IF !question.dependentElementsWithExpression.empty»
-        <f:ajax event="keyup" render="«FOR element : question.dependentElementsWithExpression SEPARATOR ' '»«question.id»«ENDFOR»"/>
-      «ENDIF»
-      «generateConverter(question)»
-      </h:inputText>'''
+  def generateQuestionText(Question question) '''
+    <h:inputText id="txt«question.id»" value="#{«question.formName+'.'+question.name»}">
+      <f:ajax event="keyup" «question.ajaxRenderString»/>
+    «generateConverter(question)»
+    </h:inputText>
+  '''
+  
+  def getAjaxRenderString (Question question) {
+    if (!question.dependentElementsWithExpression.empty) {
+      '''render="«FOR element : question.dependentElementsWithExpression SEPARATOR ' '»«question.id»«ENDFOR»"'''
+    }
   }
   
   def generateConverter (Question question) {
@@ -128,10 +129,15 @@ class JSFGenerator implements IGenerator{
     val needsConversion = !(question.type.type instanceof JvmPrimitiveType) 
        && !defaultConverters.contains(question.type.type.simpleName)
     if (needsConversion) {
-      '''<f:converter converterId="converter.«question.type.type.simpleName»"'''
+      '''<f:converter converterId="converter.«question.type.type.simpleName»"/>'''
     } else
       ""
   }
+
+  Set<String> defaultConverters = newHashSet ("BigDecimal","BigInteger",
+    "Boolean","Byte","Character","DateTime","Double","Enum","Float","Integer","Long",
+    "Number","Short","String"
+  )
 
 
   def generate_JSFFacesConfig(List<Form> forms)
@@ -172,8 +178,8 @@ class JSFGenerator implements IGenerator{
   // --------------------------------------------------------------------------
   def String getId (EObject o) {
     switch (o) {
-      Question: "q"+o.name.toFirstUpper
-      Form: "form"+o.name.toFirstUpper
+      Question: o.name.toFirstLower
+      Form: o.name.toFirstLower + "Form"
       ConditionalQuestionGroup: "group"+allConditionalGroups(o).indexOf(o)
     }
   }
@@ -197,7 +203,7 @@ class JSFGenerator implements IGenerator{
     val Iterable<FormElement> allFormElementsWithExpression = field.eResource.allContents
       .filter(typeof(FormElement))
       .filter[it.expression!=null]
-      .toIterable
+      .toList
     // search the expressions of the form elements which call the JvmField field in a feature call
     val result = allFormElementsWithExpression.filter[
         val featureCalls = it.expression.eAllContents.filter(typeof(XFeatureCall))
