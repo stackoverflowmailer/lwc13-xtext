@@ -1,5 +1,218 @@
 \subsection{The Language QLS}
 
-- QLS example
-- QLS grammar
+In this chapter we will describe how the optional task to define a language 
+for styling and layout information can be accomplished in our language workbench.
+The language QLS should allow for defining the following information:
+\begin{itemize}
+  \item Grouping of question forms into pages, sections and subsections
+  \item Navigation links between pages
+  \item Styling of question texts by defining font style, font type and color
+  \item Defining the appearance of a question by specifying the widget type to render
+\end{itemize}
 
+The following shows an example model that we want to be able to define with QLS:
+
+\begin{lstlisting}[language=QLS]
+page HouseOwningPage {
+	section house uses Box1HouseOwning {
+		question hasBoughtHouse [widget: CheckBox]
+		question valueResidue [
+			font-style: "bold" 
+			font-color: "#2233FF"
+			font-type:  "Arial"
+		]
+	}
+	
+	section garage uses GarageOwning {
+		question hasBoughtGarage [widget: Radio["Yepp", "Nope"]]		
+	}
+	
+	navigation {
+		CarOwningPage
+	}
+	
+}
+
+page CarOwningPage uses CarOwning {
+	// ...
+}
+\end{lstlisting}
+
+This example model defines two pages. The first page contains of two sections,
+one for the question form \emph{Box1HouseOwning} which was defined in chapter 
+\ref{chp:QL} and one for a further form called \emph{GarageOwning}. The form to
+be rendered inside a page or a section is specified by the \texttt{uses} keyword.
+This definition must be unambiguously, e.g. if there is a form included by a page,
+it is not allowed to refer to another form in one of its containing sections.
+This restriction is ensured by implementing a corresponding validation which will be covered
+in chapter (TODO). In a section (or page) the styling information for the questions of the included
+form can be defined as in lines 3-8 and 12. The \texttt{navigation} keyword allows to define order in which the pages are to
+be displayed by specifying which page should appear next.
+
+TODO: expressions? 
+
+Before we can write the corresponding Xtext grammar, we need to create the DSL 
+projects for QLS as we have done for the Questionnaire language. For this, refer
+again to chapter \ref{chp:CreateDslProjects} and replace all occurences of 
+\texttt{ql} with \texttt{qls}. The project \texttt{org.eclipse.xtext.example.qls}
+should then contain the grammar file \texttt{QlsDsl.xtext}. We define the content
+of this file as the following:
+
+\begin{lstlisting}[language=Xtext]
+grammar org.eclipse.xtext.example.qls.QlsDsl with org.eclipse.xtext.common.Terminals
+
+generate qlsDsl "http://www.eclipse.org/xtext/example/qls/QlsDsl"
+import "http://www.eclipse.org/xtext/example/ql/QlDsl" as ql
+
+QuestionnaireStyleModel:
+	pages+=Page*;
+	
+Page:
+	"page" name=ID ("uses" form=[ql::Form|ID])? "{"
+		element+=PageElement*
+		navigation=Navigation?
+	"}"
+;
+
+PageElement:
+	Question | Section
+;
+
+Question:
+	"question" question=[ql::Question] styling+=StyleInformation?	
+;
+
+StyleInformation: {StyleInformation}
+	"["
+	(
+		("font-style:" fontStyle=STRING)? &
+		("font-color:" fontColor=STRING)? &
+		("font-type:" fontType=STRING)? &
+		("widget:" widget=Widget)?
+	)
+	"]"
+;
+
+Widget: {Widget}
+	widgetType=("Radio"|"DropDown"|"CheckBox"|"Text"|"Slider") ("[" labels+=STRING ("," labels+=STRING)* "]")?
+;
+  
+Section:
+	"section" name=ID ("uses" form=[ql::Form|ID])? "{"
+		element+=PageElement*
+	"}"
+;
+
+Navigation: {Navigation}
+	"navigation" "{" (nextPage+=NextPage)* "}"
+;
+
+NextPage:
+	page=[Page|ID]
+;
+\end{lstlisting}
+
+After reading chapter \ref{sec:DefiningGrammar}, you should be familiar with the
+concepts of xtext grammar definitions and understand most parts of the QLS grammar.
+One new concept represented in the QLS grammar is the one of unordered lists:
+
+\begin{lstlisting}[language=Xtext]
+StyleInformation: {StyleInformation}
+	"["
+	(
+		("font-style:" fontStyle=STRING)? &
+		("font-color:" fontColor=STRING)? &
+		("font-type:" fontType=STRING)? &
+		("widget:" widget=Widget)?
+	)
+	"]"
+;
+\end{lstlisting}
+
+The styling information can be defined in an arbitrary order in which each kind 
+of element (font style, font color, font type and widget type) may only occur at 
+most once. The arbitrariness of the order is expressed by the \texttt{'\&'} between
+the style elements. The optionality of each style information is again declared by
+the question mark \texttt{'?'}.
+
+A further noteworthy aspect is the handling of references. In Xtext, references 
+to language elements are expressed by using squared brackets. An example for this are the  
+references to existing pages in the navigation section:
+
+\begin{lstlisting}[language=Xtext]
+NextPage:
+	page=[Page|ID]
+;
+\end{lstlisting}
+
+Here, \texttt{page} is a reference to an existing page description which may even
+be defined in a different file. \texttt{ID} defines which attribute should be used
+for the reference's name. Xtext automatically creates hyperlinks to the referenced
+elements which can be enabled by holding \texttt{Ctrl} and moving the curser over the
+reference or by pressing \texttt{F3}.
+
+To define references to elements defined in other langauges than the own,
+the reference needs to be qualified. An example in QLS is the reference to questions
+or forms defined in a QL model. To express this on the grammar level, the QL DSL
+needs first to be imported:
+
+\begin{lstlisting}[language=Xtext]
+import "http://www.eclipse.org/xtext/example/ql/QlDsl" as ql
+\end{lstlisting}
+
+Since the QL DSL is imported under the name \texttt{ql}, references can now be 
+qualified by using a double colon (\texttt{::}):
+
+\begin{lstlisting}[language=Xtext]
+Question:
+	"question" question=[ql::Question] styling+=StyleInformation?	
+;
+\end{lstlisting}
+
+This grammar rule allows for refering all question elements defined in
+any QL model in our test project. However, since there is always an unambiguous
+form specified for a page or a section, only the questions defined within this 
+form should be referable. This is a typical scoping issue which needs to be 
+handled in the scope provider of the QLS language. We already learned about scoping
+in section \ref{sec:scoping}. The scope provider for the QLS language looks like
+the following:
+
+\begin{lstlisting}[language=Java]
+public class QlsDslScopeProvider extends AbstractDeclarativeScopeProvider {
+
+  public IScope scope_Question_question(EObject context, EReference reference) {
+    Form usedForm = getUsedForm(context);
+    List<Question> allQuestions = EcoreUtil2.getAllContentsOfType(usedForm,
+        Question.class);
+    return Scopes.scopeFor(allQuestions);
+  }
+
+  private Form getUsedForm(EObject context) {
+    if (context instanceof Section) {
+      Section section = (Section) context;
+      if (section.getForm() != null) {
+        return section.getForm();
+      }
+    } else if (context instanceof Page) {
+      Page page = (Page) context;
+      if (page.getForm() != null) {
+        return page.getForm();
+      }
+    }
+    if (context != null) {
+      return getUsedForm(context.eContainer());
+    }
+    return null;
+  }
+}
+\end{lstlisting}
+
+The method \texttt{scope\_Question\_question} is always invoked whenever the visible
+elements for the attribute \texttt{question} in the grammar rule \texttt{Question} 
+need to be computed. Here, we just use a recursive algorithm to get the form declaration
+of the parent section or page which is mandatory. With the helper method \texttt{getAllContentsOfType}
+all questions defined in this form are collected and a scope containing these questions is returned.
+
+Now it's time to play around with the QLS language and to test its features. For this,
+switch to the test project in the runtime environment (see also section \ref{sec:TestingQL})
+and create a file with the file extension \texttt{.qls}.
