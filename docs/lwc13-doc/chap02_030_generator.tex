@@ -27,7 +27,7 @@ public interface IGenerator {
 
 The code generator is invoked with a \texttt{Resource} instance, which holds a \texttt{Questionnaire}
 instance. We have to generate multiple artifacts for each resource, so it is a common 
-pattern to create a template class serves as entry point and dispatches to other
+pattern to create a template class which serves as entry point and dispatches to other
 template classes to create the artifacts. Usually one template per artifact is
 created.
 
@@ -75,7 +75,7 @@ Open class \texttt{QlDslRuntimeModule} and add this method:
   }
 \end{lstlisting}
 
-Now we are ready to add templates additional templates and register them in the
+Now we are ready to add additional templates and register them in the
 \texttt{Root} class.
 
 
