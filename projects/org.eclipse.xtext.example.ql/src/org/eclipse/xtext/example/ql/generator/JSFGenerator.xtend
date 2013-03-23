@@ -54,14 +54,14 @@ class JSFGenerator implements IGenerator{
 
       <ui:composition template="/index.xhtml">
         <ui:define name="content">
-          <h:form id="Â«form.idÂ»">
+          <h:form id="«form.id»">
            <!-- B E G I N _ M A I N _ S E C T I O N  -->
-            <h:panelGroup id="grp_Â«form.name.toFirstLowerÂ»Form">
+            <h:panelGroup id="grp_«form.name.toFirstLower»Form">
               <!-- evaluation part, every expression has one -->
-              <h:panelGroup id="Â«form.renderGroupIdÂ»">
-              Â«FOR elem: form.elementÂ»
-                Â«elem.generateÂ»
-              Â«ENDFORÂ»
+              <h:panelGroup id="«form.renderGroupId»">
+              «FOR elem: form.element»
+                «elem.generate»
+              «ENDFOR»
               </h:panelGroup>
             </h:panelGroup>
           <!-- E N D _ generate_JSFPage _ S E C T I O N  -->
@@ -75,12 +75,12 @@ class JSFGenerator implements IGenerator{
   //TODO ajax support, ids to render on change, sample: grp_state grp_ValueReside
 
   def dispatch generate (ConditionalQuestionGroup group) '''
-    <h:panelGroup id="Â«group.renderGroupIdÂ»">
-      <h:panelGroup id="group_Â«group.idÂ»Visible"
-        rendered="#{Â«group.formNameÂ».Â«group.idÂ»Visible}">
-      Â«FOR elem: group.elementÂ»
-        Â«elem.generateÂ»
-      Â«ENDFORÂ»
+    <h:panelGroup id="«group.renderGroupId»">
+      <h:panelGroup id="group_«group.id»Visible"
+        rendered="#{«group.formName».«group.id»Visible}">
+      «FOR elem: group.element»
+        «elem.generate»
+      «ENDFOR»
       </h:panelGroup>
     </h:panelGroup>
    '''
@@ -89,34 +89,34 @@ class JSFGenerator implements IGenerator{
   //TODO a cleaner solution for providing extensibility of question types?
   //TODO special cases (readonly money, )
   def dispatch generate (Question question) '''
-    <h:outputLabel value="Â«question.labelÂ»"/>
+    <h:outputLabel value="«question.label»"/>
 
-    Â«switch(question.type.type){
+    «switch(question.type.type){
         JvmPrimitiveType: {
           switch (question.type.simpleName.toLowerCase){
-            case "boolean": '''Â«generateQuestionBoolean(question)Â»'''
+            case "boolean": '''«generateQuestionBoolean(question)»'''
           }
         }
-        default : '''Â«generateQuestionText(question)Â»'''
-      }Â»
+        default : '''«generateQuestionText(question)»'''
+      }»
      <br/>
   '''
 
   def generateQuestionBoolean(Question question) '''
-    <h:selectBooleanCheckbox id="q_Â«question.idÂ»" value="#{Â«question.formName+'.'+question.nameÂ»}">
-      <f:ajax event="click" Â«question.ajaxRenderStringÂ»/>
+    <h:selectBooleanCheckbox id="q_«question.id»" value="#{«question.formName+'.'+question.name»}">
+      <f:ajax event="click" «question.ajaxRenderString»/>
     </h:selectBooleanCheckbox>
   '''
 
   def generateQuestionText(Question question) '''
-    <h:inputText id="q_Â«question.idÂ»" value="#{Â«question.formName+'.'+question.nameÂ»}"Â«IF question.expression!=nullÂ» readonly="true"Â«ENDIFÂ»>
-      <f:ajax event="blur" Â«question.ajaxRenderStringÂ»/>
-      Â«generateConverter(question)Â»
+    <h:inputText id="q_«question.id»" value="#{«question.formName+'.'+question.name»}"«IF question.expression!=null» readonly="true"«ENDIF»>
+      <f:ajax event="blur" «question.ajaxRenderString»/>
+      «generateConverter(question)»
     </h:inputText>
   '''
   
   def getAjaxRenderString (Question question) {
-      '''render="Â«question.renderGroupIdÂ» Â«FOR element : question.dependentElementsWithExpression SEPARATOR ' 'Â»q_Â«element.idÂ»Â«ENDFORÂ»"'''
+      '''render="«question.renderGroupId» «FOR element : question.dependentElementsWithExpression SEPARATOR ' '»q_«element.id»«ENDFOR»"'''
   }
   
   def generateConverter (Question question) {
@@ -124,7 +124,7 @@ class JSFGenerator implements IGenerator{
     val needsConversion = !(question.type.type instanceof JvmPrimitiveType) 
        && !defaultConverters.contains(question.type.type.simpleName)
     if (needsConversion) {
-      '''<f:converter converterId="converter.Â«question.type.type.simpleNameÂ»"/>'''
+      '''<f:converter converterId="converter.«question.type.type.simpleName»"/>'''
     } else
       ""
   }
@@ -144,9 +144,9 @@ class JSFGenerator implements IGenerator{
         xmlns:ui="http://java.sun.com/jsf/facelets">
       <ui:composition template="/index.xhtml">
         <ui:define name="content">
-        Â«FOR elem: forms SEPARATOR "<br/>"Â»
-          <h:outputLink value="Â«elem.nameÂ».jsf">Â«elem.nameÂ»</h:outputLink>
-        Â«ENDFORÂ»
+        «FOR elem: forms SEPARATOR "<br/>"»
+          <h:outputLink value="«elem.name».jsf">«elem.name»</h:outputLink>
+        «ENDFOR»
         </ui:define>
       </ui:composition>
       </html>
