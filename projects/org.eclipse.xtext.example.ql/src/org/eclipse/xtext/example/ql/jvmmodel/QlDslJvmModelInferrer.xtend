@@ -129,7 +129,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
     */
    def JvmOperation createIsEnabledMethod (Question question) {
      question.toMethod("is"+question.name.toFirstUpper+"Enabled", typeReferences.getTypeForName("boolean", question, null)) [
-       body = [it.append('''return Â«question.expression == null»;''')]
+       body = [it.append('''return «question.expression == null»;''')]
   ]
    }
 
