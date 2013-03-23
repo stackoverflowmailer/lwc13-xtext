@@ -6,10 +6,85 @@ package org.eclipse.xtext.example.qls.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.example.qls.qlsDsl.QuestionnaireStyleModel
+import org.eclipse.xtext.example.ql.generator.JsfOutputConfigurationProvider
+import org.eclipse.xtext.example.qls.qlsDsl.Page
+import com.google.inject.Inject
+import org.eclipse.xtext.example.qls.qlsDsl.StyleInformation
+import org.eclipse.xtext.example.qls.qlsDsl.Question
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.example.ql.qlDsl.Form
+import org.eclipse.xtext.example.qls.qlsDsl.Section
 
 class QlsDslGenerator implements IGenerator {
-	
-	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		//TODO implement me
+  @Inject extension JsfOutputConfigurationProvider
+  override void doGenerate(Resource input, IFileSystemAccess fsa) {
+	if (input.URI.fileExtension!="qls")
+      return
+            
+      val styleModel = input.contents.head as QuestionnaireStyleModel
+      for (page: styleModel.pages) {
+      	val cssContent = generateCssFile(page);
+       	val cssFileName = "resources/default/css/generated/"+page.name+".css"
+       	fsa.generateFile(cssFileName, WEB_CONTENT, cssContent)
+       	
+       	val xhtmlContent = generateXhtmlFile(page);
+       	val xhtmlFileName = "generated/pages/"+page.name+".xhtml"
+       	fsa.generateFile(xhtmlFileName, WEB_CONTENT, xhtmlContent)
+      }
 	}
+	
+	def generateCssFile(Page page) 
+	'''
+		«FOR styleInfo: page.eAllContents.filter(typeof(StyleInformation)).toList»
+			«styleInfo.id» {
+				«IF styleInfo.fontColor != null»color:       «styleInfo.fontColor»; «ENDIF»
+				«IF styleInfo.fontFamily != null»font-family: «styleInfo.fontFamily»; «ENDIF»	
+				«IF styleInfo.fontStyle != null»font-style:  «styleInfo.fontStyle»; «ENDIF»	
+				«IF styleInfo.fontWeight != null»font-weight: «styleInfo.fontWeight»; «ENDIF»		
+			}
+			
+		«ENDFOR»
+	'''
+	
+	
+	def generateXhtmlFile(Page page) '''
+		<!-- @generated -->
+		<html xmlns="http://www.w3.org/1999/xhtml"
+		  xmlns:ui="http://java.sun.com/jsf/facelets"
+		  xmlns:h="http://java.sun.com/jsf/html"
+		  xmlns:f="http://java.sun.com/jsf/core">
+		  <h:head></h:head>
+		  <ui:composition template="/index.xhtml">
+		   <ui:define name="content">
+		   
+		   <h:outputStylesheet library="default/css/generated" name="«page.name».css"  />
+		   
+		   «FOR section: page.eAllContents.toList.filter(typeof(Section)).toList SEPARATOR '<p/>'»
+		   <ui:include src="/generated_ref/forms/«section.form.name»Base.xhtml" />		  
+		  «ENDFOR»
+		  	</ui:define>
+		  </ui:composition>
+		</html>
+	'''
+		
+	def getId(StyleInformation styleInfo) {
+		val question = (styleInfo.eContainer as Question).question
+		val form = EcoreUtil2::getContainerOfType(question, typeof(Form))
+		'''#form«form.name»-lblq«question.name.toFirstUpper»'''
+	}
+
+	def dispatch getForm(Section section) {
+		if (section.form != null) {
+			section.form
+		}
+		else {
+			section.eContainer.form
+		}
+	}
+	
+	def dispatch getForm(Page page) {
+		page.form
+	}
+
 }

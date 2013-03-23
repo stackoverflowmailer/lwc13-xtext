@@ -21,13 +21,14 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.xtext.example.ql,
- org.eclipse.xtext.example.ql.services,
+ org.eclipse.xtext.example.ql.formatting,
+ org.eclipse.xtext.example.ql.generator,
+ org.eclipse.xtext.example.ql.jvmmodel,
+ org.eclipse.xtext.example.ql.parser.antlr,
+ org.eclipse.xtext.example.ql.parser.antlr.internal,
  org.eclipse.xtext.example.ql.qlDsl,
  org.eclipse.xtext.example.ql.qlDsl.impl,
  org.eclipse.xtext.example.ql.qlDsl.util,
  org.eclipse.xtext.example.ql.serializer,
- org.eclipse.xtext.example.ql.parser.antlr,
- org.eclipse.xtext.example.ql.parser.antlr.internal,
- org.eclipse.xtext.example.ql.validation,
- org.eclipse.xtext.example.ql.formatting,
- org.eclipse.xtext.example.ql.jvmmodel
+ org.eclipse.xtext.example.ql.services,
+ org.eclipse.xtext.example.ql.validation

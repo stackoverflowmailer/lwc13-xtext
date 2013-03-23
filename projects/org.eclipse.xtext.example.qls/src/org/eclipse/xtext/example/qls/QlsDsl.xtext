@@ -32,8 +32,9 @@ StyleInformation: {StyleInformation}
 	"["
 	(
 		("font-style:" fontStyle=STRING)? &
+		("font-weight:" fontWeight=STRING)? &
 		("font-color:" fontColor=STRING)? &
-		("font-type:" fontType=STRING)? &
+		("font-family:" fontFamily=STRING)? &
 		("widget:" widget=Widget)?
 	)
 	"]"

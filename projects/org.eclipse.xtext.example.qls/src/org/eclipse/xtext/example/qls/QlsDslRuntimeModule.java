@@ -3,9 +3,30 @@
  */
 package org.eclipse.xtext.example.qls;
 
-/**
- * Use this class to register components to be used at runtime / without the Equinox extension registry.
- */
-public class QlsDslRuntimeModule extends org.eclipse.xtext.example.qls.AbstractQlsDslRuntimeModule {
+import org.eclipse.xtext.example.ql.generator.JsfOutputConfigurationProvider;
+import org.eclipse.xtext.example.qls.generator.QlsDslGenerator;
+import org.eclipse.xtext.generator.IGenerator;
+import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 
+import com.google.inject.Binder;
+import com.google.inject.Singleton;
+
+/**
+ * Use this class to register components to be used at runtime / without the
+ * Equinox extension registry.
+ */
+public class QlsDslRuntimeModule extends
+    org.eclipse.xtext.example.qls.AbstractQlsDslRuntimeModule {
+
+  @Override
+  public Class<? extends IGenerator> bindIGenerator() {
+    return QlsDslGenerator.class;
+  }
+
+  @Override
+  public void configure(Binder binder) {
+    super.configure(binder);
+    binder.bind(IOutputConfigurationProvider.class)
+        .to(JsfOutputConfigurationProvider.class).in(Singleton.class);
+  }
 }
