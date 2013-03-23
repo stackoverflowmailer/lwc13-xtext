@@ -1,0 +1,23 @@
+<!-- @generated -->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core">
+
+      <h:form id="formCarOwning">
+       <!-- B E G I N _ generate_JSFPage _ S E C T I O N  -->
+        <h:panelGroup id="grpCarOwningForm">
+          <!-- evaluation part, every expression has one -->
+          <h:panelGroup id="grpCarOwningForm_nested">
+          <h:outputLabel id="lblqHasSoldCar" value="Did you sell a car in 2010?"/>
+          <h:selectBooleanCheckbox id="qHasSoldCar" value="#{carOwning.hasSoldCar}">
+                </h:selectBooleanCheckbox>
+          <h:outputLabel id="lblqHasBoughtCar" value="Did you buy a car in 2010?"/>
+          <h:selectBooleanCheckbox id="qHasBoughtCar" value="#{carOwning.hasBoughtCar}">
+                </h:selectBooleanCheckbox>
+          </h:panelGroup>
+        </h:panelGroup>
+      <!-- E N D _ generate_JSFPage _ S E C T I O N  -->
+      </h:form>
+</html>
