@@ -1,0 +1,21 @@
+page HouseOwningPage {
+	section house uses HouseOwning {
+		question hasBoughtHouse [
+			font-color:"red"
+		]
+	} 
+	 
+	section garage uses GarageOwning {
+		
+	}
+	 
+	navigation {
+		CarOwningPage
+	}
+}
+
+page CarOwningPage uses CarOwning {
+	question hasBoughtCar [
+		font-family:"Verdana"
+	]
+}

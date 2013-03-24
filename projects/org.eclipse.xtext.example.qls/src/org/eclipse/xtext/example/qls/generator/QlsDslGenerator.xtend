@@ -15,9 +15,12 @@ import org.eclipse.xtext.example.qls.qlsDsl.Question
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.example.ql.qlDsl.Form
 import org.eclipse.xtext.example.qls.qlsDsl.Section
+import org.eclipse.xtext.example.ql.generator.JSFGenerator
 
 class QlsDslGenerator implements IGenerator {
   @Inject extension JsfOutputConfigurationProvider
+  @Inject extension JSFGenerator
+  
   override void doGenerate(Resource input, IFileSystemAccess fsa) {
 	if (input.URI.fileExtension!="qls")
       return
@@ -52,9 +55,6 @@ class QlsDslGenerator implements IGenerator {
       </html>
     '''
 
-	
-		
-	
 	def generateCssFile(Page page) 
 	'''
 		«FOR styleInfo: page.eAllContents.filter(typeof(StyleInformation)).toList»
@@ -82,7 +82,7 @@ class QlsDslGenerator implements IGenerator {
 		      <h:outputStylesheet library="default/css/generated" name="«page.name».css"  />
 		   
 		    «FOR section: page.eAllContents.toList.filter(typeof(Section)).toList SEPARATOR '<p/>'»
-		      <ui:include src="/generated_ref/forms/«section.form.name»Base.xhtml" />
+		      <ui:include src="/generated/forms/«section.form.name»Base.xhtml" />
 		    «ENDFOR»
 		  
 		  	  <div>
@@ -100,7 +100,7 @@ class QlsDslGenerator implements IGenerator {
 	def getId(StyleInformation styleInfo) {
 		val question = (styleInfo.eContainer as Question).question
 		val form = EcoreUtil2::getContainerOfType(question, typeof(Form))
-		'''#form«form.name»-lblq«question.name.toFirstUpper»'''
+		'''#«form.id»\:q«question.id»'''
 	}
 
 	def dispatch getForm(Section section) {

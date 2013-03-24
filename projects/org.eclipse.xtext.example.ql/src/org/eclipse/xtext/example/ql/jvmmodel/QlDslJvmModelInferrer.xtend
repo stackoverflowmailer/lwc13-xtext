@@ -129,7 +129,6 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
     */
    def JvmOperation createIsQuestionVisibleMethod (Question question) {
    	if(question.expression != null){
-   		//TODO if a questions value is calculated from expression it should be visible when its calculated 
    		 question.toMethod("is"+question.name.toFirstUpper+"Visible", typeReferences.getTypeForName("boolean", question, null)) [
        body = [it.append('''return get«question.name.toFirstUpper»() != null;''')]
        	]

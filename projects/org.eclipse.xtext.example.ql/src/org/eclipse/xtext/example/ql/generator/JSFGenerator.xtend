@@ -135,7 +135,7 @@ class JSFGenerator implements IGenerator{
 
 
   def generateQuestionBoolean(Question question) '''
-    <h:selectBooleanCheckbox id="q_«question.id»" value="#{«question.formName+'.'+question.name»}">
+    <h:selectBooleanCheckbox id="q«question.id»" value="#{«question.formName+'.'+question.name»}">
       <f:ajax event="click" «question.ajaxRenderString»/>
     </h:selectBooleanCheckbox>
   '''
@@ -205,11 +205,11 @@ class JSFGenerator implements IGenerator{
 
 
   def private allConditionalGroups (EObject ctx) {
-    ctx.eResource.allContents.filter(typeof(ConditionalQuestionGroup)).toList
+    ctx.form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
   }
 
   def getFormName(FormElement elem){ 
-    EcoreUtil2::getContainerOfType(elem, typeof(Form)).name.toFirstLower
+    elem.form.name.toFirstLower
   }
 
 
@@ -249,16 +249,9 @@ class JSFGenerator implements IGenerator{
     return result
   }
   
-  
-	def EObject getForm(EObject question) {
-		val form = question.eContainer
-		if(form instanceof Form){
-			return form
-		}else{
-			getForm(form)
-		}
-	}
-
+  def getForm(EObject question) {
+	EcoreUtil2::getContainerOfType(question, typeof(Form)) as Form
+  }
 
   /**
    * Returns the expression assigned to a FormElement, dependent on subtype for FormElement. 
