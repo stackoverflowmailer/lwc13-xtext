@@ -51,9 +51,5 @@ Section:
 ;
 
 Navigation: {Navigation}
-	"navigation" "{" (nextPage+=NextPage)* "}"
-;
-
-NextPage:
-	page=[Page|ID] // TODO enable xbase's expressions here
+	"navigation" "{" (nextPage+=[Page|ID])+ "}"
 ;
