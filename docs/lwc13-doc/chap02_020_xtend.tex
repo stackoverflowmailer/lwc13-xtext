@@ -1,23 +1,149 @@
 \subsection{Xtend}
-
+ 
 Since we will use Xtend to write the code generator, this chapter describes some
 basic concepts of the Xtend language. However, we will not cover all aspects of
 Xtend in this section, for more information see also the official documentation\footnote{\url{http://www.eclipse.org/xtend/documentation.html}}.
 
 Xtend is a statically-typed general purpose language similar to Java. Xtend uses
 Xbase as core language which was already roughly explained in section \ref{sec:Xbase}.
-The main focus of Xtend lies in providing a language which seamlessly plays together with 
-Java 
+Hence, the presented concepts of Xbase are also valid for Xtend. The main focus
+of Xtend lies in providing a language that is more readable than Java in certain
+situations. In the backgroud, Xtend compiles to Java code. Thus, it plays perfectly
+together with Java, e.g. methods declared in Java classes can be called in Xtend
+and vice versa. Several concepts of Xtend are especially beneficial when writing code
+generators. 
 
-- uses xbase as core
+\begin{lstlisting}[language=Xtend]
+def someMethod() {
+  var myQuestion = 'where do we go?'
+  myQuestion = myQuestion.toFirstLower
+  val myAnswer = 42
+  'The answer for question '+myQuestion+' is: '+myAnswer
+}
+\end{lstlisting}
 
-- small method: explain def, val, var, everything is an expression, implicit return type
-- extension methods
-- polymorphic dispatching
+In Xtend, a method is defined with the \texttt{def} keyword. The return type is
+optional and will be automatically inferred. Only when a method is recursively
+invoking itself, a return type needs to be specified explicitly. The keyword 
+\texttt{var} defines a variable; constant values are defined with \texttt{val}.
+In Xtend - since it is based on Xbase - everything is an expression, meaning that 
+it has a return type. The last expression of a method defines the return value
+and also the return type of the method.
 
-- loops (for with separator)
-- switch case based on type
-- rich strings
+In line 3 a so-called extension method is used. Recall that the String class in 
+Java does not provide a method \texttt{toFirstUpper}. Xtend allows for extending
+closed types without changing (maybe you already guess where Xtend got its name from).
+You can easily write your own extension for the String type for example:
 
-http://www.eclipse.org/xtend/
-http://www.eclipse.org/xtend/documentation.html
+\begin{lstlisting}[language=Xtend]
+  def square(Integer input) {
+  	input * input
+  }
+  
+  def useExtension() {
+  	16.square // returns 256
+  }
+\end{lstlisting}
+
+What Xtend basically does is changing the syntax of how methods are called. Instead
+of writing \texttt{toLastUpper(``Hello'')}, Xtend always offers the alternative to
+use the first input parameter as receiver of the method call (\texttt{``Hello''.toLastUpper}).
+This results in the syntax being more chained than nested which improves readability.
+To use methods from another class as extension methods in your class, the field
+defining an object of the other class needs to be marked with the \textt{extension}
+keyword. In our scenario we will use dependency injection like the following:
+
+\begin{lstlisting}[language=Xtend]
+class JSFGenerator implements IGenerator{
+  @Inject extension IJvmModelAssociations
+  ...
+}
+\end{lstlisting}
+
+This statement simply allows to use the methods declared by the interface \texttt{IJvmModelAssociations}
+in our generator class as extension methods on our objects. Which concrete implementation of the
+interface is later actually called, is configured in the Guice module.
+
+A further useful feature of Xtend is \emph{polymorphic dispatching}. Using the \texttt{dispatch}
+keyword on multiple methods with identical signatures has the effect that the 
+decision on which method should be called is based on the runtime type of the
+target object. In contrast, Java binds methods at compile time based on the static
+type of the target object. Since Xtend compiles to Java, polymorphic dispatching
+is internally realized by a dispatcher method using a cascade of \textt{instanceof}
+constructs. 
+
+\begin{lstlisting}[language=Xtend]
+  def dispatch doSomething(Integer input) {
+  	// do something with integer
+  }
+  
+  def dispatch doSomething(Float input) {
+  	// do something with float
+  }
+  
+  def useDispatching() {
+    val Number x = 123
+    val Number y = 0.1
+    x.doSomething + y.doSomething
+  }
+\end{lstlisting}
+
+// TODO gescheites beispiel überlegen und zwei sätze zu schreiben.
+
+Xtend offers the possibility to define \emph{rich Strings} (also called \emph{templates})
+which is especially useful when writing code generators. Rich Strings allow for
+writing complex Strings with line breaks and indentations without the need for
+concatenating special characters like \texttt{'\textbackslash n'} or \texttt{'\textbackslash t'}. A rich String
+construct starts and ends with triple single quotes (\texttt{'''}). Within such
+a String code pieces which themself return a String can be inserted (surrounded by guillemots \texttt{«»}).
+There are also logical structures like \texttt{for} loops or \texttt{if-else}
+statements supported:
+
+\begin{lstlisting}[language=Xtend]
+  def htmlContent(List<String> contents) '''
+  	<html>
+  	  <body>
+  	    «FOR content: contents BEFORE '<p>' SEPARATOR '<br/>' AFTER '</p>'»
+  	      «IF content.length > 10»
+  	        Large Content: «content.toFirstUpper»
+  	      «ELSE»
+  	        Small Content: «content.toFirstUpper»
+  	      «ENDIF»
+  	    «ENDFOR»
+  	  </body>
+  	</html>'''
+\end{lstlisting}
+
+Note the special keywords in the \texttt{FOR} loop declaration: \texttt{BEFORE} 
+and \texttt{AFTER} will be called once before and after the iteration, but only
+if the loop will be iterated at least once. With the \texttt{SEPARATOR} keyword
+a string which will be inserted between two iteratins can be specified. Calling 
+the example method with ['hello', 'Some more text'] results in:
+
+\begin{lstlisting}[language=Xtend]
+<html>
+  <body>
+    <p>
+    Small Content: Hello<br/>
+    Large Content: Some more text
+    </p>
+  </body>
+</html>
+\end{lstlisting}
+
+Last but not least, Xtend offers a more sophisticated \texttt{switch-case} statement
+than Java does. The \texttt{break} statement as known from Java is implicit in Xtend.
+Furthermore, switching based on Strings and even types is possible:
+
+\begin{lstlisting}[language=Xtend]
+  def getTypeName(Number input) {
+  	switch (input) {
+  		Integer: "It is an Integer!"
+  		Float:   "It is a Float!"
+  		default: "It is some other number type."
+  	}
+  }
+\end{lstlisting}
+
+Now as you know the basic concepts of Xtend, let's finally start writing the code
+generator.
