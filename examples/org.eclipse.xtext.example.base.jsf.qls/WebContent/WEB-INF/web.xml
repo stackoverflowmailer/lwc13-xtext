@@ -16,10 +16,6 @@
     	WEB-INF/generate_ref/form_config.xml
     </param-value>
   </context-param>
-  <context-param>
-    <param-name>javax.faces.SEPARATOR_CHAR</param-name>
-    <param-value>-</param-value>
-  </context-param>
 
   <servlet>
     <servlet-name>Faces Servlet</servlet-name>
