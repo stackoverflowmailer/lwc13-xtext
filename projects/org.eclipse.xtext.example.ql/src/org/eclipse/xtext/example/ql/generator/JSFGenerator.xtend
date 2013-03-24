@@ -18,6 +18,7 @@ import org.eclipse.xtext.xbase.XFeatureCall
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import java.util.Set
 import org.eclipse.xtext.example.ql.qlDsl.Form
+import org.eclipse.xtext.xbase.XFeatureCall
 
 class JSFGenerator implements IGenerator{
   @Inject extension IJvmModelAssociations
@@ -60,15 +61,9 @@ class JSFGenerator implements IGenerator{
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
   	 <h:form id="«form.id»">
-           <!-- B E G I N _ M A I N _ S E C T I O N  -->
-            <h:panelGroup id="grp_«form.name.toFirstLower»Form">
-              <!-- evaluation part, every expression has one -->
-              <h:panelGroup id="«form.renderGroupId»">
-              «FOR elem: form.element»
-                «elem.generateFormElement»
-              «ENDFOR»
-              </h:panelGroup>
-            </h:panelGroup>
+      «FOR elem: form.element»
+        «elem.generateFormElement»
+      «ENDFOR»
           <!-- E N D _ generate_JSFPage _ S E C T I O N  -->
           </h:form>
     </html>
@@ -100,7 +95,7 @@ class JSFGenerator implements IGenerator{
 	 <!-- generateFormElement(FormElement element) -->
 	«IF element.isReferenced»
 	<h:panelGroup id="«element.renderGroupId»">
-		<h:panelGroup id="group_«element.id»Visible"
+		<h:panelGroup id="grp_«element.id»Visible"
 			rendered="#{«element.formName».«element.id»Visible}">«ENDIF»
 			 «element.generate»
 	«IF element.isReferenced»
@@ -226,8 +221,9 @@ class JSFGenerator implements IGenerator{
 
     // Get all FormElements which have an expression 
     val form = getForm(q)
+   org::eclipse::xtend::typesystem::emf::EcoreUtil2::allContents(form)
    
-    val allResourceContents = form.eAllContents.toIterable
+    val allResourceContents =  org::eclipse::xtend::typesystem::emf::EcoreUtil2::allContents(form)
     val Iterable<FormElement> allFormElementsWithExpression = allResourceContents
       .filter(typeof(FormElement))
       .filter[it.expression!=null]
@@ -237,14 +233,18 @@ class JSFGenerator implements IGenerator{
    val result = allFormElementsWithExpression.filter[
     	
     	val exp = it.expression
-        val featureCalls = exp.eAllContents.toSet
-        val xfeaturecalls = featureCalls.filter(typeof(XFeatureCall))
-        xfeaturecalls.exists[
-        	val feaID = feature.simpleName
-        	val fieID = field.simpleName
-        	val equal = feaID==fieID
-        	equal
-        ]
+    	if(exp instanceof XFeatureCall){
+    		(exp as XFeatureCall) .feature.simpleName == field.simpleName	
+    	}else{
+	        val featureCalls =  org::eclipse::xtend::typesystem::emf::EcoreUtil2::allContents(exp)
+	        val xfeaturecalls = featureCalls.filter(typeof(XFeatureCall))
+	        xfeaturecalls.exists[
+	        	val feaID = feature.simpleName
+	        	val fieID = field.simpleName
+	        	val equal = feaID==fieID
+	        	equal
+	        ]
+    	}
     
 	]
 	//TODO incorrect result gives any dependent elements
