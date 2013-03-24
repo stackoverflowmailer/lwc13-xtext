@@ -35,8 +35,7 @@ class QlsDslGenerator implements IGenerator {
    	  val xhtmlFileName = "generated/pages/"+page.name+".xhtml"
    	  fsa.generateFile(xhtmlFileName, WEB_CONTENT, xhtmlContent)
     }
-    //generate index page with links to generated pages
-    val contentIndex  = generate_IndexPage(styleModel.pages.get(0))
+    val contentIndex  = generateIndexPage(styleModel.pages.get(0))
     fsa.generateFile("generated/pages/index.xhtml",WEB_CONTENT, contentIndex)
   }
 
@@ -82,7 +81,7 @@ class QlsDslGenerator implements IGenerator {
 	</html>
   '''
     
-  def generate_IndexPage(Page page)'''
+  def generateIndexPage(Page page)'''
 	<?xml version='1.0' encoding='UTF-8' ?>
 	<!-- @generated -->
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
