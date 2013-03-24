@@ -1,33 +1,32 @@
 // Forms can be defined on level page and section
 // If form is defined on parent level, no child can refer to a form
 // If parent has no form, all childs must declare their form 
-
-page Page1 {
-	section house uses Box1HouseOwning {
+page HouseOwningPage {
+	section house uses HouseOwningForm {
+		question hasSoldHouse [
+			font-color: "blue"
+		]
+		
 		question hasBoughtHouse [
-			font-color: "#FFDD99"
-			font-style: "bold italic"
-			font-type: "Comic"
+			font-color: "#ABCDEF"
+			font-style: "italic"
+			font-weight: "bold"
+			font-family: "Verdana"
 			widget: Radio ["yes","no"]
 		]
-	}
-	section car uses CarOwning { 
-		question hasSoldCar [font-color: "#AA2233"]
-		question hasBoughtCar [font-color: "#AA2233"]
-	}
+	} 
+	section garage uses GarageOwningForm { 
+		question hasSoldGarage [font-color: "#AA2233"]
+		question hasBoughtGarage [font-color: "#3322AA"]
+	} 
 	
 	navigation {
-	    // previous: implicit
-		//Page1 // (true) // isLinkToPage2Enabled()
+	    CarOwningPage
 	}
 	
 }
-/* 
-page Page2 uses Box1HouseOwning {
-	question hasMaintLoan [font-style:"italic"]
-	question sellingPrice [font-type:"Arial"]
-}
 
-page Page3 {
- // TODO
-} */
+page CarOwningPage uses CarOwningForm {
+	question hasSoldCar [font-color:"green"]
+	question hasBoughtCar [font-color:"red"]
+}

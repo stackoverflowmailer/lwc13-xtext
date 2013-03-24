@@ -6,8 +6,18 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
     version="2.1">
      <managed-bean>
-        <managed-bean-name>box1HouseOwning</managed-bean-name>
-        <managed-bean-class>forms.Box1HouseOwning</managed-bean-class>
+        <managed-bean-name>houseOwningForm</managed-bean-name>
+        <managed-bean-class>forms.HouseOwningForm</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
+     </managed-bean>
+     <managed-bean>
+     	<managed-bean-name>carOwningForm</managed-bean-name>
+     	<managed-bean-class>forms.CarOwningForm</managed-bean-class>
+     	<managed-bean-scope>session</managed-bean-scope>
+     </managed-bean>
+          <managed-bean>
+     	<managed-bean-name>garageOwningForm</managed-bean-name>
+     	<managed-bean-class>forms.GarageOwningForm</managed-bean-class>
+     	<managed-bean-scope>session</managed-bean-scope>
      </managed-bean>
 </faces-config>

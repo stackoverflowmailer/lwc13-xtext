@@ -13,7 +13,7 @@
     <param-name>javax.faces.CONFIG_FILES</param-name>
     <param-value>
     	WEB-INF/faces-config.xml,
-    	WEB-INF/generated/form_config.xml
+    	WEB-INF/generate_ref/form_config.xml
     </param-value>
   </context-param>
   <context-param>

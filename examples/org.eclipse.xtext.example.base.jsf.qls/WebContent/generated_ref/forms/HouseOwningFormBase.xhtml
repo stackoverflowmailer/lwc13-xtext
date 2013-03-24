@@ -12,9 +12,11 @@
           <h:panelGroup id="grpBox1HouseOwningForm_nested">
           <h:outputLabel id="lblqHasSoldHouse" value="Did you sell a house in 2010?"/>
           <h:selectBooleanCheckbox id="qHasSoldHouse" value="#{box1HouseOwning.hasSoldHouse}">
+          <f:ajax event="click" render="group0"/>
                 </h:selectBooleanCheckbox>
           <h:outputLabel id="lblqHasBoughtHouse" value="Did you by a house in 2010?"/>
           <h:selectBooleanCheckbox id="qHasBoughtHouse" value="#{box1HouseOwning.hasBoughtHouse}">
+          <f:ajax event="click" render="group0"/>
                 </h:selectBooleanCheckbox>
           <h:outputLabel id="lblqHasMaintLoan" value="Did you enter a loan for maintenance/reconstruction?"/>
           <h:selectBooleanCheckbox id="qHasMaintLoan" value="#{box1HouseOwning.hasMaintLoan}">

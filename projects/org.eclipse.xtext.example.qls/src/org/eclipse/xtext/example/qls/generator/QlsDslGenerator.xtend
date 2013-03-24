@@ -32,7 +32,28 @@ class QlsDslGenerator implements IGenerator {
        	val xhtmlFileName = "generated/pages/"+page.name+".xhtml"
        	fsa.generateFile(xhtmlFileName, WEB_CONTENT, xhtmlContent)
       }
+      
+      //generate index page with links to generated forms
+      val contentIndex  = generate_IndexPage(styleModel.pages.get(0))
+      fsa.generateFile("generated/pages/index.xhtml",WEB_CONTENT, contentIndex)
 	}
+	def generate_IndexPage(Page page) 
+	'''<?xml version='1.0' encoding='UTF-8' ?>
+      <!-- @generated -->
+      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+      <ui:composition template="/index.xhtml">
+        <ui:define name="content">
+          <h:outputLink value="«page.name».jsf">«page.name»</h:outputLink>
+        </ui:define>
+      </ui:composition>
+      </html>
+    '''
+
+	
+		
 	
 	def generateCssFile(Page page) 
 	'''
@@ -56,14 +77,22 @@ class QlsDslGenerator implements IGenerator {
 		  xmlns:f="http://java.sun.com/jsf/core">
 		  <h:head></h:head>
 		  <ui:composition template="/index.xhtml">
-		   <ui:define name="content">
+		    <ui:define name="content">
 		   
-		   <h:outputStylesheet library="default/css/generated" name="«page.name».css"  />
+		      <h:outputStylesheet library="default/css/generated" name="«page.name».css"  />
 		   
-		   «FOR section: page.eAllContents.toList.filter(typeof(Section)).toList SEPARATOR '<p/>'»
-		   <ui:include src="/generated_ref/forms/«section.form.name»Base.xhtml" />		  
-		  «ENDFOR»
-		  	</ui:define>
+		    «FOR section: page.eAllContents.toList.filter(typeof(Section)).toList SEPARATOR '<p/>'»
+		      <ui:include src="/generated_ref/forms/«section.form.name»Base.xhtml" />
+		    «ENDFOR»
+		  
+		  	  <div>
+		  	  «IF page.navigation != null»
+		  	  «FOR nextPage: page.navigation.nextPage»
+		  	    <h:outputLink value="«nextPage.name».jsf">Next Page</h:outputLink>
+		  	  «ENDFOR»
+		  	  «ENDIF»
+			  </div>
+		    </ui:define>
 		  </ui:composition>
 		</html>
 	'''

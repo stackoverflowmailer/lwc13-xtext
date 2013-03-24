@@ -1,0 +1,54 @@
+<!-- @generated -->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core">
+
+      <h:form id="garageowningform">
+       <!-- B E G I N _ M A I N _ S E C T I O N  -->
+        <h:panelGroup id="grp_garageOwningFormForm">
+          <!-- evaluation part, every expression has one -->
+          <h:panelGroup id="grp_garageowningform">
+          <h:outputLabel value="Did you sell a garage in 2010?"/>
+          
+          <h:selectBooleanCheckbox id="q_hassoldgarage" value="#{garageOwningForm.hasSoldGarage}">
+            <f:ajax event="click" render="grp_garageowningform "/>
+          </h:selectBooleanCheckbox>
+           <br/>
+          <h:panelGroup id="grp_group0">
+            <h:panelGroup id="group_group0Visible"
+              rendered="#{garageOwningForm.group0Visible}">
+            <h:outputLabel value="Price garage was sold for"/>
+            
+            <h:inputText id="q_sellingprice" value="#{garageOwningForm.sellingPrice}">
+              <f:ajax event="blur" render="grp_group0 "/>
+              <f:converter converterId="converter.Money"/>
+            </h:inputText>
+             <br/>
+            </h:panelGroup>
+          </h:panelGroup>
+          <h:outputLabel value="Did you buy a garage in 2010?"/>
+          
+          <h:selectBooleanCheckbox id="q_hasboughtgarage" value="#{garageOwningForm.hasBoughtGarage}">
+            <f:ajax event="click" render="grp_garageowningform "/>
+          </h:selectBooleanCheckbox>
+           <br/>
+          <h:panelGroup id="grp_group1">
+            <h:panelGroup id="group_group1Visible"
+              rendered="#{garageOwningForm.group1Visible}">
+            <h:outputLabel value="Price garage was bought for"/>
+            
+            <h:inputText id="q_buyingprice" value="#{garageOwningForm.buyingPrice}">
+              <f:ajax event="blur" render="grp_group1 "/>
+              <f:converter converterId="converter.Money"/>
+            </h:inputText>
+             <br/>
+            </h:panelGroup>
+          </h:panelGroup>
+          </h:panelGroup>
+        </h:panelGroup>
+      <!-- E N D _ generate_JSFPage _ S E C T I O N  -->
+      </h:form>
+
+</html>
