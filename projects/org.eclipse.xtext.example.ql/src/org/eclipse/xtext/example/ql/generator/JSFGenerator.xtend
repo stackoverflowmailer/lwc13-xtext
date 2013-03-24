@@ -31,10 +31,12 @@ class JSFGenerator implements IGenerator{
         //generate forms
         val questionnaire = input.contents.head as Questionnaire
         for (form: questionnaire.forms) {
+        	//simple jsf which includes the generated form
             val content = generate_JSFPage(form)
             val fileName = "generated/forms/"+form.name+".xhtml"
             fsa.generateFile(fileName,WEB_CONTENT, content)
             
+            //the base form which can be included in other pages
             val contentBase = generate_JSFBaseForm(form)
             val fileNameBase = "generated/forms/"+form.name+"Base.xhtml"
             fsa.generateFile(fileNameBase,WEB_CONTENT, contentBase)
@@ -238,8 +240,8 @@ class JSFGenerator implements IGenerator{
         val featureCalls = exp.eAllContents.toSet
         val xfeaturecalls = featureCalls.filter(typeof(XFeatureCall))
         xfeaturecalls.exists[
-        	val feaID = feature.id
-        	val fieID = field.id
+        	val feaID = feature.simpleName
+        	val fieID = field.simpleName
         	val equal = feaID==fieID
         	equal
         ]
