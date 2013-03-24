@@ -100,7 +100,7 @@ class QlsDslGenerator implements IGenerator {
 	def getId(StyleInformation styleInfo) {
 		val question = (styleInfo.eContainer as Question).question
 		val form = EcoreUtil2::getContainerOfType(question, typeof(Form))
-		'''#«form.id»\:q«question.id»'''
+		'''#«form.id»\:lbl«question.id.toFirstUpper»'''
 	}
 
 	def dispatch getForm(Section section) {

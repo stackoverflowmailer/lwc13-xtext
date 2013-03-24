@@ -118,7 +118,7 @@ class JSFGenerator implements IGenerator{
   //TODO special cases (readonly money, )
   def dispatch generate (Question question) '''
   <!-- generate (Question question) -->
-    <h:outputLabel value="«question.label»"/>
+    <h:outputLabel id="lbl«question.id.toFirstUpper»" value="«question.label»"/>
     «switch(question.type.type){
         JvmPrimitiveType: {
           switch (question.type.simpleName.toLowerCase){
