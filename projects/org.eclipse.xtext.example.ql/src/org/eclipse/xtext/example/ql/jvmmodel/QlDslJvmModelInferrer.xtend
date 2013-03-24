@@ -95,7 +95,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
             getter.body = question.expression
             members += getter
           }
-          members += question.createIsEnabledMethod
+          members += question.createIsQuestionVisibleMethod
         }
 
         val allQuestionGroups = form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
@@ -124,13 +124,16 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
   }
 
    /**
-    * Create a method <code>public boolean is[QUESTION]Enabled ()</code>.
+    * Create a method <code>public boolean is[QUESTION]Visible ()</code>.
     * @param question Source Question instance
     */
-   def JvmOperation createIsEnabledMethod (Question question) {
-     question.toMethod("is"+question.name.toFirstUpper+"Enabled", typeReferences.getTypeForName("boolean", question, null)) [
-       body = [it.append('''return «question.expression == null»;''')]
-  ]
+   def JvmOperation createIsQuestionVisibleMethod (Question question) {
+   	if(question.expression != null){
+   		//TODO if a questions value is calculated from expression it should be visible when its calculated 
+   		 question.toMethod("is"+question.name.toFirstUpper+"Visible", typeReferences.getTypeForName("boolean", question, null)) [
+       body = [it.append('''return get«question.name.toFirstUpper»() != null;''')]
+       	]
+    }
    }
 
    /**
