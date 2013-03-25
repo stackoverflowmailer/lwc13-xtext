@@ -69,8 +69,8 @@ keyword on multiple methods with identical signatures has the effect that the
 decision on which method should be called is based on the runtime type of the
 target object. In contrast, Java binds methods at compile time based on the static
 type of the target object. Since Xtend compiles to Java, polymorphic dispatching
-is internally realized by a dispatcher method using a cascade of \textt{instanceof}
-constructs. 
+is internally realized by a dispatcher method using a cascade of
+\texttt{instanceof} constructs. 
 
 \begin{lstlisting}[language=Xtend]
   def dispatch doSomething(Integer input) {
