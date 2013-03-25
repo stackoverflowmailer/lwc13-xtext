@@ -5,8 +5,6 @@
       <repositories location="http://download.eclipse.org/releases/juno">
         <bundles name="org.eclipse.ui.ide.application" versionRange="1.0.400.v20120523-1955"/>
         <bundles name="org.eclipse.swt.win32.win32.x86_64" versionRange="3.100.1.v4234e"/>
-        <features name="org.eclipse.xtend.sdk.feature.group" versionRange="[2.3.1,2.3.2)"/>
-        <features name="org.eclipse.xtext.sdk.feature.group" versionRange="[2.3.1,2.3.2)"/>
         <features name="org.eclipse.emf.sdk.feature.group" versionRange="[2.8.1,2.8.2)"/>
         <features name="org.eclipse.equinox.p2.sdk.feature.group" versionRange="3.8.0.v20120524-0542-9N89H_mGMMn84Osz0TAoT279BRQD"/>
       </repositories>
@@ -18,9 +16,17 @@
         <bundles name="javax.inject" versionRange="1.0.0.v20091030"/>
         <bundles name="javax.inject.source" versionRange="1.0.0.v20091030"/>
         <bundles name="org.junit" versionRange="4.8.2.v4_8_2_v20110321-1705"/>
+        <bundles name="org.glassfish.com.sun.faces" versionRange="2.1.6.v201205171319"/>
+        <bundles name="org.glassfish.javax.faces" versionRange="2.1.6.v201205170953"/>
       </repositories>
       <repositories location="http://download.eclipse.org/eclipse/updates/4.2">
         <products name="org.eclipse.platform.ide" versionRange="4.2.1"/>
+      </repositories>
+      <repositories location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/" description="Xtext Releases">
+        <features name="org.eclipse.xtend.sdk.feature.group" versionRange="2.4.0.v201303201134"/>
+        <features name="org.eclipse.xtext.sdk.feature.group" versionRange="2.4.0.v201303201134"/>
+        <features name="org.eclipse.xtext.sdk.source.feature.group" versionRange="2.4.0.v201303201134"/>
+        <features name="org.eclipse.xtend.sdk.source.feature.group" versionRange="2.4.0.v201303201134"/>
       </repositories>
     </contributions>
     <validationRepositories location="http://download.eclipse.org/releases/juno"/>
