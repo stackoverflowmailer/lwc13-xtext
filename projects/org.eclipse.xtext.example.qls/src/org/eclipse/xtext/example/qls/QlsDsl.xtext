@@ -6,7 +6,7 @@ import "http://www.eclipse.org/xtext/example/ql/QlDsl" as ql
 /**
  * Following requirements should be fulfilled:
  * - grouping of related questions into pages, sections, subsection
- * - font style (italic, bold, underlined), font type, and color for labels
+ * - styling information for question labels (font-style, font-weight, font-family, color)
  * - widget selection 
  */
 
@@ -21,10 +21,10 @@ Page:
 ;
 
 PageElement:
-	Question | Section
+	QuestionStyling | Section
 ;
 
-Question:
+QuestionStyling:
 	"question" question=[ql::Question] styling+=StyleInformation?	
 ;
 

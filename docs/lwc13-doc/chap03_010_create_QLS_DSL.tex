@@ -17,20 +17,18 @@ page HouseOwningPage {
 	section house uses Box1HouseOwning {
 		question hasBoughtHouse [widget: CheckBox]
 		question valueResidue [
-			font-style: "bold" 
-			font-color: "#2233FF"
-			font-type:  "Arial"
+			font-style:  "italic"
+			font-wight:  "bold" 
+			font-color:  "#2233FF"
+			font-family: "Arial"
 		]
 	}
-	
 	section garage uses GarageOwning {
 		question hasBoughtGarage [widget: Radio["Yepp", "Nope"]]		
 	}
-	
 	navigation {
 		CarOwningPage
 	}
-	
 }
 
 page CarOwningPage uses CarOwning {
@@ -38,7 +36,7 @@ page CarOwningPage uses CarOwning {
 }
 \end{lstlisting}
 
-This example model defines two pages. The first page contains of two sections,
+This example model defines two pages. The first page consists of two sections,
 one for the question form \emph{Box1HouseOwning} which was defined in chapter 
 \ref{chp:QL} and one for a further form called \emph{GarageOwning}. The form to
 be rendered inside a page or a section is specified by the \texttt{uses} keyword.
@@ -46,10 +44,8 @@ This definition must be unambiguously, e.g. if there is a form included by a pag
 it is not allowed to refer to another form in one of its containing sections.
 This restriction is ensured by implementing a corresponding validation which will be covered
 in chapter (TODO). In a section (or page) the styling information for the questions of the included
-form can be defined as in lines 3-8 and 12. The \texttt{navigation} keyword allows to define order in which the pages are to
+form can be defined as in lines 3-9 and 13. The \texttt{navigation} keyword allows to define the order in which the pages are to
 be displayed by specifying which page should appear next.
-
-TODO: expressions? 
 
 Before we can write the corresponding Xtext grammar, we need to create the DSL 
 projects for QLS as we have done for the Questionnaire language. For this, refer
@@ -75,22 +71,21 @@ Page:
 ;
 
 PageElement:
-	Question | Section
+	QuestionStyling | Section
 ;
 
-Question:
+QuestionStyling:
 	"question" question=[ql::Question] styling+=StyleInformation?	
 ;
 
 StyleInformation: {StyleInformation}
-	"["
-	(
+	"["(
 		("font-style:" fontStyle=STRING)? &
+		("font-weight:" fontWeight=STRING)? &
 		("font-color:" fontColor=STRING)? &
-		("font-type:" fontType=STRING)? &
+		("font-family:" fontFamily=STRING)? &
 		("widget:" widget=Widget)?
-	)
-	"]"
+	)"]"
 ;
 
 Widget: {Widget}
@@ -104,33 +99,28 @@ Section:
 ;
 
 Navigation: {Navigation}
-	"navigation" "{" (nextPage+=NextPage)* "}"
-;
-
-NextPage:
-	page=[Page|ID]
+	"navigation" "{" (nextPage+=[Page|ID])+ "}"
 ;
 \end{lstlisting}
 
-After reading chapter \ref{sec:DefiningGrammar}, you should be familiar with the
-concepts of xtext grammar definitions and understand most parts of the QLS grammar.
+After reading chapter \ref{sec:DefiningGrammar} you should be familiar with the
+concepts of Xtext grammar definitions and understand most parts of the QLS grammar.
 One new concept represented in the QLS grammar is the one of unordered lists:
 
 \begin{lstlisting}[language=Xtext]
 StyleInformation: {StyleInformation}
-	"["
-	(
+	"["(
 		("font-style:" fontStyle=STRING)? &
+		("font-weight:" fontWeight=STRING)? &
 		("font-color:" fontColor=STRING)? &
-		("font-type:" fontType=STRING)? &
+		("font-family:" fontFamily=STRING)? &
 		("widget:" widget=Widget)?
-	)
-	"]"
+	)"]"
 ;
 \end{lstlisting}
 
 The styling information can be defined in an arbitrary order in which each kind 
-of element (font style, font color, font type and widget type) may only occur at 
+of element (font style, font color and so on) may only occur at 
 most once. The arbitrariness of the order is expressed by the \texttt{'\&'} between
 the style elements. The optionality of each style information is again declared by
 the question mark \texttt{'?'}.
@@ -140,12 +130,12 @@ to language elements are expressed by using squared brackets. An example for thi
 references to existing pages in the navigation section:
 
 \begin{lstlisting}[language=Xtext]
-NextPage:
-	page=[Page|ID]
+Navigation: {Navigation}
+	"navigation" "{" (nextPage+=[Page|ID])+ "}"
 ;
 \end{lstlisting}
 
-Here, \texttt{page} is a reference to an existing page description which may even
+Here, \texttt{nextPage} is a reference to an existing page description which may even
 be defined in a different file. \texttt{ID} defines which attribute should be used
 for the reference's name. Xtext automatically creates hyperlinks to the referenced
 elements which can be enabled by holding \texttt{Ctrl} and moving the curser over the
@@ -164,7 +154,7 @@ Since the QL DSL is imported under the name \texttt{ql}, references can now be
 qualified by using a double colon (\texttt{::}):
 
 \begin{lstlisting}[language=Xtext]
-Question:
+QuestionStyling:
 	"question" question=[ql::Question] styling+=StyleInformation?	
 ;
 \end{lstlisting}
@@ -180,7 +170,7 @@ the following:
 \begin{lstlisting}[language=Java]
 public class QlsDslScopeProvider extends AbstractDeclarativeScopeProvider {
 
-  public IScope scope_Question_question(EObject context, EReference reference) {
+  public IScope scope_QuestionStyling_question(EObject context, EReference reference) {
     Form usedForm = getUsedForm(context);
     List<Question> allQuestions = EcoreUtil2.getAllContentsOfType(usedForm,
         Question.class);
@@ -207,8 +197,8 @@ public class QlsDslScopeProvider extends AbstractDeclarativeScopeProvider {
 }
 \end{lstlisting}
 
-The method \texttt{scope\_Question\_question} is always invoked whenever the visible
-elements for the attribute \texttt{question} in the grammar rule \texttt{Question} 
+The method \texttt{scope\_QuestionStyling\_question} is always invoked whenever the visible
+elements for the attribute \texttt{question} in the grammar rule \texttt{QuestionStyling} 
 need to be computed. Here, we just use a recursive algorithm to get the form declaration
 of the parent section or page which is mandatory. With the helper method \texttt{getAllContentsOfType}
 all questions defined in this form are collected and a scope containing these questions is returned.

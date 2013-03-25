@@ -32,7 +32,7 @@ public class QlsDslJavaValidator extends AbstractQlsDslJavaValidator {
   public void checkUsedFormIsRequired(Page page) {
     if (page.getForm() == null) {
       Collection<Object> allDirectQuestions = EcoreUtil2.getObjectsByType(
-          page.getElement(), QlsDslPackage.eINSTANCE.getQuestion());
+          page.getElement(), QlsDslPackage.eINSTANCE.getQuestionStyling());
 
       if (!allDirectQuestions.isEmpty()) {
         error(

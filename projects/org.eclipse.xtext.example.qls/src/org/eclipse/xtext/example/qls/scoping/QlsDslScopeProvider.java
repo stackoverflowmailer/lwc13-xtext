@@ -25,7 +25,8 @@ import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
  */
 public class QlsDslScopeProvider extends AbstractDeclarativeScopeProvider {
 
-  public IScope scope_Question_question(EObject context, EReference reference) {
+  public IScope scope_QuestionStyling_question(EObject context,
+      EReference reference) {
     Form usedForm = getUsedForm(context);
     List<Question> allQuestions = EcoreUtil2.getAllContentsOfType(usedForm,
         Question.class);

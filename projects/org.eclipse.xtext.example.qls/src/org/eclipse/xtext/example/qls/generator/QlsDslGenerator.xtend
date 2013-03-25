@@ -11,11 +11,11 @@ import org.eclipse.xtext.example.ql.generator.JsfOutputConfigurationProvider
 import org.eclipse.xtext.example.qls.qlsDsl.Page
 import com.google.inject.Inject
 import org.eclipse.xtext.example.qls.qlsDsl.StyleInformation
-import org.eclipse.xtext.example.qls.qlsDsl.Question
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.example.ql.qlDsl.Form
 import org.eclipse.xtext.example.qls.qlsDsl.Section
 import org.eclipse.xtext.example.ql.generator.JSFGenerator
+import org.eclipse.xtext.example.qls.qlsDsl.QuestionStyling
 
 class QlsDslGenerator implements IGenerator {
   @Inject extension JsfOutputConfigurationProvider
@@ -97,7 +97,7 @@ class QlsDslGenerator implements IGenerator {
   '''	
 	
   def getId(StyleInformation styleInfo) {
-	val question = (styleInfo.eContainer as Question).question
+	val question = (styleInfo.eContainer as QuestionStyling).question
 	val form = EcoreUtil2::getContainerOfType(question, typeof(Form))
 	"#"+form.id+ "\\:lbl"+question.id.toFirstUpper
   }
