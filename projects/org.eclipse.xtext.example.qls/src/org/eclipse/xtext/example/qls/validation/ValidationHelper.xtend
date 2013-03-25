@@ -2,18 +2,19 @@ package org.eclipse.xtext.example.qls.validation
 
 import org.eclipse.xtext.example.qls.qlsDsl.Section
 import org.eclipse.xtext.example.qls.qlsDsl.Page
+import org.eclipse.emf.ecore.EObject
 
 class ValidationHelper {
 	
 	
-	def dispatch getFirstParentDeclaringUsedForm(Section section) {
+	def dispatch EObject getFirstParentDeclaringUsedForm(Section section) {
 		if (section.form!=null)
 		  return section
 		  
 		return getFirstParentDeclaringUsedForm(section.eContainer)
 	}
 	
-	def dispatch getFirstParentDeclaringUsedForm(Page page) {
+	def dispatch EObject getFirstParentDeclaringUsedForm(Page page) {
 		if (page.form!=null)
 		  return page
 		

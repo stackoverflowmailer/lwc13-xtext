@@ -22,6 +22,8 @@ Web, XML, Java EE and OSGi Enterprise Development
 -   Eclipse Web Developer Tools	3.4.1.v201208170345-7O7MFsPEMkBJz0wtb-ccsarPSceUIHO9iKk6XVPV
 -   Eclipse Java Web Developer Tools	3.4.1.v201208231800-7F7DFSlC25UrkX5qvgnXz0LZDA6kiWwylC3uxsWk
 
+Check for Updates => Xtext 2.4
+
 import project from git
 
 project home: http://code.google.com/a/eclipselabs.org/p/lwc13-xtext/

@@ -3,13 +3,11 @@ grammar org.eclipse.xtext.example.qls.QlsDsl with org.eclipse.xtext.common.Termi
 generate qlsDsl "http://www.eclipse.org/xtext/example/qls/QlsDsl"
 import "http://www.eclipse.org/xtext/example/ql/QlDsl" as ql
 
-
 /**
- * Following requirements should to be fulfilled:
+ * Following requirements should be fulfilled:
  * - grouping of related questions into pages, sections, subsection
- * - font style (italic, bold, underlined) and color for labels
- * - widget selection (checkbox and textfield are default)
- *   - radiobutton, dropdown list, slider etc. 
+ * - font style (italic, bold, underlined), font type, and color for labels
+ * - widget selection 
  */
 
 QuestionnaireStyleModel:
@@ -30,13 +28,13 @@ Question:
 	"question" question=[ql::Question] styling+=StyleInformation?	
 ;
 
-
 StyleInformation: {StyleInformation}
 	"["
 	(
 		("font-style:" fontStyle=STRING)? &
+		("font-weight:" fontWeight=STRING)? &
 		("font-color:" fontColor=STRING)? &
-		("font-type:" fontType=STRING)? &
+		("font-family:" fontFamily=STRING)? &
 		("widget:" widget=Widget)?
 	)
 	"]"
@@ -53,9 +51,5 @@ Section:
 ;
 
 Navigation: {Navigation}
-	"navigation" "{" (nextPage+=NextPage)* "}"
-;
-
-NextPage:
-	page=[Page|ID] // TODO enable xbase's expressions here
+	"navigation" "{" (nextPage+=[Page|ID])+ "}"
 ;

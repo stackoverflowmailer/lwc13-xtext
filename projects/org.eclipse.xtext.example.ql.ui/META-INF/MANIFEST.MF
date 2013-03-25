@@ -21,5 +21,6 @@ Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.xtext.example.ql.ui.contentassist,
  org.eclipse.xtext.example.ql.ui.contentassist.antlr,
- org.eclipse.xtext.example.ql.ui.internal
+ org.eclipse.xtext.example.ql.ui.internal,
+ org.eclipse.xtext.example.ql.ui.quickfix
 Bundle-Activator: org.eclipse.xtext.example.ql.ui.internal.QlDslActivator

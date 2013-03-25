@@ -94,7 +94,7 @@ ConditionalQuestionGroup: {ConditionalQuestionGroup}
 For the condition of the \texttt{if}-statement the grammar rule \texttt{XParenthesizedExpression} 
 inherited from Xbase is used. An \texttt{XParenthesizedExpression} is simply an expression in parenthesis.
 The \texttt{if}-statement is optional (as defined by the question mark '?' symbol) which allows for just
-grouping questions without the necessarity for a condition. The inner element are again \texttt{FormElement}s,
+grouping questions without the necessarity for a condition. The inner elements are again \texttt{FormElement}s,
 making it possible to nest groups within groups and so on. The last part that has changed is the \texttt{Question}
 rule. Here again the rule \texttt{XParenthesizedExpression} is used to optionally embed Xbase expressions:
 
@@ -109,7 +109,7 @@ GenerateQlDsl.mwe2 workflow again. Then restart the runtime workbench.
 \footnote{Select it from the Run / Run Configurations dialog or from the drop
 down menu next to the green ``play'' button in the tool bar.}
 
-Xbase comes out of the box with the support for standard Java types like like Strings or Integers inside expressions .
+Xbase comes out of the box with the support for standard Java types like Strings or Integers inside expressions.
 However, in the questionnaire language own data types, like the Money type from the example, need also to be
 integrated. Such data types will be typically defined in a Java class. When importing such a type via the \texttt{import}
 statement, it will be available in the questionnaire definition. Xbase needs to know how to handle

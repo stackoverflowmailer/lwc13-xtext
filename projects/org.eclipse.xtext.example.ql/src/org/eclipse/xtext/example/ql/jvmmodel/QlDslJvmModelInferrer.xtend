@@ -7,8 +7,6 @@ import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
 import org.eclipse.xtext.example.ql.qlDsl.Question
 import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
-import org.eclipse.xtext.xbase.XExpression
-import org.eclipse.xtext.xbase.XbaseFactory
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
@@ -97,7 +95,7 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
             getter.body = question.expression
             members += getter
           }
-          members += question.createIsEnabledMethod
+          members += question.createIsQuestionVisibleMethod
         }
 
         val allQuestionGroups = form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
@@ -126,13 +124,15 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
   }
 
    /**
-    * Create a method <code>public boolean is[QUESTION]Enabled ()</code>.
+    * Create a method <code>public boolean is[QUESTION]Visible ()</code>.
     * @param question Source Question instance
     */
-   def JvmOperation createIsEnabledMethod (Question question) {
-     question.toMethod("is"+question.name.toFirstUpper+"Enabled", typeReferences.getTypeForName("boolean", question, null)) [
-       body = [it.append('''return Â«question.expression == nullÂ»;''')]
-  ]
+   def JvmOperation createIsQuestionVisibleMethod (Question question) {
+   	if(question.expression != null){
+   		 question.toMethod("is"+question.name.toFirstUpper+"Visible", typeReferences.getTypeForName("boolean", question, null)) [
+       body = [it.append('''return get«question.name.toFirstUpper»() != null;''')]
+       	]
+    }
    }
 
    /**
