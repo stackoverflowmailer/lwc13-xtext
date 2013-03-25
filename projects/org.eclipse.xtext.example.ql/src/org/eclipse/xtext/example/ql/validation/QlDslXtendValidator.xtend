@@ -6,9 +6,13 @@ import org.eclipse.xtext.example.ql.qlDsl.QlDslPackage
 import org.eclipse.xtext.example.ql.qlDsl.Question
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.ValidationMessageAcceptor
+import org.eclipse.xtext.xbase.XFeatureCall
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 class QlDslXtendValidator extends AbstractQlDslJavaValidator {
 	@Inject extension QlDslExtensions
+	@Inject extension IJvmModelAssociations
 	
 	/**
 	 * Test for cyclic dependencies. For instance, the following snippet should
@@ -26,17 +30,25 @@ class QlDslXtendValidator extends AbstractQlDslJavaValidator {
 	 * computed values.
 	 */
 	@Check
-	def void checkCyclicDependencies (Question question) {
-		// these Questions have expressions that refer to 'question'
-		val dependentQuestions = question.getDependentElementsWithExpression.filter(typeof(Question))
-		
-		if (dependentQuestions.exists[
-			val dependentQuestionsForOther = it.getDependentElementsWithExpression.filter(typeof(Question))
-			val boolean isCyclic = dependentQuestionsForOther.toSet.contains(question)
-			return isCyclic
-		]) {
-			error("Cyclic dependency for question "+question.name+" in an expression.",question, QlDslPackage::eINSTANCE.question_Name, ValidationMessageAcceptor::INSIGNIFICANT_INDEX)
-		}
+	def void checkCyclicDependencies (XFeatureCall featureCall) {
+	  val question = featureCall.feature.sourceElements.head
+	  if (question != null) {
+	    val node = NodeModelUtils::getNode(question)
+	    node.offset
+	    if (node.offset > NodeModelUtils::getNode(featureCall).offset) {
+	      error("Cyclic dependency for question "+featureCall.feature.qualifiedName+" in an expression.",question, QlDslPackage::eINSTANCE.question_Name, ValidationMessageAcceptor::INSIGNIFICANT_INDEX)
+	    }
+	  }
+//		// these Questions have expressions that refer to 'question'
+//		val dependentQuestions = question.getDependentElementsWithExpression.filter(typeof(Question))
+//		
+//		if (dependentQuestions.exists[
+//			val dependentQuestionsForOther = it.getDependentElementsWithExpression.filter(typeof(Question))
+//			val boolean isCyclic = dependentQuestionsForOther.toSet.contains(question)
+//			return isCyclic
+//		]) {
+//			error("Cyclic dependency for question "+question.name+" in an expression.",question, QlDslPackage::eINSTANCE.question_Name, ValidationMessageAcceptor::INSIGNIFICANT_INDEX)
+//		}
 	}
 	
 }
