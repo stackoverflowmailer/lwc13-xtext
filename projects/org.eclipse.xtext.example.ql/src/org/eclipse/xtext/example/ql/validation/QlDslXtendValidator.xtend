@@ -1,26 +1,23 @@
 package org.eclipse.xtext.example.ql.validation
 
 import javax.inject.Inject
-import org.eclipse.xtext.example.ql.QlDslExtensions
-import org.eclipse.xtext.example.ql.qlDsl.QlDslPackage
-import org.eclipse.xtext.example.ql.qlDsl.Question
 import org.eclipse.xtext.validation.Check
-import org.eclipse.xtext.validation.ValidationMessageAcceptor
 import org.eclipse.xtext.xbase.XFeatureCall
+import org.eclipse.xtext.xbase.XbasePackage
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+
+import static extension org.eclipse.xtext.nodemodel.util.NodeModelUtils.*
 
 class QlDslXtendValidator extends AbstractQlDslJavaValidator {
-	@Inject extension QlDslExtensions
 	@Inject extension IJvmModelAssociations
 	
 	/**
 	 * Test for cyclic dependencies. For instance, the following snippet should
 	 * be rejected: 
 	 * <pre>
-	 * ￼￼if (x) { y: "Y?" boolean }
+	 * if (x) { y: "Y?" boolean }
 	   if (y) { x: "X?" boolean }
-￼	 * </pre>
+	 * </pre>
 	 * 
 	 * The reason is that y will only be asked for when x is true,
 	 * but x will only get a value when y is true. Of course such cyclic
@@ -30,25 +27,14 @@ class QlDslXtendValidator extends AbstractQlDslJavaValidator {
 	 * computed values.
 	 */
 	@Check
-	def void checkCyclicDependencies (XFeatureCall featureCall) {
-	  val question = featureCall.feature.sourceElements.head
-	  if (question != null) {
-	    val node = NodeModelUtils::getNode(question)
-	    node.offset
-	    if (node.offset > NodeModelUtils::getNode(featureCall).offset) {
-	      error("Cyclic dependency for question "+featureCall.feature.qualifiedName+" in an expression.",question, QlDslPackage::eINSTANCE.question_Name, ValidationMessageAcceptor::INSIGNIFICANT_INDEX)
+	def void check_featureDeclaredBeforeCall (XFeatureCall featureCall) {
+	  val featureSource = featureCall.feature.sourceElements.head
+    val nodeFeature = if (featureSource != null) featureSource.node else featureCall.feature.node
+    val nodeCall = featureCall.node
+	  if (nodeFeature != null) {
+	    if (nodeFeature.offset > nodeCall.offset) {
+	      error(featureCall.feature.simpleName+" must be declared before.",featureCall, XbasePackage::eINSTANCE.XAbstractFeatureCall_Feature, IssueCodes::FEATURE_CALL_BEFORE_DECLARATION, null)
 	    }
 	  }
-//		// these Questions have expressions that refer to 'question'
-//		val dependentQuestions = question.getDependentElementsWithExpression.filter(typeof(Question))
-//		
-//		if (dependentQuestions.exists[
-//			val dependentQuestionsForOther = it.getDependentElementsWithExpression.filter(typeof(Question))
-//			val boolean isCyclic = dependentQuestionsForOther.toSet.contains(question)
-//			return isCyclic
-//		]) {
-//			error("Cyclic dependency for question "+question.name+" in an expression.",question, QlDslPackage::eINSTANCE.question_Name, ValidationMessageAcceptor::INSIGNIFICANT_INDEX)
-//		}
-	}
-	
+  }
 }
