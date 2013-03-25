@@ -1,0 +1,69 @@
+  <!-- @generated -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core">
+  	 <h:form id="box1houseowning">
+   <!-- generateFormElement(FormElement element) -->
+  		 <!-- generate (Question question) -->
+  		   <h:outputLabel id="lblHasSoldHouse" value="Did you sell a house in 2010?"/>
+  		   		<h:selectBooleanCheckbox id="qhasSoldHouse" value="#{box1HouseOwning.hasSoldHouse}">
+  		   		  <f:ajax event="click" render="grp_group0"/>
+  		   		</h:selectBooleanCheckbox>
+  		    <br/>
+   <!-- generateFormElement(FormElement element) -->
+  		 <!-- generate (Question question) -->
+  		   <h:outputLabel id="lblHasBoughtHouse" value="Did you by a house in 2010?"/>
+  		   		<h:selectBooleanCheckbox id="qhasBoughtHouse" value="#{box1HouseOwning.hasBoughtHouse}">
+  		   		  <f:ajax event="click" render="grp_group0"/>
+  		   		</h:selectBooleanCheckbox>
+  		    <br/>
+   <!-- generateFormElement(FormElement element) -->
+  		 <!-- generate (Question question) -->
+  		   <h:outputLabel id="lblHasMaintLoan" value="Did you enter a loan for maintenance/reconstruction?"/>
+  		   		<h:selectBooleanCheckbox id="qhasMaintLoan" value="#{box1HouseOwning.hasMaintLoan}">
+  		   		  <f:ajax event="click" render=""/>
+  		   		</h:selectBooleanCheckbox>
+  		    <br/>
+   <!-- generateFormElement(FormElement element) -->
+  <h:panelGroup id="grp_group0">
+  	<h:panelGroup id="grp_group0Visible"
+  		rendered="#{box1HouseOwning.group0Visible}">
+  		   <!-- generate (ConditionalQuestionGroup group) -->
+  		  <!-- generateFormElement(FormElement element) -->
+  		 		 <!-- generate (Question question) -->
+  		 		   <h:outputLabel id="lblSellingPrice" value="Price the house was sold for    :"/>
+  		 		   		<h:inputText id="q_sellingPrice" value="#{box1HouseOwning.sellingPrice}">
+  		 		   		  <f:ajax event="blur" render="grp_valueResidue"/>
+  		 		   		  <f:converter converterId="converter.Money"/>
+  		 		   		</h:inputText>
+  		 		    <br/>
+  		  <!-- generateFormElement(FormElement element) -->
+  		 		 <!-- generate (Question question) -->
+  		 		   <h:outputLabel id="lblPrivateDebt" value="Private debts for the sold house: "/>
+  		 		   		<h:inputText id="q_privateDebt" value="#{box1HouseOwning.privateDebt}">
+  		 		   		  <f:ajax event="blur" render="grp_valueResidue"/>
+  		 		   		  <f:converter converterId="converter.Money"/>
+  		 		   		</h:inputText>
+  		 		    <br/>
+  		  <!-- generateFormElement(FormElement element) -->
+  		 <h:panelGroup id="grp_valueResidue">
+  		 	<h:panelGroup id="grp_valueResidueVisible"
+  		 		rendered="#{box1HouseOwning.valueResidueVisible}">
+  		 		 <!-- generate (Question question) -->
+  		 		   <h:outputLabel id="lblValueResidue" value="Value residue: "/>
+  		 		   		<h:inputText id="q_valueResidue" value="#{box1HouseOwning.valueResidue}" readonly="true">
+  		 		   		  <f:ajax event="blur" render=""/>
+  		 		   		  <f:converter converterId="converter.Money"/>
+  		 		   		</h:inputText>
+  		 		    <br/>
+  		 	 </h:panelGroup>
+  		 </h:panelGroup>
+  	 </h:panelGroup>
+  </h:panelGroup>
+      <!-- E N D _ generate_JSFPage _ S E C T I O N  -->
+      </h:form>
+</html>
