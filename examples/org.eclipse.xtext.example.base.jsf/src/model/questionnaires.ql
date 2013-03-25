@@ -1,5 +1,8 @@
 import types.Money
-//TODO currently just a single modelfile is supported (generator executed fore resource and overwrites /generated/forms/index.xhtml)
+
+//TODO currently just a single model file is supported (generator overwrites /generated/forms/index.xhtml fore model resource)
+//TODO the keyword this should not be used in expressions (current restriction in JSFGenerator.getDependentElementsWithExpression)
+
 form HouseOwning {    
 	hasSoldHouse: "Did you sell a house in 2010?" boolean
 	hasBoughtHouse: "Did you by a house in 2010?" boolean  
