@@ -39,16 +39,16 @@ class QlsDslGenerator implements IGenerator {
     fsa.generateFile("generated/pages/index.xhtml",WEB_CONTENT, contentIndex)
   }
 
-  def generateCssFile(Page page) 
-  '''
+  def generateCssFile(Page page) '''
+  	<!-- @generated -->
     «FOR styleInfo: page.eAllContents.filter(typeof(StyleInformation)).toList»
-	  «styleInfo.id» {
-		«IF styleInfo.fontColor != null»color:       «styleInfo.fontColor»; «ENDIF»
-		«IF styleInfo.fontFamily != null»font-family: «styleInfo.fontFamily»; «ENDIF»	
-		«IF styleInfo.fontStyle != null»font-style:  «styleInfo.fontStyle»; «ENDIF»	
-		«IF styleInfo.fontWeight != null»font-weight: «styleInfo.fontWeight»; «ENDIF»		
-	}
-    «ENDFOR»
+		«styleInfo.id» {
+		  «IF styleInfo.fontColor != null»color: «styleInfo.fontColor»;«ENDIF»
+		  «IF styleInfo.fontFamily != null»font-family: «styleInfo.fontFamily»;«ENDIF»
+		  «IF styleInfo.fontStyle != null»font-style: «styleInfo.fontStyle»;«ENDIF»
+		  «IF styleInfo.fontWeight != null»font-weight: «styleInfo.fontWeight»;«ENDIF»
+		}
+   «ENDFOR»
   '''
 	
   def generateXhtmlFile(Page page) '''

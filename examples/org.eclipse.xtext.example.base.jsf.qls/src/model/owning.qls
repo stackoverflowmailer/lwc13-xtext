@@ -1,21 +1,21 @@
 page HouseOwningPage {
 	section house uses HouseOwning {
-		question hasBoughtHouse [
-			font-color:"red"
+		question hasBoughtHouse [font-style:"italic"]
+		question valueResidue [
+			font-weight: "bold" 
+			font-color:  "#2233FF"
+			font-family: "Verdana"
 		]
-	} 
-	 
+	}
 	section garage uses GarageOwning {
-		
-	} 
-	 
+		question hasBoughtGarage [widget: Radio["Yepp", "Nope"]]		
+	}
 	navigation {
 		CarOwningPage
 	}
-} 
+}
 
 page CarOwningPage uses CarOwning {
-	question hasBoughtCar [
-		font-family:"Verdana"
-	]
+	question hasSoldCar [font-color: "green"]
+	question hasBoughtCar [font-color: "red"]
 }
