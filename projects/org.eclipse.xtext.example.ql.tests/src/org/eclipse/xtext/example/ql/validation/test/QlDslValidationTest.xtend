@@ -3,7 +3,6 @@ package org.eclipse.xtext.example.ql.validation.test
 import javax.inject.Inject
 import org.eclipse.xtext.example.ql.QlDslInjectorProvider
 import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
-import org.eclipse.xtext.example.ql.validation.IssueCodes
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
@@ -31,7 +30,7 @@ class QlDslValidationTest {
       if (x) { y: "Y?" boolean }
       if (y) { x: "X?" boolean }
     }
-    '''.parse.assertError(XbasePackage::eINSTANCE.XFeatureCall, IssueCodes::FEATURE_CALL_BEFORE_DECLARATION, "must be declared before")
+    '''.parse.assertError(XbasePackage::eINSTANCE.XFeatureCall, "ERR_FEATURE_CALL_BEFORE_DECLARATION", "must be declared before")
   }
 
   @Test
