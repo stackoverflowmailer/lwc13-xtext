@@ -43,4 +43,45 @@ class QlDslValidationTest {
     }
     '''.parse.assertNoErrors
   }
+  
+  
+  // Type check conditions and variables: the expressions in conditions should be type correct and should ultimately be booleans. 
+  // The assigned variables should be assigned consistently: each assignment should use the same type.  
+  @Test
+  def void testValidation_ConditionTypeCheck_expectError () {
+    '''
+    form Foo {
+      if ("foo".length) { a: "X?" boolean }
+    }
+    '''.parse.assertError(XbasePackage::eINSTANCE.XMemberFeatureCall, 
+       "org.eclipse.xtext.xbase.validation.IssueCodes.incompatible_types", "Type mismatch")
+  }
+  
+  @Test
+  def void testValidation_ConditionTypeCheck_expectSuccess () {
+    '''
+    form Foo {
+      if ("foo".length>1) { a: "X?" boolean }
+    }
+    '''.parse.assertNoErrors
+  }
+
+  @Test
+  def void testValidation_AssignmentTypeCheck_expectFailure () {
+    '''
+    form Foo {
+      a: "X?" boolean ("foo".length)
+    }
+    '''.parse.assertError(XbasePackage::eINSTANCE.XMemberFeatureCall, 
+       "org.eclipse.xtext.xbase.validation.IssueCodes.incompatible_types", "Type mismatch")
+  }
+
+  @Test
+  def void testValidation_AssignmentTypeCheck_expectSuccess () {
+    '''
+    form Foo {
+      a: "X?" boolean ("foo".length>1)
+    }
+    '''.parse.assertNoErrors
+  }
 }
