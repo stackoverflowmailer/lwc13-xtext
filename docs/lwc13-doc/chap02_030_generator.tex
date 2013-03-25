@@ -78,6 +78,27 @@ Open class \texttt{QlDslRuntimeModule} and add this method:
 Now we are ready to add additional templates and register them in the
 \texttt{Root} class.
 
+\subsubsection {JSF Generator}
+
+For that purpose we use the \texttt{New Xtend Class Wizard} to create a
+new Xtend file \texttt{JSFGenerator.xtend} in package
+\texttt{org.eclipse.xtext.example.ql.generator}.
+
+\begin{center}
+\includegraphics[width=10cm]{./images/chapter02/newXtendClassWizard.png}
+\end{center}
+
+The \texttt{New Xtend Class Wizard} provides the possibility to add interfaces
+by use of the \texttt{Add} button near the interface section. As we want to
+create a new generator we add the interface
+\texttt{org.eclipse.xtext.generator.IGenerator} to our new Xtend class.
+
+\begin{center}
+\includegraphics[width=10cm]{./images/chapter02/newXtendClassWizardAddInterface.png}
+\end{center}
+
+
+
 - create xtend file
 - add xtend lib if required
 - show whole generater
