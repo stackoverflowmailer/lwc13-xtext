@@ -1,8 +1,10 @@
 package types;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Money {
+public class Money implements Serializable, Comparable<Money> {
+  private static final long serialVersionUID = 1L;
   private BigDecimal amount;
 
   public Money(BigDecimal amount) {
@@ -32,5 +34,10 @@ public class Money {
 
   public Money operator_divide(Money other) {
     return new Money(this.amount.divide(other.amount));
+  }
+
+  @Override
+  public int compareTo(Money other) {
+    return this.amount.compareTo(other.amount);
   }
 }

@@ -11,7 +11,7 @@ form HouseOwning {
 		valueResidue: "Value residue: " Money (sellingPrice - privateDebt) 
 	}       
 }   
-   
+
 form CarOwning {    
 	hasSoldCar: "Did you sell a car in 2010?" boolean
 	if (hasSoldCar) {

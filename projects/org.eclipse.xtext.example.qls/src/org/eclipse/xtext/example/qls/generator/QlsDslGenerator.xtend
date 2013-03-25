@@ -40,7 +40,6 @@ class QlsDslGenerator implements IGenerator {
   }
 
   def generateCssFile(Page page) '''
-  	<!-- @generated -->
     «FOR styleInfo: page.eAllContents.filter(typeof(StyleInformation)).toList»
 		«styleInfo.id» {
 		  «IF styleInfo.fontColor != null»color: «styleInfo.fontColor»;«ENDIF»
