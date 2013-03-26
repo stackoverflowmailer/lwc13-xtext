@@ -10,7 +10,6 @@ import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator;
 /**
  * Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=403678
  */
-@SuppressWarnings("restriction")
 public class JvmModelAssociatorCustom extends JvmModelAssociator {
   @Override
   public JvmIdentifiableElement getLogicalContainer(EObject object) {
