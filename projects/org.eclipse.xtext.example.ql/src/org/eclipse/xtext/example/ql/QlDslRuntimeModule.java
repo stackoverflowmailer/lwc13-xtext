@@ -5,7 +5,7 @@ package org.eclipse.xtext.example.ql;
 
 import org.eclipse.xtext.example.ql.customizing.JvmModelAssociatorCustom;
 import org.eclipse.xtext.example.ql.customizing.QlScopeProvider;
-import org.eclipse.xtext.example.ql.generator.JsfOutputConfigurationProvider;
+import org.eclipse.xtext.example.ql.generator.JSFOutputConfigurationProvider;
 import org.eclipse.xtext.example.ql.generator.Root;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
@@ -19,7 +19,6 @@ import com.google.inject.Singleton;
  * Use this class to register components to be used at runtime / without the
  * Equinox extension registry.
  */
-@SuppressWarnings("restriction")
 public class QlDslRuntimeModule extends
     org.eclipse.xtext.example.ql.AbstractQlDslRuntimeModule {
   @Override
@@ -40,6 +39,6 @@ public class QlDslRuntimeModule extends
   public void configure(Binder binder) {
     super.configure(binder);
     binder.bind(IOutputConfigurationProvider.class)
-        .to(JsfOutputConfigurationProvider.class).in(Singleton.class);
+        .to(JSFOutputConfigurationProvider.class).in(Singleton.class);
   }
 }

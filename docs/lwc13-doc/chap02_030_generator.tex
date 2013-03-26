@@ -31,7 +31,8 @@ pattern to create a template class which serves as entry point and dispatches to
 template classes to create the artifacts. Usually one template per artifact is
 created.
 
-Create the class \texttt{Root.java} in package \texttt{org.eclipse.xtext.example.ql.generator}:
+Create the class \texttt{Root.java} in 
+package \texttt{org.eclipse.xtext.example.ql.generator}:
 
 \begin{lstlisting}[language=Java]
 package org.eclipse.xtext.example.ql.generator;
@@ -78,8 +79,98 @@ Open class \texttt{QlDslRuntimeModule} and add this method:
 Now we are ready to add additional templates and register them in the
 \texttt{Root} class.
 
-- create xtend file
-- add xtend lib if required
+\subsubsection {JSF Generator}
+
+After creation of the \texttt{Root} class where we easily can add new
+Generators, we use the \texttt{New Xtend Class Wizard} to create a new Xtend
+class called \texttt{JSFGenerator.xtend} in package
+\texttt{org.eclipse.xtext.example.ql.generator}.
+
+This class will be our entry point to generate JSF related artifacts.
+
+\begin{figure}[here]
+\centering
+\includegraphics[width=10cm]{./images/chapter02/newXtendClassWizard.png}
+\caption{New Xtend Class Wizard}
+\label{fig:newXtendClassWizard}
+\end{figure}
+
+The \texttt{New Xtend Class Wizard} provides the possibility to bind
+interfaces to the new class by use of the \texttt{Add} button near the interface
+section.
+As we want to create a new generator we add the interface
+\texttt{org.eclipse.xtext.generator.IGenerator} to our new Xtend class.
+After typing in the package, the name and the interface of our new Xtend class
+as shown in figure ~\ref{fig:newXtendClassWizard}, we can finish the
+wizard so that the class shown in listing ~\ref{lst:newXtendClass} will be
+created in our project.
+
+\begin{lstlisting}[language=Java, caption={New Xtend
+Class},label={lst:newXtendClass}] 
+package org.eclipse.xtext.example.ql.generator
+
+import org.eclipse.xtext.generator.IGenerator
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.xtext.generator.IFileSystemAccess
+
+class JSFGenerator implements IGenerator {
+	
+	override doGenerate(Resource input, IFileSystemAccess fsa) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+}
+\end{lstlisting}
+
+
 - show whole generater
 - explain step by step
 
+\subsubsection{OutputConfigurationProvider}
+
+//TODO explain OutputConfigurationProvider
+
+\begin{lstlisting}[language=Java,
+caption={JSFOutputConfigurationProvider},label={lst:jsfOutputConfigurationProvider}]
+package org.eclipse.xtext.example.ql.generator;
+
+import java.util.Set;
+
+import org.eclipse.xtext.generator.OutputConfiguration;
+import org.eclipse.xtext.generator.OutputConfigurationProvider;
+
+public class JsfOutputConfigurationProvider extends OutputConfigurationProvider {
+
+  public final String WEB_CONTENT = "WebContent";
+
+  /**
+   * @return a set of {@link OutputConfiguration} available for the generator
+   */
+  public Set<OutputConfiguration> getOutputConfigurations() {
+    Set<OutputConfiguration> outputConfigurations = super
+        .getOutputConfigurations();
+
+    OutputConfiguration webContent = new OutputConfiguration(WEB_CONTENT);
+    webContent.setDescription("Read-only Output Folder for forms");
+    webContent.setOutputDirectory("./WebContent");
+    webContent.setOverrideExistingResources(true);
+    webContent.setCreateOutputDirectory(true);
+    webContent.setCleanUpDerivedResources(true);
+    webContent.setSetDerivedProperty(true);
+    outputConfigurations.add(webContent);
+
+    return outputConfigurations;
+  }
+}
+\end{lstlisting}
+
+//TODO binding the OutputConfigurationProvider in QlDslRuntimeModule 
+
+\begin{lstlisting}[language=Java,
+caption={Binding
+JSFOutputConfigurationProvider},label={lst:bindingJsfOutputConfigurationProvider}]
+@Override public void configure(Binder binder) {
+    super.configure(binder);
+    binder.bind(IOutputConfigurationProvider.class)
+        .to(JSFOutputConfigurationProvider.class).in(Singleton.class);
+  }
+ \end{lstlisting}

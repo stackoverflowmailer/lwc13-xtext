@@ -20,7 +20,7 @@ import com.google.common.collect.Iterables;
 /**
  * Adds local variable bindings for expressions.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("deprecation")
 public class QlScopeProvider extends XbaseScopeProvider {
   @Inject
   private IJvmModelAssociations associations;
