@@ -6,21 +6,21 @@ can be made available in expressions. Further, it allows that model elements are
 necessarily generate a Java class.
 
 The derivation of the Java model for language concepts is the responsibility of the JVM Model Inferrer, which is a class that implements
-the \href{http://download.eclipse.org/modeling/tmf/xtext/javadoc/2.3/org/eclipse/xtext/xbase/jvmmodel/IJvmModelInferrer.html}{IJvmModelInferrer} interface.
+the \href{http://download.eclipse.org/modeling/tmf/xtext/javadoc/2.3/org/eclipse/xtext/xbase/jvmmodel/IJvmModelInferrer.html}{\texttt{IJvmModelInferrer}} interface.
 A skeleton has already been generated into package \texttt{org.eclipse.xtext.example.ql.jvmmodel}. The file \texttt{QlDslJvmModelInferrer.xtend} is a class
 written with Xtend.
 
 The mapping that has to be implemented for the Questionnaire DSL should be as follows:
 \begin{enumerate}
-  \item Each Form instance is mapped to a JvmDeclaredType (which is the common concept for Java classes and interfaces).
+  \item Each \texttt{Form} instance is mapped to a \texttt{JvmDeclaredType} (which is the common concept for Java classes and interfaces).
   The type's name is simply the form name, and the target package is forms.
-  \item Each Question of a Form is mapped to a JvmField, which is added as member of the declared type
-  \item For each Question accessor methods for the field are generated. The field gets only a setter if the value of the Question is
+  \item Each \texttt{Question} of a \texttt{Form} is mapped to a \texttt{JvmField}, which is added as member of the declared type
+  \item For each \texttt{Question} accessor methods for the field are generated. The field gets only a setter if the value of the Question is
   not computed by an expression. If the field is computed, the content of the getter has to compute the result.
-  \item For each Question a method \texttt{is<QUESTIONNAME>Enabled()} is inferred.
+  \item For each \texttt{Question} a method \texttt{is<QUESTIONNAME>Enabled()} is inferred.
   Questions with computed values are not enabled.
-  \item For each Question Group a method is produced that computes whether the
-  group is visible or not. 
+  \item For each \texttt{ConditionalQuestionGroup} a method is produced that computes
+  whether the group is visible or not. 
 \end{enumerate}
 
 Now place the content into the inferrer class\footnote{\url{https://gist.github.com/kthoms/5132153}}
@@ -52,7 +52,9 @@ def dispatch void infer(Questionnaire element, IJvmDeclaredTypeAcceptor acceptor
         //implements Serializable
         it.superTypes +=typeReferences.getTypeForName(typeof(Serializable),element,null)
 
-        it.members += toField("serialVersionUID",typeReferences.getTypeForName("long",element),[final = false ^static = false ])
+        members += toField("serialVersionUID",typeReferences.getTypeForName("long",element),[final = true ^static = true 
+          setInitializer([it.append("1L")])
+        ])
 
         val allQuestions = form.eAllContents.filter(typeof(Question)).toList
         
@@ -118,11 +120,11 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
 The inferrer class implements \texttt{IJvmModelInferrer}, but for convenience we derive
 from its abstract implementation \texttt{AbstractModelInferrer}. The main method to
 implement is \texttt{infer()}. In the case of QL models, the root element
-of model resources is a Questionnaire. The base implementation uses polymorphic dispatching on
+of model resources is a \texttt{Questionnaire}. The base implementation uses polymorphic dispatching on
 the root element of a model resource, and the \texttt{infer()} method of our
 implementation hooks into the dispatching by using the dispatch keyword. That is
-also why the first argument can be of type Questionnaire, and not of the base
-type EObject, like defined in the \texttt{infer()} method that is definied in
+also why the first argument can be of type \texttt{Questionnaire}, and not of the base
+type \texttt{EObject}, like defined in the \texttt{infer()} method that is definied in
 \texttt{IJvmModelInferrer}.
 
 The implementation uses two services, which are injected as members into the
@@ -130,7 +132,7 @@ class:
 \begin{itemize}
 \item The \texttt{JvmTypesBuilder} offers factory and builder functions to create
 instances of JVM Model types. The additional keyword \texttt{extension} has the effect,
-that the methods of the \texttt{JvmTypesBuilder} become so-called extension methods.
+that the methods of the \texttt{JvmTypesBuilder} become so-called \textbf{extension methods}.
 This means, the functions become implicitly available as additional
 methods on the first argument of the function. We will see extensive use of this
 nice feature of Xtend in the implementation of the Xtend based code generator in
@@ -148,18 +150,23 @@ given qualified Java class names through its \texttt{getTypeForName()} methods.
     }
 \end{lstlisting}
 
-Let's take a deeper look on the \texttt{infer()} method. The outer loop simply iterates over the Form instances of the Questionnaire element. Inside the loop we first derive a Class
-instance for each Questionnaire element in package \texttt{forms}. JVM Model Inference is executed in two
+Let's take a deeper look on the \texttt{infer()} method. The outer loop simply
+iterates over the \texttt{Form} instances of the \texttt{Questionnaire} element.
+Inside the loop we first derive a Class instance for each \texttt{Questionnaire}
+element in package \texttt{forms}. JVM Model Inference is executed in two
 phases: In the first phase all types are derived, without any content. In the
 second phase, the content of the types is derived. This is done by the closure
-passed to \texttt{initializeLater()}. The reason why this has to happen this way is that
-during inference of type members, they could refer again to types that are
-derived by the inferrer. The two phases prevent circular calls.
+passed to \texttt{initializeLater()}. The reason why this has to happen this way
+is that during inference of type members, they could refer again to types that
+are derived by the inferrer. The two phases prevent circular calls.
 
 \begin{lstlisting}[language=Xtend]
 it.superTypes +=typeReferences.getTypeForName(typeof(Serializable),element,null)
 
-it.members += toField("serialVersionUID",typeReferences.getTypeForName("long",element),[final = false ^static = false ])
+members += toField("serialVersionUID",typeReferences.getTypeForName("long",element),
+[final = true ^static = true 
+  setInitializer([it.append("1L")])
+])
 \end{lstlisting}
         
 We want to make the resulting Java class serializable. This is optional, but
@@ -167,7 +174,8 @@ better style. Therefore the class has to implement the \texttt{java.io.Serializa
 interface, whose JVM Model representative is retrieved from the \texttt{TypeReferences}
 instance and added to the \texttt{superTypes} collection. The identifier \texttt{it} denotes the
 implicit variable of type Form of the closure. It is not necessary to qualify it
-here, it could be left out.
+here, it could be left out. The closure passed to the \texttt{setInitializer()}
+method initializes the field with the value ``1'' of type long.
 
 \begin{lstlisting}[language=Xtend]
 val allQuestions = form.eAllContents.filter(typeof(Question)).toList
@@ -177,11 +185,11 @@ for (question: allQuestions) {
 }
 \end{lstlisting}
 
-All Question instances from the resource are bound to the final variable
+All \texttt{Question} instances from the resource are bound to the final variable
 \texttt{allQuestions}. Since Questions can be nested into groups, the content has to be
 searched recursively. \texttt{eAllContents} will traverse over all elements.
 
-Next, for each Question a JvmField instance is inferred. Here the
+Next, for each \texttt{Question} a \texttt{JvmField} instance is inferred. Here the
 \texttt{JvmTypesBuilder} is helping us with the method \texttt{toField}, which gets the name and
 type of the derived field. Here we see the effect of the extension keyword: It
 seems that \texttt{toField} is actually a method of type Question, but it is a method of
@@ -228,14 +236,14 @@ def JvmOperation createIsEnabledMethod (Question question) {
 }
 \end{lstlisting}
 
-For each question a method boolean \texttt{is<QUESTIONNAME>Enabled()} is
-inferred. The body of the method does simpley return true if the Question does
-not have an computation expression assigned, or false otherwise.
+For each \texttt{Question} a method \texttt{boolean is<QUESTIONNAME>Enabled()}
+is inferred. The body of the method does simply return \texttt{true} if the Question does
+not have an computation expression assigned, or \texttt{false} otherwise.
 
 In this case we assign to the body a closure that computes the method
-implementation text. This is the first example where we make use of Xtend's Rich
-String (the text between the three single quotes ''') feature, which is later
-heavily used in the code generator templates.
+implementation text. This is the first example where we make use of Xtend's \emph{Rich
+String} feature (the text between the three single quotes '''), which is
+later heavily used in the code generator templates.
 
 \begin{lstlisting}[language=Xtend]
 val allQuestionGroups = form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
@@ -256,12 +264,12 @@ def JvmOperation createIsGroupVisibleMethod (ConditionalQuestionGroup group, int
 }
 \end{lstlisting}
 
-We now filter all ConditionalQuestionGroup instances from the Questionnaire and
+We now filter all \texttt{ConditionalQuestionGroup} instances from the \texttt{Questionnaire} and
 loop over them. For each of them, a method \texttt{is<QUESTIONGROUPINDEX>Visible()} 
 is produced. Unfortunately, question groups are anonymous, thus we
 maintain an index counter and name the methods \texttt{isGroup<IDX>Visible()}.
 
 Since condition expressions for groups are optional, the method body has to
-return simply true in the case that no expression is assigned. When groups have
+return simply \texttt{true} in the case that no expression is assigned. When groups have
 a condition, the condition expression is assigned as the method body.
 

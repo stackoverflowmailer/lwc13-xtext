@@ -1,10 +1,10 @@
 \subsection{Create the DSL Projects} \label{chp:CreateDslProjects}
 
 Let's start creating the projects for the Questionnaire DSL. Open the New
-Project Wizard with \emph{File / New / Project}. Choose ``Xtext Project'' and press
-``Next''.
+Project Wizard with \emph{File / New / Project}. Choose ``\emph{Xtext Project}'' and press
+``\emph{Next}''.
 
-\includegraphics[width=17cm]{./images/chapter01/NewXtextProjectWizard.png}
+\includegraphics[width=14cm]{./images/chapter01/NewXtextProjectWizard.png}
 
 On the project wizard page enter:
 \begin{enumerate}
@@ -22,9 +22,9 @@ On the project wizard page enter:
   Project}, which we do not handle in this tutorial any further.
 \end{enumerate}
 
-Now press ``Finish''. Xtext will generate for you 3 projects into your workspace:
+Now press ``\emph{Finish}''. Xtext will generate for you 3 projects into your workspace:
 
-\includegraphics{./images/chapter01/WorkspaceAfterWizard.png}
+\includegraphics[width=10cm]{./images/chapter01/WorkspaceAfterWizard.png}
 
 \begin{itemize}
   \item \texttt{org.eclipse.xtext.example.ql}: This is the Runtime Project,
@@ -33,8 +33,8 @@ Now press ``Finish''. Xtext will generate for you 3 projects into your workspace
   this project.
   \item \texttt{org.eclipse.xtext.example.ql.tests}: This project is intended to
   hold test code for the language. Tests are implemented with JUnit. Xtext will
-  generate some infrastructure code required for tests into here. We won't deal
-  testing of DSLs in this tutorial any further. You can close or remove this
+  generate some infrastructure code required for tests into here. We will deal
+  testing of DSLs at the end of this tutorial. For now, you can close this
   project if you want.
   \item \texttt{org.eclipse.xtext.example.ql.ui}: Xtext produces a language
   specific text editor. The editor is an Eclipse plugin. While the runtime part
@@ -47,8 +47,9 @@ important files in the \texttt{/src} folder.
 \begin{itemize}
   \item \texttt{GenerateQlDsl.mwe2}: This is a so-called ``MWE2 Workflow''. MWE
   is short for ``Modeling Workflow Engine'', which is a framework that is
-  intended to define processes for code generation. This file defines the
-  process to generate code for the DSL implementation.
+  intended to define processes for code generation\footnote{More about MWE2
+  see \url{http://www.eclipse.org/Xtext/documentation.html\#MWE2}}. This file
+  defines the process to generate code for the DSL implementation.
   \item \texttt{QlDsl.xtext}: This is the file that contains the DSL language
   definition itself. It is called the \emph{Grammar} of the language.
 \end{itemize}
@@ -140,7 +141,7 @@ The metamodel will represent the language's Abstract Syntax Tree
   \item an
   \href{http://download.eclipse.org/modeling/emf/emf/javadoc/2.7.0/org/eclipse/emf/ecore/EPackage.html}{EPackage}
   for each \texttt{generate} statement. The name of the EPackage is the first
-  argument (\texttt{qlDsl}), the package's nsURI is the second argument
+  argument (\texttt{qlDsl}), the package's \texttt{nsURI} is the second argument
   \newline(\texttt{"http://www.eclipse.org/xtext/example/ql/QlDsl"}).
   \item an
   \href{http://download.eclipse.org/modeling/emf/emf/javadoc/2.7.0/org/eclipse/emf/ecore/EClass.html}{EClass}
@@ -216,7 +217,7 @@ Form:
   "}";
 \end{lstlisting}
 
-Forms have an attribute called \texttt{name}. ID is a \emph{terminal rule},
+Forms have an attribute called \texttt{name}. \texttt{ID} is a \emph{terminal rule},
 which is defined in Xtext's root grammar \texttt{Terminals}. It allows typical
 Java-style identifiers (beginning with a word character followed by arbitrary many characters,
 numbers or underscores).
@@ -234,7 +235,7 @@ FormElement:
 \end{lstlisting}
 
 Finally, the \texttt{Question} rule is defined. In a first step, Questions are identified
-by a name, followed by a label string and a reference to a type. Later we will
+by a \texttt{name}, followed by a \texttt{label} string and a reference to a \texttt{type}. Later we will
 add expressions to compute the value.
 
 \begin{lstlisting}[language=Xtext]

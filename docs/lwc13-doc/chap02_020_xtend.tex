@@ -8,8 +8,8 @@ Xtend is a statically-typed general purpose language similar to Java. Xtend uses
 Xbase as core language which was already roughly explained in section \ref{sec:Xbase}.
 Hence, the presented concepts of Xbase are also valid for Xtend. The main focus
 of Xtend lies in providing a language that is more readable than Java in certain
-situations. In the backgroud, Xtend compiles to Java code. Thus, it plays perfectly
-together with Java, e.g. methods declared in Java classes can be called in Xtend
+situations. In the background, Xtend compiles to Java code. Thus, it plays
+perfectly together with Java, e.g. methods declared in Java classes can be called in Xtend
 and vice versa. Several concepts of Xtend are especially beneficial when writing code
 generators. 
 
@@ -60,9 +60,9 @@ class MyGenerator implements IGenerator{
 }
 \end{lstlisting}
 
-This statement simply allows to use the methods declared by the interface \texttt{IJvmModelAssociations}
-in our generator class as extension methods on our objects. Which concrete implementation of the
-interface is later actually called, is configured in the Guice module.
+This statement simply allows to use the methods declared by the interface
+\newline\texttt{IJvmModelAssociations} in our generator class as extension methods
+on our objects. Which concrete implementation of the interface is later actually called, is configured in the Guice module.
 
 A further useful feature of Xtend is \emph{polymorphic dispatching}. Using the \texttt{dispatch}
 keyword on multiple methods with identical signatures has the effect that the 
@@ -90,12 +90,12 @@ is internally realized by a dispatcher method using a cascade of
 
 // TODO gescheites beispiel überlegen und zwei sätze zu schreiben.
 
-Xtend offers the possibility to define \emph{rich Strings} (also called \emph{templates})
+Xtend offers the possibility to define \emph{Rich Strings} (also called \emph{templates})
 which is especially useful when writing code generators. Rich Strings allow for
 writing complex Strings with line breaks and indentations without the need for
 concatenating special characters like \texttt{'\textbackslash n'} or \texttt{'\textbackslash t'}. A rich String
-construct starts and ends with triple single quotes (\texttt{'''}). Within such
-a String code pieces which themself return a String can be inserted (surrounded by guillemots \texttt{«»}).
+construct starts and ends with triple single quotes (\texttt{\'\'\'}). Within
+such a String code pieces which themself return a String can be inserted (surrounded by guillemots \texttt{«»}).
 There are also logical structures like \texttt{for} loops or \texttt{if-else}
 statements supported:
 

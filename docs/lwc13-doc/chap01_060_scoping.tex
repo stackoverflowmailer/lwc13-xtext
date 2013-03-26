@@ -1,14 +1,20 @@
 \subsection{Scoping} \label{sec:scoping}
 
-Scoping is, roughly said, the computation of referrable names in a given context. It is a quite complex topic, and we won't cover it here into deep. 
+Scoping is, roughly said, the computation of referrable names in a given
+context. It is a quite complex topic, and we won't cover it here into deep.
 The topic itself is heavily documented by the Xtext user
 manual\footnote{\href{http://www.eclipse.org/Xtext/documentation.html\#scoping}{Xtext
 manual:Scoping}}, several articles\footnote{e.g.
-\url{http://blogs.itemis.de/stundzig/archives/776}} and implementation examples \footnote{e.g. \url{https://github.com/LorenzoBettini/xtext-scoping}}.
+\url{http://blogs.itemis.de/stundzig/archives/776}} and implementation examples
+\footnote{e.g. \url{https://github.com/LorenzoBettini/xtext-scoping}}.
 
-The Xtext framework already provides default implementations to solve scoping and linking. In the case of Xbase based languages the \texttt{XbaseScopeProvider} is configured by default as
-implementation of the \texttt{IScopeProvider} interface. We have to extend its behavior to recognize the current Form instance as variable "\texttt{this}" within an expression. By this, Question fields 
-are noticed as variables in expressions, which allows us to use the required expressions.
+The Xtext framework already provides default implementations to solve scoping
+and linking. In the case of Xbase based languages the
+\texttt{XbaseScopeProvider} is configured by default as implementation of the
+\texttt{IScopeProvider} interface. We have to extend its behavior to recognize
+the current \texttt{Form} instance as variable "\texttt{this}" within an
+expression. By this, Question fields are noticed as variables in expressions,
+which allows us to use the required expressions.
 
 Create the class \texttt{QlScopeProvider} in package \texttt{org.eclipse.xtext.example.ql.customizing}:\footnote{url{http://tinyurl.com/bd7kggk}}
 \begin{lstlisting}[language=Java]
