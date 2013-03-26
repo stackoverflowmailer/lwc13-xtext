@@ -20,7 +20,7 @@ import java.util.Set
 
 class JSFGenerator implements IGenerator{
   @Inject extension IJvmModelAssociations
-  @Inject extension JsfOutputConfigurationProvider
+  @Inject extension JSFOutputConfigurationProvider
   
   override doGenerate(Resource input, IFileSystemAccess fsa) {
         if (input.URI.fileExtension!="ql")

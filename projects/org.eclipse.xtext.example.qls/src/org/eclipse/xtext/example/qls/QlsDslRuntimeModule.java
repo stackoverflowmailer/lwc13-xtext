@@ -3,7 +3,7 @@
  */
 package org.eclipse.xtext.example.qls;
 
-import org.eclipse.xtext.example.ql.generator.JsfOutputConfigurationProvider;
+import org.eclipse.xtext.example.ql.generator.JSFOutputConfigurationProvider;
 import org.eclipse.xtext.example.qls.generator.QlsDslGenerator;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
@@ -27,6 +27,6 @@ public class QlsDslRuntimeModule extends
   public void configure(Binder binder) {
     super.configure(binder);
     binder.bind(IOutputConfigurationProvider.class)
-        .to(JsfOutputConfigurationProvider.class).in(Singleton.class);
+        .to(JSFOutputConfigurationProvider.class).in(Singleton.class);
   }
 }

@@ -7,7 +7,6 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.example.qls.qlsDsl.QuestionnaireStyleModel
-import org.eclipse.xtext.example.ql.generator.JsfOutputConfigurationProvider
 import org.eclipse.xtext.example.qls.qlsDsl.Page
 import com.google.inject.Inject
 import org.eclipse.xtext.example.qls.qlsDsl.StyleInformation
@@ -16,9 +15,10 @@ import org.eclipse.xtext.example.ql.qlDsl.Form
 import org.eclipse.xtext.example.qls.qlsDsl.Section
 import org.eclipse.xtext.example.ql.generator.JSFGenerator
 import org.eclipse.xtext.example.qls.qlsDsl.QuestionStyling
+import org.eclipse.xtext.example.ql.generator.JSFOutputConfigurationProvider
 
 class QlsDslGenerator implements IGenerator {
-  @Inject extension JsfOutputConfigurationProvider
+  @Inject extension JSFOutputConfigurationProvider
   @Inject extension JSFGenerator
   
   override void doGenerate(Resource input, IFileSystemAccess fsa) {
