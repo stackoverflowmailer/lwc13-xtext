@@ -17,14 +17,11 @@ import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.xbase.XFeatureCall
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import java.util.Set
-import org.eclipse.xtext.example.ql.qlDsl.Form
-import org.eclipse.xtext.xbase.XFeatureCall
 
 class JSFGenerator implements IGenerator{
   @Inject extension IJvmModelAssociations
   @Inject extension JsfOutputConfigurationProvider
-  // enumeration of class names which do not need a converter
-  // see http://www.javabeat.net/2007/11/using-converters-in-jsf/
+  
   override doGenerate(Resource input, IFileSystemAccess fsa) {
         if (input.URI.fileExtension!="ql")
             return
@@ -33,45 +30,43 @@ class JSFGenerator implements IGenerator{
         val questionnaire = input.contents.head as Questionnaire
         for (form: questionnaire.forms) {
         	//simple jsf which includes the generated form
-            val content = generate_JSFPage(form)
+            val content = generate_FormPage(form)
             val fileName = "generated/forms/"+form.name+".xhtml"
             fsa.generateFile(fileName,WEB_CONTENT, content)
             
             //the base form which can be included in other pages
-            val contentBase = generate_JSFBaseForm(form)
+            val contentBase = generate_FormBase(form)
             val fileNameBase = "generated/forms/"+form.name+"Base.xhtml"
             fsa.generateFile(fileNameBase,WEB_CONTENT, contentBase)
         }
 
         //generate index page with links to generated forms
-        val contentIndex  = generate_JSFIndexPage(questionnaire.forms)
-        //TODO the generator is called once per resource, so the index page will be overwritten if there are more than model files
+        val contentIndex  = generate_FormIndex(questionnaire.forms)
+        // TODO the generator is called once per resource, so the index page will be overwritten if there are more than model files
         fsa.generateFile("generated/forms/index.xhtml",WEB_CONTENT, contentIndex)
 
     }
     
     
-  def generate_JSFBaseForm(Form form)'''
-      <!-- @generated -->
+  def generate_FormBase(Form form)
+  '''<!-- @generated -->
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-    <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
-  	 <h:form id="«form.id»">
-      «FOR elem: form.element»
-        «elem.generateFormElement»
-      «ENDFOR»
-          <!-- E N D _ generate_JSFPage _ S E C T I O N  -->
-          </h:form>
-    </html>
+	    <html xmlns="http://www.w3.org/1999/xhtml"
+	      xmlns:ui="http://java.sun.com/jsf/facelets"
+	      xmlns:h="http://java.sun.com/jsf/html"
+	      xmlns:f="http://java.sun.com/jsf/core">
+	  	 	<h:form id="«form.id»">
+	      «FOR elem: form.element»
+	        	«elem.generateFormElement»
+	      «ENDFOR»
+	        <!-- E N D _ generate_JSFPage _ S E C T I O N  -->
+			</h:form>
+	    </html>
   '''
     
-     //TODO extract dynamic content
-  def generate_JSFPage (Form form) '''
-    <!-- @generated -->
+  def generate_FormPage (Form form) 
+  '''<!-- @generated -->
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -88,33 +83,46 @@ class JSFGenerator implements IGenerator{
     </html>
   '''
 
-  //TODO in allen ConditionalQuestionGroup, wenn expression.parts.contains.question.name, dann return (ConditionalQuestionGroup.parts, seperator _,as String id for ajax rendering)
-  //TODO ajax support, ids to render on change, sample: grp_state grp_ValueReside
-
-	def generateFormElement(FormElement element)'''
-	 <!-- generateFormElement(FormElement element) -->
+  def generate_FormIndex (List<Form> forms)
+  '''<?xml version='1.0' encoding='UTF-8' ?>
+      <!-- @generated -->
+      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+      <ui:composition template="/index.xhtml">
+        <ui:define name="content">
+        «FOR elem: forms SEPARATOR "<br/>"»
+          <h:outputLink value="«elem.name».jsf">«elem.name»</h:outputLink>
+        «ENDFOR»
+        </ui:define>
+      </ui:composition>
+      </html>
+  '''
+	
+  def Object generateFormElement(FormElement element)
+  '''<!-- generateFormElement(FormElement element) -->
 	«IF element.isReferenced»
-	<h:panelGroup id="«element.renderGroupId»">
-		<h:panelGroup id="grp_«element.id»Visible"
-			rendered="#{«element.formName».«element.id»Visible}">«ENDIF»
-			 «element.generate»
+		<h:panelGroup id="«element.renderGroupId»">
+			<h:panelGroup id="grp_«element.id»Visible"
+				rendered="#{«element.formName».«element.id»Visible}">
+	«ENDIF»
+			 	«element.generate»
 	«IF element.isReferenced»
-     	 </h:panelGroup>
-     </h:panelGroup>«ENDIF»
+	     	 </h:panelGroup>
+	     </h:panelGroup>
+	«ENDIF»
 	'''
 
-  def dispatch generate (ConditionalQuestionGroup group) '''
-        <!-- generate (ConditionalQuestionGroup group) -->
+  def dispatch generate(ConditionalQuestionGroup group) 
+  '''<!-- generate (ConditionalQuestionGroup group) -->
       «FOR elem: group.element»
         «elem.generateFormElement»
       «ENDFOR»
    '''
    
-
-  //TODO a cleaner solution for providing extensibility of question types?
-  //TODO special cases (readonly money, )
-  def dispatch generate (Question question) '''
-  <!-- generate (Question question) -->
+  def dispatch generate (Question question) 
+  '''<!-- generate (Question question) -->
     <h:outputLabel id="lbl«question.id.toFirstUpper»" value="«question.label»"/>
     «switch(question.type.type){
         JvmPrimitiveType: {
@@ -133,22 +141,27 @@ class JSFGenerator implements IGenerator{
 
   def generateQuestionBoolean(Question question) '''
     <h:selectBooleanCheckbox id="q«question.id»" value="#{«question.formName+'.'+question.name»}">
-      <f:ajax event="click" «question.ajaxRenderString»/>
+      <f:ajax event="click" «question.getRenderSequence»/>
     </h:selectBooleanCheckbox>
   '''
 
   def generateQuestionText(Question question) '''
     <h:inputText id="q_«question.id»" value="#{«question.formName+'.'+question.name»}"«IF question.expression!=null» readonly="true"«ENDIF»>
-      <f:ajax event="blur" «question.ajaxRenderString»/>
+      <f:ajax event="blur" render="«question.getRenderSequence»"/>
       «generateConverter(question)»
     </h:inputText>
   '''
   
-  def getAjaxRenderString (Question question) {
-     //'''render="«question.renderGroupId» «FOR element : question.dependentElementsWithExpression SEPARATOR ' '»q_«element.id»«ENDFOR»"'''
-     '''render="«FOR elem: question.dependentElementsWithExpression SEPARATOR ' '»«elem.getRenderGroupId»«ENDFOR»"'''
+  /**
+   * Creates a sequence from all dependent page element ids for the given question.
+   */
+  def getRenderSequence (Question question) {
+     '''«FOR elem: question.dependentElementsWithExpression SEPARATOR ' '»«elem.getRenderGroupId»«ENDFOR»'''
   }
    
+  /**
+   * 
+   */
   def generateConverter (Question question) {
     // primitive types and known classes do not require a special converter
     val needsConversion = !(question.type.type instanceof JvmPrimitiveType) 
@@ -158,31 +171,17 @@ class JSFGenerator implements IGenerator{
     } else
       ""
   }
-
+  
+  // enumeration of class names which do not need a converter
+  // see http://www.javabeat.net/2007/11/using-converters-in-jsf/
   Set<String> defaultConverters = newHashSet ("BigDecimal","BigInteger",
     "Boolean","Byte","Character","DateTime","Double","Enum","Float","Integer","Long",
     "Number","Short","String"
   )
-
-
-  def generate_JSFIndexPage (List<Form> forms)
-  '''<?xml version='1.0' encoding='UTF-8' ?>
-      <!-- @generated -->
-      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-      <html xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:ui="http://java.sun.com/jsf/facelets">
-      <ui:composition template="/index.xhtml">
-        <ui:define name="content">
-        «FOR elem: forms SEPARATOR "<br/>"»
-          <h:outputLink value="«elem.name».jsf">«elem.name»</h:outputLink>
-        «ENDFOR»
-        </ui:define>
-      </ui:composition>
-      </html>
-  '''
   
-  // --------------------------------------------------------------------------
+ /**
+  * Creates an id for the given domain object. 
+  */
   def String getId (EObject o) {
     switch (o) {
       ConditionalQuestionGroup: "group"+allConditionalGroups(o).indexOf(o)
@@ -191,16 +190,21 @@ class JSFGenerator implements IGenerator{
     }
   }
 
+/**
+ * Creates the id which will be used to trigger updates of parts in the generated JSF page.
+ */
   def String getRenderGroupId (EObject elem) {
     switch (elem) {
       Form: "grp_"+elem.id
       ConditionalQuestionGroup: "grp_"+elem.id
-     // FormElement: getRenderGroupId(elem.eContainer)//TODO 1.get panels that contain this exp 
       Question : "grp_"+elem.id
     }
   }
 
 
+/**
+ * Get all ConditionalGroups underneath the given context.
+ */
   def private allConditionalGroups (EObject ctx) {
     ctx.form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
   }
@@ -221,21 +225,21 @@ class JSFGenerator implements IGenerator{
 
     // Get all FormElements which have an expression 
     val form = getForm(q)
-   org::eclipse::xtend::typesystem::emf::EcoreUtil2::allContents(form)
-   
-    val allResourceContents =  org::eclipse::xtend::typesystem::emf::EcoreUtil2::allContents(form)
-    val Iterable<FormElement> allFormElementsWithExpression = allResourceContents
+    val allFormContents =  org::eclipse::xtend::typesystem::emf::EcoreUtil2::allContents(form)
+    val Iterable<FormElement> allFormElementsWithExpression = allFormContents
       .filter(typeof(FormElement))
       .filter[it.expression!=null]
       .toSet
       
    // search the expressions of the form elements which call the JvmField field in a feature call
    val result = allFormElementsWithExpression.filter[
-    	
+    	//TODO if there is a 'this' used in the expression, the following logic will fail!
     	val exp = it.expression
     	if(exp instanceof XFeatureCall){
+    		// a simple expression e.g. '(XFeatureCall)'
     		(exp as XFeatureCall) .feature.simpleName == field.simpleName	
     	}else{
+    		// a complex expression e.g. '(XFeatureCall1 - XFeatureCall2)'
 	        val featureCalls =  org::eclipse::xtend::typesystem::emf::EcoreUtil2::allContents(exp)
 	        val xfeaturecalls = featureCalls.filter(typeof(XFeatureCall))
 	        xfeaturecalls.exists[
@@ -247,10 +251,12 @@ class JSFGenerator implements IGenerator{
     	}
     
 	]
-	//TODO incorrect result gives any dependent elements
     return result
   }
   
+  /**
+   * Get the Form container the given question is part of. 
+   */
   def getForm(EObject question) {
 	EcoreUtil2::getContainerOfType(question, typeof(Form)) as Form
   }
