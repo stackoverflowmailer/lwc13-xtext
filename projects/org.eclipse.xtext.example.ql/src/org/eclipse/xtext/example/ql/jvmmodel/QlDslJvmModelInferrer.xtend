@@ -44,15 +44,15 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
    *            types} from.
    * @param acceptor
    *            each created
-   *            {@link org.eclipse.xtext.common.types.JvmDeclaredType type}
+   *            org.eclipse.xtext.common.types.JvmDeclaredType type
    *            without a container should be passed to the acceptor in order
    *            get attached to the current resource. The acceptor's
-   *            {@link IJvmDeclaredTypeAcceptor#accept(org.eclipse.xtext.common.types.JvmDeclaredType)
-   *            accept(..)} method takes the constructed empty type for the
+   *            IJvmDeclaredTypeAcceptor#accept(org.eclipse.xtext.common.types.JvmDeclaredType)
+   *            accept(..) method takes the constructed empty type for the
    *            pre-indexing phase. This one is further initialized in the
    *            indexing phase using the closure you pass to the returned
-   *            {@link org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor.IPostIndexingInitializing#initializeLater(org.eclipse.xtext.xbase.lib.Procedures.Procedure1)
-   *            initializeLater(..)}.
+   *            org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor.IPostIndexingInitializing#initializeLater(org.eclipse.xtext.xbase.lib.Procedures.Procedure1)
+   *            initializeLater(..).
    * @param isPreIndexingPhase
    *            whether the method is called in a pre-indexing phase, i.e.
    *            when the global index is not yet fully updated. You must not
