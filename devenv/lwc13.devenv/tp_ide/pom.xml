@@ -3,14 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.eclipse.xtext.example.ql</groupId>
-		<artifactId>parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version><!--X -->
-		<relativePath>../../pom.xml</relativePath>
-	</parent>
+	<properties>
+		<tycho-version>0.17.0</tycho-version>
+	</properties>
 
-	<artifactId>org.eclipse.xtext.example.ql.devenv</artifactId>
+	<groupId>org.languageworkbenches</groupId>
+	<artifactId>lwc13.ide.platform</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>eclipse-feature</packaging>
 
 	<build>
@@ -34,14 +33,20 @@
 					</execution>
 				</executions>
 				<configuration>
-					<appArgLine>-application org.eclipse.b3.cli.headless aggregate
-						--buildModel targetrepo.b3aggr</appArgLine>
+					<appArgLine>-application org.eclipse.b3.cli.headless aggregate --buildModel ${b3file}</appArgLine>
 					<dependencies>
 						<dependency>
 							<artifactId>org.eclipse.b3.aggregator.engine.feature</artifactId>
 							<type>eclipse-feature</type>
 						</dependency>
 					</dependencies>
+					<repositories>
+						<repository>
+							<id>nexus.local</id>
+							<layout>p2</layout>
+							<url>http://localhost:9000/nexus/content/groups/p2.public/</url>
+						</repository>
+					</repositories>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -54,6 +59,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<profiles>
 		<profile>
 			<id>local-build</id>

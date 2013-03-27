@@ -1,0 +1,56 @@
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus.mirror</id>
+      <name>Local Mirror</name>
+      <url>http://localhost:9000/nexus/content/groups/public</url>
+      <mirrorOf>external:*</mirrorOf>
+    </mirror>
+  </mirrors>
+	<activeProfiles>
+		<activeProfile>external-repositories</activeProfile>
+	</activeProfiles>
+	<profiles>
+		<profile>
+			<id>external-repositories</id>
+			<repositories>
+				<repository>
+					<id>Eclipse Juno</id>
+					<layout>p2</layout>
+					<url>http://download.eclipse.org/releases/juno</url>
+				</repository>
+				<repository>
+					<id>Eclipse Orbit</id>
+					<layout>p2</layout>
+					<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/
+					</url>
+				</repository>
+				<repository>
+					<id>Eclipse Xtext</id>
+					<layout>p2</layout>
+					<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/
+					</url>
+				</repository>
+				<repository>
+					<id>ql-p2</id>
+					<layout>p2</layout>
+					<url>file:/Users/thoms/git/lwc13-xtext/projects/org.eclipse.xtext.example.ql.repository/target/repository
+					</url>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>fornax.releases</id>
+					<name>Fornax Release Repository</name>
+					<url>https://www.fornax-platform.org/nexus/content/repositories/releases/
+					</url>
+				</pluginRepository>
+				<pluginRepository>
+					<id>xtend</id>
+					<url>http://build.eclipse.org/common/xtend/maven/</url>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
+</settings>
+

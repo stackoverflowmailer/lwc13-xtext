@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aggregator:Aggregation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:aggregator="http://www.eclipse.org/b3/2011/aggregator/1.1.0" label="QL DSL Target Platform Repository" buildRoot="./target/repository" packedStrategy="SKIP">
+  <validationSets label="Main">
+    <contributions label="Main Contribution">
+      <repositories location="http://localhost:9000/nexus/content/groups/p2.public/">
+        <products name="org.eclipse.platform.ide" versionRange="4.2.2"/>
+        <bundles name="javax.persistence" versionRange="1.0.0.v200905011740"/>
+        <bundles name="javax.persistence.source" versionRange="1.0.0.v200905011740"/>
+        <bundles name="javax.ejb" versionRange="3.1.1.v201204261316"/>
+        <bundles name="javax.ejb.source" versionRange="3.1.1.v201204261316"/>
+        <bundles name="javax.inject" versionRange="1.0.0.v20091030"/>
+        <bundles name="javax.inject.source" versionRange="1.0.0.v20091030"/>
+        <bundles name="org.junit" versionRange="4.8.2.v4_8_2_v20110321-1705"/>
+        <bundles name="org.glassfish.com.sun.faces" versionRange="2.1.6.v201205171319"/>
+        <bundles name="org.glassfish.javax.faces" versionRange="2.1.6.v201205170953"/>
+        <features name="org.eclipse.emf.sdk.feature.group" versionRange="[2.8.1,2.8.2)"/>
+        <features name="org.eclipse.equinox.p2.sdk.feature.group" versionRange="3.8.0.v20120524-0542-9N89H_mGMMn84Osz0TAoT279BRQD"/>
+        <features name="org.eclipse.jsf.feature.feature.group" versionRange="3.5.0.v201301161500-7E7U-F9JgLWrLWXMXBLL"/>
+        <features name="org.eclipse.m2e.feature.feature.group" versionRange="1.3.0.20130129-0926"/>
+        <features name="org.eclipse.pde.feature.group" versionRange="3.8.2.v20130116-091538-7c7wFj0FFt6Zr9bd4AM1JEQMS"/>
+        <features name="org.eclipse.wst.server_adapters.feature.feature.group" versionRange="3.2.203.v20130123_1813-7L3FA4CcNBGVCZL_l8OCG"/>
+        <features name="org.eclipse.jst.enterprise_ui.feature.feature.group" versionRange="3.4.2.v201301240600-7b7JINbFSK2WM3QNAEr799V-TyUp"/>
+        <features name="org.eclipse.jst.server_adapters.feature.feature.group" versionRange="3.2.201.v20130123_1813-20A87w31241234a2924"/>
+        <features name="org.eclipse.xtend.sdk.feature.group" versionRange="2.4.0.v201303201134"/>
+        <features name="org.eclipse.xtext.sdk.feature.group" versionRange="2.4.0.v201303201134"/>
+        <features name="org.eclipse.xtext.sdk.source.feature.group" versionRange="2.4.0.v201303201134"/>
+        <features name="org.eclipse.xtend.sdk.source.feature.group" versionRange="2.4.0.v201303201134"/>
+        <features name="org.eclipse.emf.mwe.sdk.feature.group" versionRange="1.3.0.v201303191413"/>
+        <features name="org.eclipse.emf.mwe.sdk.source.feature.group" versionRange="1.3.0.v201303191413"/>
+        <features name="org.eclipse.emf.mwe2.language.sdk.feature.group" versionRange="2.4.0.v201303191501"/>
+        <features name="org.eclipse.emf.mwe2.language.sdk.source.feature.group" versionRange="2.4.0.v201303191501"/>
+        <features name="org.eclipse.emf.mwe2.runtime.sdk.feature.group" versionRange="2.4.0.v201303191413"/>
+        <features name="org.eclipse.emf.mwe2.runtime.sdk.source.feature.group" versionRange="2.4.0.v201303191413"/>
+        <features name="org.eclipse.xtend.m2e.feature.group" versionRange="2.4.0.v201303201134"/>
+        <features name="org.eclipse.epp.package.jee.feature.feature.group" versionRange="1.5.0.20120614-1633"/>
+      </repositories>
+    </contributions>
+    <validationRepositories location="http://localhost:9000/nexus/content/groups/p2.public/"/>
+  </validationSets>
+  <configurations/>
+  <configurations architecture="x86_64"/>
+  <configurations operatingSystem="macosx" windowSystem="cocoa" architecture="x86_64"/>
+</aggregator:Aggregation>
