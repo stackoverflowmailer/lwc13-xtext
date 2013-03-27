@@ -1,12 +1,4 @@
 <settings>
-  <mirrors>
-    <mirror>
-      <id>nexus.mirror</id>
-      <name>Local Mirror</name>
-      <url>http://localhost:9000/nexus/content/groups/public</url>
-      <mirrorOf>external:*</mirrorOf>
-    </mirror>
-  </mirrors>
 	<activeProfiles>
 		<activeProfile>external-repositories</activeProfile>
 	</activeProfiles>
@@ -34,7 +26,7 @@
 				<repository>
 					<id>ql-p2</id>
 					<layout>p2</layout>
-					<url>file:/Users/thoms/git/lwc13-xtext/projects/org.eclipse.xtext.example.ql.repository/target/repository
+					<url>https://karsten.ci.cloudbees.com/job/lwc13-dsl/lastSuccessfulBuild/artifact/projects/org.eclipse.xtext.example.ql.repository/target/repository/
 					</url>
 				</repository>
 			</repositories>
