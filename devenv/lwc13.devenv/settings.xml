@@ -28,7 +28,7 @@
 				<pluginRepository>
 					<id>fornax.releases</id>
 					<name>Fornax Release Repository</name>
-					<url>https://www.fornax-platform.org/nexus/content/repositories/releases/
+					<url>http://www.fornax-platform.org/nexus/content/repositories/releases/
 					</url>
 				</pluginRepository>
 				<pluginRepository>
