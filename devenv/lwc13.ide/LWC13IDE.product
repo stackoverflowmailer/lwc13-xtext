@@ -88,19 +88,29 @@
 
    <features>
       <feature id="org.eclipse.sdk"/>
+      <feature id="org.eclipse.sdk.source"/>
       <feature id="org.eclipse.epp.package.jee.feature"/>
       <feature id="org.eclipse.jsf.feature"/>
+      <feature id="org.eclipse.jsf.feature.source"/>
       <feature id="org.eclipse.m2e.feature"/>
+      <feature id="org.eclipse.m2e.feature.source"/>
       <feature id="org.eclipse.pde"/>
+      <feature id="org.eclipse.pde.source"/>
       <feature id="org.eclipse.wst.server_adapters.feature"/>
       <feature id="org.eclipse.jst.enterprise_ui.feature"/>
       <feature id="org.eclipse.jst.server_adapters.feature"/>
       <feature id="org.eclipse.xtend.sdk"/>
+      <feature id="org.eclipse.xtend.sdk.source"/>
       <feature id="org.eclipse.xtext.sdk"/>
+      <feature id="org.eclipse.xtext.sdk.source"/>
       <feature id="org.eclipse.emf.mwe.sdk"/>
+      <feature id="org.eclipse.emf.mwe.sdk.source"/>
       <feature id="org.eclipse.emf.mwe2.language.sdk"/>
+      <feature id="org.eclipse.emf.mwe2.language.sdk.source"/>
       <feature id="org.eclipse.emf.mwe2.runtime.sdk"/>
+      <feature id="org.eclipse.emf.mwe2.runtime.sdk.source"/>
       <feature id="org.eclipse.xtend.m2e"/>
+      <feature id="org.eclipse.xtend.m2e.source"/>
       <feature id="org.eclipse.xtext.example.ql.sdk"/>
    </features>
 
