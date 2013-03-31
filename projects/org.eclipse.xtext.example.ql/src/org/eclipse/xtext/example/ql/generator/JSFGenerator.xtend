@@ -42,7 +42,7 @@ class JSFGenerator implements IGenerator{
 
         //generate index page with links to generated forms
         val contentIndex  = generate_FormIndex(questionnaire.forms)
-        // TODO the generator is called once per resource, so the index page will be overwritten if there are more than model files
+        // TODO the generator is called once per resource, so the index page will be overwritten if there is more than model file
         fsa.generateFile("generated/forms/index.xhtml",WEB_CONTENT, contentIndex)
 
     }
