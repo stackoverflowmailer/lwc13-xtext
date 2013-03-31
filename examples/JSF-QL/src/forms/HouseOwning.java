@@ -1,4 +1,4 @@
-package generated.forms;
+package forms;
 
 import java.io.Serializable;
 
