@@ -130,7 +130,9 @@ class QlDslJvmModelInferrer extends AbstractModelInferrer {
    def JvmOperation createIsQuestionVisibleMethod (Question question) {
    	if(question.expression != null){
    		 question.toMethod("is"+question.name.toFirstUpper+"Visible", typeReferences.getTypeForName("boolean", question, null)) [
-       body = [it.append('''return get«question.name.toFirstUpper»() != null;''')]
+   		 	//TODO problematic for calculated fields with primitive type e.g.:
+   		 	// 'valueResidue2: "Value residue: " boolean (sellingPrice == privateDebt)' 
+       		body = [it.append('''return «question.toGetter(question.name,question.type).simpleName»() != null;''')]
        	]
     }
    }
