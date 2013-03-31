@@ -24,6 +24,7 @@ public interface IGenerator {
 \end{lstlisting}
 
 \subsubsection {Dispatcher template}
+\label{sec:dispatcherTemplate}
 
 The code generator is invoked with a \texttt{Resource} instance, which holds a \texttt{Questionnaire}
 instance. We have to generate multiple artifacts for each resource, so it is a common 
@@ -79,58 +80,20 @@ Open class \texttt{QlDslRuntimeModule} and add this method:
 Now we are ready to add additional templates and register them in the
 \texttt{Root} class.
 
-\subsubsection {JSF Generator}
-
-After creation of the \texttt{Root} class where we easily can add new
-Generators, we use the \emph{New Xtend Class Wizard} to create a new Xtend
-class called \texttt{JSFGenerator.xtend} in package
-\texttt{org.eclipse.xtext.example.ql.generator}.
-
-This class will be our entry point to generate JSF related artifacts.
-
-\begin{figure}[here]
-\centering
-\includegraphics[width=10cm]{./images/chapter02/newXtendClassWizard.png}
-\caption{New Xtend Class Wizard}
-\label{fig:newXtendClassWizard}
-\end{figure}
-
-The \emph{New Xtend Class Wizard} provides the possibility to bind
-interfaces to the new class by use of the \texttt{Add} button near the interface
-section.
-As we want to create a new generator we add the interface
-\texttt{org.eclipse.xtext.generator.IGenerator} to our new Xtend class.
-After typing in the package, the name and the interface of our new Xtend class
-as shown in figure ~\ref{fig:newXtendClassWizard}, we can finish the
-wizard so that the class shown in listing ~\ref{lst:newXtendClass} will be
-created in our project.
-
-\begin{lstlisting}[language=Java, caption={New Xtend
-Class},label={lst:newXtendClass}] 
-package org.eclipse.xtext.example.ql.generator
-
-import org.eclipse.xtext.generator.IGenerator
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.generator.IFileSystemAccess
-
-class JSFGenerator implements IGenerator {
-	
-	override doGenerate(Resource input, IFileSystemAccess fsa) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-}
-\end{lstlisting}
-
-
-- show whole generater
-- explain step by step
-
 \subsubsection{OutputConfigurationProvider}
+\label{sec:outputConfigurationProvider}
 
-//TODO explain OutputConfigurationProvider
+In JSF applications all the web related content is normally placed under
+\texttt{./WebContent} instead of \texttt{./src-gen} which is mostly used in
+java applications. We will adapt to this convention and seperate generated java
+classes and jsf artifacts from each other. For that purpose add a class called
+\texttt{JsfOutputConfigurationProvider} derived from
+\texttt{OutputConfigurationProvider}
+\footnote{\url{http://xtextcasts.org/episodes/15-output-configurations}} which
+adds an additional \texttt{OutputConfiguration} pointing to the ouput directoy
+\texttt{./WebContent} as shown in the listing below.
 
-\begin{lstlisting}[language=Java,
-caption={JSFOutputConfigurationProvider},label={lst:jsfOutputConfigurationProvider}]
+\begin{lstlisting}[language=Java]
 package org.eclipse.xtext.example.ql.generator;
 
 import java.util.Set;
@@ -163,14 +126,92 @@ public class JsfOutputConfigurationProvider extends OutputConfigurationProvider 
 }
 \end{lstlisting}
 
-//TODO binding the OutputConfigurationProvider in QlDslRuntimeModule 
+Our \texttt{JsfOutputConfigurationProvider} has to be bound to the
+\texttt{QlDslRuntimeModule} by overriding the method \texttt{configure}. 
 
-\begin{lstlisting}[language=Java,
-caption={Binding
-JSFOutputConfigurationProvider},label={lst:bindingJsfOutputConfigurationProvider}]
+\begin{lstlisting}[language=Java]
 @Override public void configure(Binder binder) {
     super.configure(binder);
     binder.bind(IOutputConfigurationProvider.class)
         .to(JSFOutputConfigurationProvider.class).in(Singleton.class);
   }
  \end{lstlisting}
+ 
+After
+this step we can refer to the additional \texttt{OutputConfiguration} in
+generators by use of the constant \texttt{WEB\_CONTENT} defined in class
+\texttt{JsfOutputConfigurationProvider}.
+
+\subsubsection {JSF Generator}
+\label{sec:jsfGenerator}
+
+After creation of the class \texttt{Root} in section
+\ref{sec:dispatcherTemplate} \texttt{Dispatcher Template} where we easily can
+add new Generators and the defintion of the
+\texttt{JsfOutputConfigurationProvider} in section \ref{sec:outputConfigurationProvider}
+\texttt{OutputConfigurationProvider} which prvides an output folder for JSF
+artifacts, we use the \emph{New Xtend Class Wizard} to create a new Xtend class
+called \texttt{JSFGenerator.xtend} in package \texttt{org.eclipse.xtext.example.ql.generator}.
+
+This class will be our entry point to generate JSF related artifacts. The
+\emph{New Xtend Class Wizard} provides the possibility to bind interfaces to the
+new class by use of the \texttt{Add} button near the interface section.
+
+\begin{center}
+\includegraphics[width=8cm]{./images/chapter02/newXtendClassWizard.png}
+\end{center}
+
+As we want to create a new generator we add the interface
+\texttt{org.eclipse.xtext.generator.IGenerator} to our new Xtend class.
+After typing in the package, the name and the interface of our new Xtend class
+as shown in the figure above, we can finish the
+wizard so that the class shown in the following listing
+will be created in our project.
+
+\begin{lstlisting}[language=Java] 
+package org.eclipse.xtext.example.ql.generator
+
+import org.eclipse.xtext.generator.IGenerator
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.xtext.generator.IFileSystemAccess
+
+class JSFGenerator implements IGenerator {
+	
+	override doGenerate(Resource input, IFileSystemAccess fsa) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+}
+\end{lstlisting}
+
+To get the created \texttt{JSFGenarator} executed we have to inject and dispatch
+to it in our dispatcher template \texttt{Root.class}
+which was created in section \ref{sec:dispatcherTemplate}
+\texttt{Dispatcher Template} earlier.
+
+\begin{lstlisting}[language=Java] 
+ package org.eclipse.xtext.example.ql.generator;
+
+import javax.inject.Inject;
+
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.generator.IFileSystemAccess;
+import org.eclipse.xtext.generator.IGenerator;
+import org.eclipse.xtext.xbase.compiler.JvmModelGenerator;
+
+public class Root implements IGenerator {
+  @Inject
+  JvmModelGenerator jvmModelGenerator;
+  @Inject
+  JSFGenerator jsfGenerator;
+
+  public void doGenerate(Resource input, IFileSystemAccess fsa) {
+    // dispatch to other generators
+    jvmModelGenerator.doGenerate(input, fsa);
+    jsfGenerator.doGenerate(input, fsa);
+  }
+}
+\end{lstlisting}
+
+
+- show whole generater
+- explain step by step
