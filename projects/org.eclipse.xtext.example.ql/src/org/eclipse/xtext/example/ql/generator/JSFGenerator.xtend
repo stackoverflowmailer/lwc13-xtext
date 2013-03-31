@@ -49,9 +49,11 @@ class JSFGenerator implements IGenerator{
     
     
   def generate_FormBase(Form form)
-  '''<!-- @generated -->
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	    	
+	<!-- @generated -->
+
 	    <html xmlns="http://www.w3.org/1999/xhtml"
 	      xmlns:ui="http://java.sun.com/jsf/facelets"
 	      xmlns:h="http://java.sun.com/jsf/html"
@@ -60,16 +62,16 @@ class JSFGenerator implements IGenerator{
 	      «FOR elem: form.element»
 	        	«elem.generateFormElement»
 	      «ENDFOR»
-	        <!-- E N D _ generate_JSFPage _ S E C T I O N  -->
 			</h:form>
 	    </html>
   '''
     
   def generate_FormPage (Form form) 
-  '''<!-- @generated -->
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+	
+	<!-- @generated -->
+	
     <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
@@ -141,7 +143,7 @@ class JSFGenerator implements IGenerator{
 
   def generateQuestionBoolean(Question question) '''
     <h:selectBooleanCheckbox id="q«question.id»" value="#{«question.formName+'.'+question.name»}">
-      <f:ajax event="click" «question.getRenderSequence»/>
+      <f:ajax event="click" render="«question.getRenderSequence»"/>
     </h:selectBooleanCheckbox>
   '''
 
