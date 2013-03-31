@@ -16,10 +16,11 @@ import org.eclipse.xtext.example.qls.qlsDsl.Section
 import org.eclipse.xtext.example.ql.generator.JSFGenerator
 import org.eclipse.xtext.example.qls.qlsDsl.QuestionStyling
 import org.eclipse.xtext.example.ql.generator.JSFOutputConfigurationProvider
+import org.eclipse.xtext.example.ql.QlDslExtensions
 
 class QlsDslGenerator implements IGenerator {
   @Inject extension JSFOutputConfigurationProvider
-  @Inject extension JSFGenerator
+  @Inject extension QlDslExtensions
   
   override void doGenerate(Resource input, IFileSystemAccess fsa) {
 	if (input.URI.fileExtension!="qls")
