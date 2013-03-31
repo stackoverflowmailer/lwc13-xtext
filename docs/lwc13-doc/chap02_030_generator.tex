@@ -101,7 +101,7 @@ import java.util.Set;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 
-public class JsfOutputConfigurationProvider extends OutputConfigurationProvider {
+public class JSFOutputConfigurationProvider extends OutputConfigurationProvider {
 
   public final String WEB_CONTENT = "WebContent";
 
@@ -113,7 +113,8 @@ public class JsfOutputConfigurationProvider extends OutputConfigurationProvider 
         .getOutputConfigurations();
 
     OutputConfiguration webContent = new OutputConfiguration(WEB_CONTENT);
-    webContent.setDescription("Read-only Output Folder for forms");
+    webContent
+        .setDescription("Read-only Output Folder for web generated application artifacts");
     webContent.setOutputDirectory("./WebContent");
     webContent.setOverrideExistingResources(true);
     webContent.setCreateOutputDirectory(true);
@@ -125,6 +126,11 @@ public class JsfOutputConfigurationProvider extends OutputConfigurationProvider 
   }
 }
 \end{lstlisting}
+
+The interface \texttt{OutputConfiguration} provides several options to configure
+the behavior of the so called \texttt{Outlet}. We using the defaults as used in
+\texttt{OutputConfigurationProvider} except its name, description and
+outputDirectoy.
 
 Our \texttt{JsfOutputConfigurationProvider} has to be bound to the
 \texttt{QlDslRuntimeModule} by overriding the method \texttt{configure}. 
