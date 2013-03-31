@@ -80,13 +80,13 @@ Open class \texttt{QlDslRuntimeModule} and add this method:
 Now we are ready to add additional templates and register them in the
 \texttt{Root} class.
 
-\subsubsection{OutputConfigurationProvider}
+\subsubsection{Output Configuration Provider}
 \label{sec:outputConfigurationProvider}
 
 In JSF applications all the web related content is normally placed under
-\texttt{./WebContent} instead of \texttt{./src-gen} which is mostly used in
-java applications. We will adapt to this convention and seperate generated java
-classes and jsf artifacts from each other. For that purpose add a class called
+\texttt{./WebContent} instead of \texttt{./src-gen}, which is mostly used as
+output for java artifacts. We will adapt to this convention and seperate
+generated java classes and jsf artifacts from each other. For that purpose add a class called
 \texttt{JsfOutputConfigurationProvider} derived from
 \texttt{OutputConfigurationProvider}
 \footnote{\url{http://xtextcasts.org/episodes/15-output-configurations}} which
@@ -128,9 +128,8 @@ public class JSFOutputConfigurationProvider extends OutputConfigurationProvider 
 \end{lstlisting}
 
 The interface \texttt{OutputConfiguration} provides several options to configure
-the behavior of the so called \texttt{Outlet}. We using the defaults as used in
-\texttt{OutputConfigurationProvider} except its name, description and
-outputDirectoy.
+the behavior of the so called \texttt{Outlet}. We use the defaults as in
+\texttt{OutputConfigurationProvider} except its name, description and outputDirectoy.
 
 Our \texttt{JsfOutputConfigurationProvider} has to be bound to the
 \texttt{QlDslRuntimeModule} by overriding the method \texttt{configure}. 
@@ -143,8 +142,7 @@ Our \texttt{JsfOutputConfigurationProvider} has to be bound to the
   }
  \end{lstlisting}
  
-After
-this step we can refer to the additional \texttt{OutputConfiguration} in
+After this step we can refer to the additional \texttt{OutputConfiguration} in
 generators by use of the constant \texttt{WEB\_CONTENT} defined in class
 \texttt{JsfOutputConfigurationProvider}.
 
@@ -152,10 +150,10 @@ generators by use of the constant \texttt{WEB\_CONTENT} defined in class
 \label{sec:jsfGenerator}
 
 After creation of the class \texttt{Root} in section
-\ref{sec:dispatcherTemplate} \texttt{Dispatcher Template} where we easily can
+\ref{sec:dispatcherTemplate} where we easily can
 add new Generators and the defintion of the
 \texttt{JsfOutputConfigurationProvider} in section \ref{sec:outputConfigurationProvider}
-\texttt{OutputConfigurationProvider} which prvides an output folder for JSF
+which prvides an output folder for JSF
 artifacts, we use the \emph{New Xtend Class Wizard} to create a new Xtend class
 called \texttt{JSFGenerator.xtend} in package \texttt{org.eclipse.xtext.example.ql.generator}.
 
@@ -192,7 +190,7 @@ class JSFGenerator implements IGenerator {
 To get the created \texttt{JSFGenarator} executed we have to inject and dispatch
 to it in our dispatcher template \texttt{Root.class}
 which was created in section \ref{sec:dispatcherTemplate}
-\texttt{Dispatcher Template} earlier.
+earlier.
 
 \begin{lstlisting}[language=Java] 
  package org.eclipse.xtext.example.ql.generator;
@@ -214,10 +212,121 @@ public class Root implements IGenerator {
     // dispatch to other generators
     jvmModelGenerator.doGenerate(input, fsa);
     jsfGenerator.doGenerate(input, fsa);
-  }
+  } 
 }
 \end{lstlisting}
 
+Now it is time to add some functionality to the \texttt{JSFGenarator}. Open the
+file \texttt{JSFGenarator.xtend} and go to the \texttt{doGenerate} extension
+which is responsible to generate artifacts.
+Delete the auto-generated body of the extension and add the following lines as
+first statements to prevent execution of the generator if the file extension
+does not fit.
 
+\begin{lstlisting}[language=Java] 
+  if (input.URI.fileExtension!="ql")
+            return
+\end{lstlisting}
+
+After this pre condition is passed we want to execute the generator logic for
+our model so it is a good idea to save to model root node in a variable.
+
+\begin{lstlisting}[language=Java] 
+  val questionnaire = input.contents.head as Questionnaire 
+\end{lstlisting}
+
+Because we will generate JSF artifacts into the \texttt{WebContent} folder in
+the following steps we let Guice add a \texttt{JSFOutputConfigurationProvider}
+extension to our \texttt{JSFGenerator} to get the possibility to use the
+WebContent OutputConfiguration constant.
+
+\begin{lstlisting}[language=Java] 
+class JSFGenerator implements IGenerator{
+  @Inject extension JSFOutputConfigurationProvider
+  ...
+ }
+\end{lstlisting}
+
+The following paragraphs will describe the different JSF artifacts which will be
+genarted by the JSFGenerator.
+
+Because we expect that some more logic will be added to the generator in later
+steps, we add a new extension definition for each artifact to the
+\texttt{JSFGenerator.xtend} class which encapsulates the logic to generate it. 
+
+\begin{lstlisting}[language=HTML] 
+  def generate_Artifact ()
+  '''<?xml version='1.0' encoding='UTF-8' ?>
+      <!-- @generated -->
+      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+     ...
+      </html>
+  '''
+\end{lstlisting}
+
+To get a valid xhtml page we have to generate the DOCTYPE
+and HTML tag into each xhtml file what was replaced by '\ldots' in the following
+listings to provide a better overview.
+
+\paragraph{JSF Form index}
+$\;$ \\To get simple access to all generated forms in the application
+ we want to generate an index page where a link is included for each form which is defined
+in our model.
+The generated index page should be saved in a subfolder \texttt{'generated/forms/'} of the \texttt{WEB\_CONTENT} OutputConfiguration
+created in section \ref{sec:outputConfigurationProvider}.
+
+\begin{lstlisting}[language=Java] 
+        val contentIndex  = generate_FormIndex(questionnaire.forms)
+        val fileNameIndex = "generated/forms/index.xhtml"
+        fsa.generateFile(fileNameIndex,WEB_CONTENT, contentIndex)
+\end{lstlisting}
+
+For the new artifact add a new extension called \texttt{def
+generate\_FormIndex}.
+It receives a list of \texttt{Form} elements. In a short loop it generates an
+outputlink for each form of the given model.
+
+\begin{lstlisting}[language=HTML] 
+  def generate_FormIndex (List<Form> forms)
+  '''...
+      <ui:composition template="/index.xhtml">
+        <ui:define name="content">
+        
+        «FOR elem: forms SEPARATOR "<br/>"»
+          <h:outputLink value="«elem.name».jsf">«elem.name»</h:outputLink>
+        «ENDFOR»
+        
+        </ui:define>
+      </ui:composition>
+      ...
+  '''
+\end{lstlisting}
+ 
+The index page is also used to integrate the generated forms into the whole web
+application by use of JSF xhtml
+templating.\footnote{\url{http://docs.oracle.com/javaee/6/javaserverfaces/2.1/docs/vdldocs/facelets/}}
+By using the attribute \texttt{template} of a \texttt{composition} tag the
+structure and styles of the template will be derived to our index page and also
+the forms later. Our generated form index needs a \texttt{index.xhtml} in the
+applications root folder which defines an \texttt{facelet:insert} section
+with name content like the shown in the listing below.
+
+ \begin{lstlisting}[language=HTML] 
+   <ui:insert name="content">
+   </ui:insert>
+  \end{lstlisting}
+ 
+-generated form index
+
+-template needed sample Web/Content/index.xhtml
+
+\paragraph{JSF Form}
+
+\subparagraph{JSF Form composite}
+
+\paragraph{QlDslExtensions} 
 - show whole generater
 - explain step by step

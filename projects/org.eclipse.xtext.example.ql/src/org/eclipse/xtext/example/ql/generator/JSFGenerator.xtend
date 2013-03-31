@@ -24,8 +24,16 @@ class JSFGenerator implements IGenerator{
         if (input.URI.fileExtension!="ql")
             return
 
-        //generate forms
+		// model root
         val questionnaire = input.contents.head as Questionnaire
+
+		// generate index page with links to generated forms
+        val contentIndex  = generate_FormIndex(questionnaire.forms)
+        // TODO the generator is called once per resource, so the index page will be overwritten if there is more than model file
+        val fileNameIndex = "generated/forms/index.xhtml"
+        fsa.generateFile(fileNameIndex,WEB_CONTENT, contentIndex)
+
+        //generate forms
         for (form: questionnaire.forms) {
         	//simple jsf which includes the generated form
             val content = generate_FormPage(form)
@@ -37,11 +45,6 @@ class JSFGenerator implements IGenerator{
             val fileNameBase = "generated/forms/"+form.name+"Base.xhtml"
             fsa.generateFile(fileNameBase,WEB_CONTENT, contentBase)
         }
-
-        //generate index page with links to generated forms
-        val contentIndex  = generate_FormIndex(questionnaire.forms)
-        // TODO the generator is called once per resource, so the index page will be overwritten if there is more than model file
-        fsa.generateFile("generated/forms/index.xhtml",WEB_CONTENT, contentIndex)
 
     }
     
