@@ -5,7 +5,6 @@ import javax.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 
-import org.eclipse.xtext.common.types.JvmField
 import org.eclipse.xtext.common.types.JvmPrimitiveType
 import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
 import org.eclipse.xtext.example.ql.qlDsl.Form
@@ -14,13 +13,10 @@ import org.eclipse.xtext.example.ql.qlDsl.Question
 import org.eclipse.xtext.example.ql.qlDsl.Questionnaire
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import org.eclipse.xtext.xbase.XFeatureCall
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import java.util.Set
 import org.eclipse.xtext.example.ql.QlDslExtensions
 
 class JSFGenerator implements IGenerator{
-  @Inject extension IJvmModelAssociations
   @Inject extension JSFOutputConfigurationProvider
   @Inject extension QlDslExtensions
   
