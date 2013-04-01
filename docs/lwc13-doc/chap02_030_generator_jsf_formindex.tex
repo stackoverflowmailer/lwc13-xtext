@@ -29,10 +29,10 @@ class JSFGenerator implements IGenerator{
 For the new artifact add a new extension called \texttt{def
 generate\_FormIndex}.
 It receives a list of \texttt{Form} elements. In a short loop it generates an
-outputlink for each form of the given model. Because \texttt{doGenerate} is
-called for each QL resource the generator currently has the limitation that all
-QL model elements are defined within the same QL resource to ensure generation of a
-correct form index page.
+\texttt{html:outputlink} for each form of the given model. Because
+\texttt{doGenerate} is called for each QL resource the generator currently has the limitation that all
+QL model elements have to be defined within the same QL resource to ensure
+generation of a correct form index page.
 
 \begin{lstlisting}[language=HTML] 
   def generate_FormIndex (List<Form> forms)
