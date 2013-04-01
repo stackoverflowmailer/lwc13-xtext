@@ -34,7 +34,7 @@ It receives a list of \texttt{Form} elements. In a short loop it generates an
 QL model elements have to be defined within the same QL resource to ensure
 generation of a correct form index page.
 
-\begin{lstlisting}[language=HTML] 
+\begin{lstlisting}[language=Xtend] 
   def generate_FormIndex (List<Form> forms)
   '''...
       <ui:composition template="/index.xhtml">
@@ -49,7 +49,7 @@ generation of a correct form index page.
       ... 
   '''
 \end{lstlisting}
-
+ 
 By using the attribute \texttt{template} of a \texttt{composition} tag as
 already described in \ref{subsec:referenceMainLayout}, the structure and styles of
 index.xhtml will be derived in our form index page. Our generated form index
