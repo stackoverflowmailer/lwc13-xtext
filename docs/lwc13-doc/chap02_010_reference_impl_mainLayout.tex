@@ -3,9 +3,9 @@
 
 The logical entry to the web application is the \texttt{welcome-file}
 (\texttt{WebContent/index.xhtml}) declared in
-\texttt{WebContent/WEB-INF/web.xml}. The \texttt{index.xhtml} will later be
-helpful to integrate the generated artifacts with the web applications layout by
-use of JSF xhtml templating.
+\texttt{WebContent/WEB-INF/web.xml}. The \texttt{index.xhtml} composes the
+main layout with page contents and will later be helpful to integrate the
+generated artifacts with the web applications layout by use of JSF xhtml templating.
 \footnote{\url{http://docs.oracle.com/javaee/6/javaserverfaces/2.1/docs/vdldocs/facelets/}}
 
 \begin{lstlisting}[language=HTML]
@@ -36,7 +36,7 @@ with custom output by the same pattern.
 \begin{lstlisting}[language=HTML] 
 	<ui:composition template="/index.xhtml">
   		<ui:define name="content">
-  		...
+  		...my xhtml content
   		</ui:define>
  	</ui:composition>
 \end{lstlisting}
@@ -47,20 +47,31 @@ template or one of its parent templates when the html output is rendered by the
 JSF framework.
 
 \paragraph{Default template}
-$\;$ \\The reference application is shipped with a default template placed in
-\newline \texttt{WebContent/resources/default/templates/defaultLayout.xhtml}. Its a very
-simple one which privides mainly 3 sections (header, content, footer) which can
-be overloaded by the layouts children.
+$\;$ \\
+We keep the main layout definition and the page contents seperated from each
+other so the \texttt{WebContent/index.xhtml} creates the main composition of the
+applications layout and pages. Template defintions in our web application should
+be placed in a folder \newline \texttt{WebContent/resources/*templateName*}.
 
-To change the layout it is just necesarry to change the main layout reference in
-the attribute \texttt{template} of the \texttt{facelets:composite} component.
-The current web application urgently needs a defined facelets:insert section
-with name 'content' for proper composition which is declared in
+\begin{lstlisting}[language=HTML]
+ ...
+  <ui:composition
+    template="/resources/default/templates/defaultLayout.xhtml">
+ ...
+\end{lstlisting}
+
+The reference application is shipped with a default template placed in
+\newline \texttt{WebContent/resources/default/}. Its a very
+simple one which provides a skeleton with mainly 3 sections (header, content,
+footer) where clients can add custom content by the xhtml
+\texttt{/templates/defaultLayout.xhtml}.
+
+To change the main layout it is just necesarry to change the \texttt{template}
+reference of the \texttt{facelets:composite} in \texttt{WebContent/index.xhtml}.
+The current web application urgently needs a defined \texttt{facelets:insert}
+section with name 'content' for proper composition which is declared in
 \texttt{/resources/default/templates/defaultLayout.xhtml}.
 
- 
-The \texttt{index.xhtml} creates the main composition of the applications layout
-and pages. 
 \begin{lstlisting}[language=HTML]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -89,4 +100,6 @@ and pages.
 </body>
 </html>
 \end{lstlisting}
-
+\paragraph{Default CSS}
+$\;$ \\
+\ldots evtl kurz drauf eingehen
