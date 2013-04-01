@@ -1,0 +1,63 @@
+\subsubsection{Main Layout}
+\label{subsec:referenceMainLayout} 
+
+Root entry of the web application is the \texttt{welcome-file}
+\texttt{WebContent/index.xhtml} declared in \texttt{WebContent/WEB-INF/web.xml}.
+
+The \texttt{index.xhtml} within \texttt{WebContent/} will be helpful to
+integrate the generated forms into the whole web application by use of JSF xhtml
+templating later.
+\footnote{\url{http://docs.oracle.com/javaee/6/javaserverfaces/2.1/docs/vdldocs/facelets/}}
+ 
+This file implements the main composition of the applications layout and pages.
+The main layout is provided by a default template placed in \newline
+\texttt{WebContent/resources/default/templates/defaultLayout.xhtml}.
+
+\begin{lstlisting}[language=HTML]
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets">
+<body>
+
+  <ui:composition
+    template="/resources/default/templates/defaultLayout.xhtml">
+    <ui:define name="content">
+      Hello World!
+    </ui:define>
+  </ui:composition>
+
+</body>
+
+</html>
+\end{lstlisting}
+
+To change the layout it is just necesarry to change the main layout reference in
+the attribute \texttt{template} of the \texttt{facelets:composite} component.
+The current web application urgently needs a defined facelets:insert section
+with name 'content' for proper composition which is declared in
+\texttt{/resources/default/templates/defaultLayout.xhtml}.
+
+\begin{lstlisting}[language=HTML]
+ <ui:insert name="content">
+    	Content area. Compose by use of <facelet:define name="content">.
+  </ui:insert>
+\end{lstlisting}
+
+Subpages of the application should use the main index.xhtml itself as
+their template and overwrite the content section with custom output by the same
+pattern.
+
+\begin{lstlisting}[language=HTML] 
+	<ui:composition template="/index.xhtml">
+  		<ui:define name="content">
+  		...
+  		</ui:define>
+ 	</ui:composition>
+\end{lstlisting}
+
+Everything between the opening and closing \texttt{facelet:define} tag within
+the subpage will be passed into a \texttt{facelet:insert} section defined in the
+template or one of its parent templates when the html output is rendered.

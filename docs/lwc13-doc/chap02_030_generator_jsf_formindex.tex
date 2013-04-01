@@ -46,26 +46,18 @@ correct form index page.
         
         </ui:define>
       </ui:composition>
-      ...
+      ... 
   '''
 \end{lstlisting}
 
 By using the attribute \texttt{template} of a \texttt{composition} tag as
-already described in \ref{subsec:referenceGeneral}, the structure and styles of
-index.xhtml will be derived to our index page. Our generated form index needs a
-\texttt{index.xhtml} in the applications root folder which defines an
-\texttt{facelet:insert} section with name content like the shown in the listing below.
+already described in \ref{subsec:referenceMainLayout}, the structure and styles of
+index.xhtml will be derived in our form index page. Our generated form index
+needs a \texttt{index.xhtml} in the applications root folder which itself or one of its
+parent templates defines a \texttt{facelet:insert} section with name 'content'
+like described in section \ref{subsec:referenceMainLayout}.
 
- \begin{lstlisting}[language=HTML] 
-   <ui:insert name="content">
-   </ui:insert>
-  \end{lstlisting}
- 
- Everything between the opening and closing \texttt{facelet:define} tag within
- the generated form index page will be passed in the defined
- \texttt{facelet:insert} in the applications root index page when the html
- output is rendered.
- 
-  -generated form index
-
--template needed sample Web/Content/index.xhtml
+To get the possibility to change the template for all generated files in
+a single file easily later we will use the generated form index as template for
+generated form pages in a later step. The generated form index looks similar to
+the one described in section \ref{subsec:referenceForms}.

@@ -1,0 +1,33 @@
+Before implementing a code generator one has to know what the target code is. Therefore a reference implementation has been
+developed which was coded to large degree manually. From this reference code the templates can be derived. Also this is a
+manual step.
+\begin{wrapfigure}[24]{l}{0.48\textwidth}
+ \includegraphics[width=9cm]{./images/chapter02/referenceimpl_projecttree.png}
+\end{wrapfigure}
+We use a Java Server Faces (JSF) based application, which can be deployed on any
+Java Web container (also known as a Servlet container) like Glassfish, JBoss and Apache Tomcat.
+
+The screenshot shows the structure of the web application project. The application is available for download from the project 
+homepage (\href{http://lwc13-xtext.eclipselabs.org.codespot.com/files/JSF-QL-1.0.zip}{JSF-QL-1.0.zip})
+ 
+Large parts of the application are not derivable from the model, they build the skeleton of the project. This is:
+\begin{itemize}
+\item Custom types (\texttt{src/types/*})
+\item Custom type converter (\texttt{src/converter/*})
+\item Libraries \newline (\texttt{WebContent/WEB-INF/lib/*})
+\item Web Application Descriptor \newline (\texttt{WebContent/WEB-INF/web.xml})
+\item Faces configuration \newline
+(\texttt{WebContent/WEB-INF/faces-config.xml})
+\item Images \newline (\texttt{WebContent/resources/default/img/*})
+\item Page Templates \newline
+(\texttt{WebContent/resources/default/templates/*})
+\end{itemize} 
+
+After describing some necessary configuration of the IDE we will focus on the
+parts which are dependent on the QL model and thus subject of code generation
+in sub sesction \ref{subsec:referenceForms}.
+These artifacts are:
+\begin{itemize}
+\item Java Bean classes representing the state of a Form (\texttt{src/forms})
+\item JSF enabled XHTML pages representing the presentation of a Form (\texttt{WebContent/forms/*})
+\end{itemize}
