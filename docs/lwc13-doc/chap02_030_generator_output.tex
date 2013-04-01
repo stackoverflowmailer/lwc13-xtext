@@ -1,0 +1,67 @@
+\subsubsection{Output Configuration Provider}
+\label{sec:outputConfigurationProvider}
+
+In JSF applications all the web related content is normally placed under
+\texttt{./WebContent} instead of \texttt{./src-gen}, which is mostly used as
+output for generated java artifacts. We want to adapt to the web applications
+structure and seperate generated java classes and JSF artifacts from each other. For that purposes add
+a class called \texttt{JsfOutputConfigurationProvider.java} derived from
+\texttt{org.eclipse.xtext.generator.OutputConfigurationProvider} 
+\footnote{\url{http://xtextcasts.org/episodes/15-output-configurations}} within package
+\texttt{org.eclipse.xtext.example.ql.generator}, which
+adds an additional \texttt{OutputConfiguration} for the ouput directoy
+\texttt{./WebContent} as shown in the listing below.
+
+\begin{lstlisting}[language=Java]
+package org.eclipse.xtext.example.ql.generator;
+
+import java.util.Set;
+
+import org.eclipse.xtext.generator.OutputConfiguration;
+import org.eclipse.xtext.generator.OutputConfigurationProvider;
+
+public class JSFOutputConfigurationProvider extends OutputConfigurationProvider {
+
+  public final String WEB_CONTENT = "WebContent";
+
+  /**
+   * @return a set of {@link OutputConfiguration} available for the generator
+   */
+  public Set<OutputConfiguration> getOutputConfigurations() {
+    Set<OutputConfiguration> outputConfigurations = super
+        .getOutputConfigurations();
+
+    OutputConfiguration webContent = new OutputConfiguration(WEB_CONTENT);
+    webContent
+        .setDescription("Read-only Output Folder for web generated application artifacts");
+    webContent.setOutputDirectory("./WebContent");
+    webContent.setOverrideExistingResources(true);
+    webContent.setCreateOutputDirectory(true);
+    webContent.setCleanUpDerivedResources(true);
+    webContent.setSetDerivedProperty(true);
+    outputConfigurations.add(webContent);
+
+    return outputConfigurations;
+  }
+}
+\end{lstlisting}
+
+The interface \texttt{OutputConfiguration} provides several options to configure
+the behavior of the so called \texttt{Outlet}. We use the defaults as in
+\texttt{OutputConfigurationProvider} except its name, description and outputDirectoy.
+
+Our \texttt{JsfOutputConfigurationProvider} can be bound in the
+\texttt{QlDslRuntimeModule} by overriding/extending the method
+\texttt{configure}.
+
+\begin{lstlisting}[language=Java]
+@Override public void configure(Binder binder) {
+    super.configure(binder);
+    binder.bind(IOutputConfigurationProvider.class)
+        .to(JSFOutputConfigurationProvider.class).in(Singleton.class);
+  }
+ \end{lstlisting}
+ 
+After this step we can refer to the additional \texttt{OutputConfiguration} in
+generators by use of the constant \texttt{WEB\_CONTENT} defined in class
+\texttt{JsfOutputConfigurationProvider}.
