@@ -5,22 +5,37 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
 	<title><ui:insert name="title">LWC 2013 Xtext</ui:insert></title>
+	<h:outputStylesheet library="default/css" name="base.css" />
+	<h:outputStylesheet library="default/css" name="container.css" />
 </h:head>
 <body>
+<div id="content_wrapper">
 	<div id="header">
 		<ui:insert name="header">
 			<ui:include src="/resources/default/templates/header.xhtml" />
 		</ui:insert>
 	</div>
+	
 	<div id="content">
-		<ui:insert name="content">
-    	Content area. Compose by use of tag facelet:define & name="content".
-  </ui:insert>
+		
+		<div id="main">
+			<ui:insert name="content">
+		    	Content area.  See comments below this line in the source.
+		    	<!--  include your content file or uncomment the include below and create content.xhtml in this directory -->
+				<!-- <div> -->
+				<!-- <ui:include src="content.xhtml"/> -->
+				<!-- </div> -->
+			</ui:insert>
+		</div>
 	</div>
-	<div id="footer">
+	
+	<div id="footer" class="ym-clearfix">
+		<div class="nav ym-clearfix"></div>
 		<ui:insert name="footer">
 			<ui:include src="/resources/default/templates/footer.xhtml" />
 		</ui:insert>
 	</div>
+</div>
 </body>
+
 </html>
