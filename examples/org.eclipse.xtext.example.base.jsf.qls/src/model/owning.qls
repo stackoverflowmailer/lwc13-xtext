@@ -7,15 +7,22 @@ page HouseOwningPage {
 			font-family: "Verdana"
 		]
 	}
-	section garage uses GarageOwning {
-		question hasBoughtGarage [widget: Radio["Yepp", "Nope"]]		
+	/* 
+	section garage uses CarOwning {
+		question hasBoughtCar [widget: Radio["Yepp", "Nope"]]		
 	}
+	*/
+	 
+	/*
 	navigation {
 		CarOwningPage
 	}
+	*/
 }
 
+/*
 page CarOwningPage uses CarOwning {
 	question hasSoldCar [font-color: "green"]
 	question hasBoughtCar [font-color: "red"]
 }
+*/
