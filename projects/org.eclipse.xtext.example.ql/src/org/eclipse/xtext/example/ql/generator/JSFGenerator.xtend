@@ -80,6 +80,7 @@ class JSFGenerator implements IGenerator{
 
       <ui:composition template="/index.xhtml">
         <ui:define name="content">
+        <h1> «form.name» Form </h1>        
           <ui:include src="«form.name»Base.xhtml" />	
         </ui:define>
       </ui:composition>
@@ -95,6 +96,7 @@ class JSFGenerator implements IGenerator{
         xmlns:ui="http://java.sun.com/jsf/facelets">
       <ui:composition template="/index.xhtml">
         <ui:define name="content">
+        <h1> Form Index </h1>
         «FOR elem: forms SEPARATOR "<br/>"»
           <h:outputLink value="«elem.name».jsf">«elem.name»</h:outputLink>
         «ENDFOR»
@@ -119,14 +121,17 @@ class JSFGenerator implements IGenerator{
 
   def dispatch generate(ConditionalQuestionGroup group) 
   '''<!-- generate (ConditionalQuestionGroup group) -->
+  	<div class="ym-grid ym-g50 highlight_content">
       «FOR elem: group.element»
         «elem.generateFormElement»
       «ENDFOR»
+     </div>
    '''
    
   def dispatch generate (Question question) 
   '''<!-- generate (Question question) -->
-    <h:outputLabel id="lbl«question.id.toFirstUpper»" value="«question.label»"/>
+  <div class="ym-grid">
+    <h:outputLabel styleClass="ym-g33 ym-gl" id="lbl«question.id.toFirstUpper»" value="«question.label»"/>
     «switch(question.type.type){
         JvmPrimitiveType: {
           switch (question.type.simpleName.toLowerCase){
@@ -135,6 +140,7 @@ class JSFGenerator implements IGenerator{
         }
         default : '''		«generateQuestionText(question)»'''
       }»
+   </div>
      <br/>
   '''
 	def boolean isReferenced(FormElement element) {
@@ -143,13 +149,13 @@ class JSFGenerator implements IGenerator{
 
 
   def generateQuestionBoolean(Question question) '''
-    <h:selectBooleanCheckbox id="q«question.id»" value="#{«question.formName+'.'+question.name»}">
+    <h:selectBooleanCheckbox styleClass="ym-g50 ym-gl" id="q«question.id»" value="#{«question.formName+'.'+question.name»}">
       <f:ajax event="click" render="«question.getRenderSequence»"/>
     </h:selectBooleanCheckbox>
   '''
 
   def generateQuestionText(Question question) '''
-    <h:inputText id="q_«question.id»" value="#{«question.formName+'.'+question.name»}"«IF question.expression!=null» readonly="true"«ENDIF»>
+    <h:inputText styleClass="ym-g33 ym-gl" id="q_«question.id»" value="#{«question.formName+'.'+question.name»}"«IF question.expression!=null» readonly="true"«ENDIF»>
       <f:ajax event="blur" render="«question.getRenderSequence»"/>
       «generateConverter(question)»
     </h:inputText>
