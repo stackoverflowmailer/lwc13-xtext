@@ -1,0 +1,65 @@
+\paragraph{JSF Form index}
+$\;$ \\
+To get simple access to all generated forms in the application
+ we want to generate an index page where a link is included for each form which is defined
+in our model.
+The generated index page should be saved in a file called index.xhtml within a
+subfolder \texttt{'generated/forms/'} of the \texttt{WEB\_CONTENT}
+outlet created in section \ref{sec:outputConfigurationProvider}.
+
+\begin{lstlisting}[language=Java] 
+class JSFGenerator implements IGenerator{
+  @Inject extension JSFOutputConfigurationProvider
+  @Inject extension QlDslExtensions
+  
+  override doGenerate(Resource input, IFileSystemAccess fsa) {
+        if (input.URI.fileExtension!="ql")
+            return
+		// model root
+        val questionnaire = input.contents.head as Questionnaire
+		// generate index page with links to generated forms
+        val contentIndex  = generate_FormIndex(questionnaire.forms)
+        val fileNameIndex = "generated/forms/index.xhtml"
+        fsa.generateFile(fileNameIndex,WEB_CONTENT, contentIndex)
+        ...
+  }
+  ...
+ }
+      
+\end{lstlisting}
+
+For the new artifact add a new extension called \texttt{def
+generate\_FormIndex}.
+It receives a list of \texttt{Form} elements. In a short loop it generates a
+\texttt{html:outputlink} node for each element in the given list of forms.
+Because \texttt{doGenerate} is called for each QL resource, the generator
+currently has the limitation that all QL model elements have to be defined
+within the same QL resource to ensure generation of a correct form index page.
+
+\begin{lstlisting}[language=Xtend] 
+  def generate_FormIndex (List<Form> forms)
+  '''...
+      <ui:composition template="/index.xhtml">
+        <ui:define name="content">
+        
+        «FOR elem: forms SEPARATOR "<br/>"»
+          <h:outputLink value="«elem.name».jsf">«elem.name»</h:outputLink>
+        «ENDFOR»
+        
+        </ui:define>
+      </ui:composition>
+      ... 
+  '''
+\end{lstlisting}
+ 
+By using the attribute \texttt{template} of a \texttt{composition} tag as
+already described in \ref{subsec:referenceMainLayout}, the structure and styles of
+index.xhtml will be derived in our form index page. Our generated form index
+needs a \texttt{index.xhtml} in the applications root folder which itself or one of its
+parent templates defines a \texttt{facelet:insert} section with name 'content'
+like described in section \ref{subsec:referenceMainLayout}.
+
+To get the possibility to change the template for all generated files in
+a single file easily later we will use the generated form index as template for
+generated form pages in a later step. The generated form index looks similar to
+the one described in section \ref{subsec:referenceForms}.

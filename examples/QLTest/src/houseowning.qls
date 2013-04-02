@@ -7,7 +7,7 @@ page Page1 uses Box1HouseOwning {
 		question hasBoughtHouse [
 			font-color: "#FFDD99"
 			font-style: "bold italic"
-			font-type: "Comic"
+			font-family: "Comic"
 			widget: Radio ["yes","no"]
 		]
 		
@@ -28,7 +28,7 @@ page Page1 uses Box1HouseOwning {
 
 page Page2 uses Box1HouseOwning {
 	question hasMaintLoan [font-style:"italic"]
-	question sellingPrice [font-type:"Arial"]
+	question sellingPrice [font-family:"Arial"]
 }
 
 page Page3 {

@@ -1,43 +1,45 @@
 \subsection{Reference Implementation}
+\label{subsec:referenceImpl}
 
-Before implementing a code generator one has to know what the target code is. Therefore a reference implementation has been
-developed which was coded to large degree manually. From this reference code the templates can be derived. Also this is a
-manual step.
+\input{chap02_010_reference_impl_general.tex}
 
-We use a Java Server Faces (JSF) based application, which can be deployed on any
-Java Web container (also known as a Servlet container) like Glassfish, JBoss and Apache Tomcat.
+\input{chap02_010_reference_impl_ide.tex}
 
-The following screenshot shows the structure of the web application project. The application is available for download from the project 
-homepage (\href{http://lwc13-xtext.eclipselabs.org.codespot.com/files/JSF-QL-1.0.zip}{JSF-QL-1.0.zip})
+\subsubsection{Import and run reference}
 
-\includegraphics[width=6cm]{./images/chapter02/referenceimpl_projecttree.png}
+Checkout from git OR downlaod from project home page @ code.google.com
 
-Large parts of the application are not derivable from the model, they build the skeleton of the project. This is:
-\begin{itemize}
-\item Custom types (\texttt{src/types/*})
-\item Custom type converter (\texttt{src/converter/*})
-\item Images (\texttt{WebContent/resources/default/img/*})
-\item Page Templates (\texttt{WebContent/resources/default/templates/*})
-\item Libraries (\texttt{WebContent/WEB-INF/lib/*})
-\item Web Application Descriptor (\texttt{WebContent/WEB-INF/web.xml})
-\item Faces configuration (\texttt{WebContent/WEB-INF/faces-config.xml})
-\end{itemize}
+import project from git:
+checkout instructions:
+https://code.google.com/a/eclipselabs.org/p/lwc13-xtext/source/checkout
 
-We will focus on the parts which are dependent on the QL model and thus subject of code generation. These artifacts are:
-\begin{itemize}
-\item Java Bean classes representing the state of a Form (\texttt{src/forms})
-\item JSF enabled XHTML pages representing the presentation of a Form (\texttt{WebContent/forms/*})
-\end{itemize}
+download zip from:
+project home: http://code.google.com/a/eclipselabs.org/p/lwc13-xtext/
 
-... to be continued
-\begin{itemize}
-\item setup webtools
-\item import reference apllication
-\item install tomcat
-\item run reference application
-\end{itemize}
-To integrate the generated artifacts into our web application we have to
-make manually changes in the \texttt{welcome-file} declared in \texttt{WebContent/WEB-INF/web.xml} later.
-(\texttt{WebContent/index.xhtml})
+run as MWE2 Workflow
+
+1. /org.eclipse.xtext.example.ql/src/org/eclipse/xtext/example/ql/GenerateQlDsl.mwe2
+
+2. /org.eclipse.xtext.example.qls/src/org/eclipse/xtext/example/qls/GenerateQlsDsl.mwe2
+
+Run configuration
+
+- LWC13 Runtime
+
+import existing project
+- \\lwc13-xtext\\examples\\QLTest
+
+\input{chap02_010_reference_impl_mainLayout.tex}
+
+\subsubsection{Reference Forms}
+\label{subsec:referenceForms}
+general (eg dependency baseForm, form)
+
+\paragraph{Bean}
+yxcvyxcvyxcvyxcvyxcv
+
+\paragraph{Form}
+yxcvyxcvyxcvyxcvxycv
+
 
 

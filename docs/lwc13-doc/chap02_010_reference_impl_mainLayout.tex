@@ -1,0 +1,116 @@
+\subsubsection{Main Layout}
+\label{subsec:referenceMainLayout} 
+
+The logical entry to the web application is the \texttt{welcome-file}
+(\texttt{WebContent/index.xhtml}) declared in
+\texttt{WebContent/WEB-INF/web.xml}. The \texttt{index.xhtml} composes the
+main layout with page contents and will later be helpful to integrate the
+generated artifacts with the web applications layout by use of JSF xhtml templating.
+\footnote{\url{http://docs.oracle.com/javaee/6/javaserverfaces/2.1/docs/vdldocs/facelets/}}
+
+\begin{lstlisting}[language=HTML]
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets">
+<body>
+
+  <ui:composition
+    template="/resources/default/templates/defaultLayout.xhtml">
+    <ui:define name="content">
+      Hello World!
+    </ui:define>
+  </ui:composition>
+
+</body>
+
+</html>
+\end{lstlisting}
+ 
+Subpages of the application should use the \texttt{index.xhtml} placed in
+\texttt{WebContent/} itself as their template and overwrite the content section
+with custom output by the same pattern.
+
+\begin{lstlisting}[language=HTML] 
+	<ui:composition template="/index.xhtml">
+  		<ui:define name="content">
+  		...my xhtml content
+  		</ui:define>
+ 	</ui:composition>
+\end{lstlisting}
+
+Everything between the opening and closing \texttt{facelet:define} tag within
+the subpage will be passed into a \texttt{facelet:insert} section with
+\texttt{name = content} defined in the template
+(here:\texttt{defaultLayout.xhtml}) or one of its parent templates when the html
+output is rendered by the JSF framework.
+
+\paragraph{Default template}
+$\;$ \\
+We keep the main layout definition and the page contents seperated from each
+other. The \texttt{WebContent/index.xhtml} creates the main composition of the
+applications structural layout and content of pages as described in section
+\ref{subsec:referenceMainLayout}. Layout template defintions should be placed in
+a folder \newline \texttt{WebContent/resources/*templateName*} in our web
+application.
+
+To change the main layout it is just necesarry to change the \texttt{template}
+reference of the \newline\texttt{facelets:composite} in
+\texttt{WebContent/index.xhtml}.\newline
+
+\begin{lstlisting}[language=HTML]
+ ...
+  <ui:composition
+    template="/resources/default/templates/defaultLayout.xhtml">
+ ...
+\end{lstlisting}
+
+The reference application is shipped with a default template placed in \newline
+\texttt{WebContent/resources/default/}.\newline Its a very simple one which
+provides a skeleton \newline \texttt{/templates/defaultLayout.xhtml} \newline
+with mainly 3 sections (header, content, footer) where clients can add custom content.
+
+The current web application expects a defined \texttt{facelets:insert}
+section with name 'content' within the template or one of its parents for proper
+composition. In our refernence implementation it is declared in \newline
+\texttt{/resources/default/templates/defaultLayout.xhtml}.
+
+\begin{lstlisting}[language=HTML]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title><ui:insert name="title">LWC 2013 Xtext</ui:insert></title>
+</h:head>
+<body>
+	<div id="header">
+		<ui:insert name="header">
+			<ui:include src="/resources/default/templates/header.xhtml" />
+		</ui:insert>
+	</div>
+	<div id="content">
+		<ui:insert name="content">
+    	Content area. Compose by use of tag facelet:define & name="content".
+  </ui:insert>
+	</div>
+	<div id="footer">
+		<ui:insert name="footer">
+			<ui:include src="/resources/default/templates/footer.xhtml" />
+		</ui:insert>
+	</div>
+</body>
+</html>
+\end{lstlisting}
+
+We added two \texttt{facelets:insert} sections to give the possibility to
+replace the header and footer. To simplify the concrete JSF compositions later we let JSF include
+default content for both by use of \texttt{facelets:include} for a fixed source
+\texttt{src}.
+
+\paragraph{Default CSS}
+$\;$ \\
+\ldots TODO nach erhalt der sourcen
