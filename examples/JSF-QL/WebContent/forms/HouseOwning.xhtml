@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/index.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="houseOwningForm">
+			<!-- B E G I N _ M A I N _ S E C T I O N  -->
+			<h:panelGroup id="grp_houseOwningForm">
+				<!-- evaluation part, every expression has one -->
+				<h:panelGroup id="grp_houseOwningForm_nested">
+
+					<!-- hasSoldHouse boolean  -->
+					<h:outputLabel value="Did you sell a house in 2010?" />
+					<!-- render boolean -->
+					<h:selectBooleanCheckbox id="chkHasSoldHouse"
+						value="#{houseOwning.hasSoldHouse}">
+						<f:ajax execute="chkHasSoldHouse"
+							render="grp_state grp_hasSoldHouse_hasBoughtHouse" />
+					</h:selectBooleanCheckbox>
+					<br />
+					<!-- end hasSoldHouse boolean  -->
+
+					<!-- hasBoughtHouse boolean  -->
+					<h:outputLabel value="Did you by a house in 2010?" />
+					<!-- render boolean -->
+					<h:selectBooleanCheckbox id="cgkHasBoughtHouse"
+						value="#{houseOwning.hasBoughtHouse}">
+						<f:ajax execute="cgkHasBoughtHouse"
+							render="grp_state grp_hasSoldHouse_hasBoughtHouse" />
+					</h:selectBooleanCheckbox>
+					<br />
+					<!-- end hasBoughtHouse boolean  -->
+
+					<!-- B E G I N _ N E S T E D _ S E C T I O N  -->
+					<!-- rendering will be triggered by components bounded to conditions which are used in expressions (group0Visible = houseOwning.hasSoldHouse && houseOwning.hasBoughtHouse)-->
+					<h:panelGroup id="grp_hasSoldHouse_hasBoughtHouse">
+						<!-- evaluation part, every expression has one -->
+						<h:panelGroup id="grp_group0Visible"
+							rendered="#{houseOwning.group0Visible}">
+							<!-- just showing nested components,which can also be expression relevant?!, when rendered="condition" evaluates to true-->
+
+							<br />
+							<!-- sellingPrice boolean  -->
+							<h:outputLabel value="Price the house was sold for:" />
+							<!-- render Money IN -->
+							<h:inputText id="inSellingPrice"
+								value="#{houseOwning.sellingPrice.amount}">
+								<f:ajax event="keyup" execute="inSellingPrice"
+									render="grp_state grp_ValueReside" />
+							</h:inputText>
+							<br />
+							<!-- end sellingPrice boolean  -->
+							
+							<!-- privateDebt boolean  -->
+							<h:outputLabel value="Private debts for the sold house:" />
+							<!-- render Money IN -->
+							<h:inputText id="inPrivateDebt"
+								value="#{houseOwning.privateDebt.amount}">
+								<f:ajax event="keyup" execute="inPrivateDebt"
+									render="grp_state grp_ValueReside" />
+							</h:inputText>
+							<br />
+							<!-- end privateDebt boolean  -->
+							
+							<!-- B E G I N _ N E S T E D _ S E C T I O N  -->
+							<h:panelGroup id="grp_ValueReside">
+							<!-- evaluation part, every expression has one -->
+								<h:panelGroup id="grp_ValueReside_nested"
+									rendered="#{houseOwning.valueResidueVisible}">
+									<!-- just showing nested components,which can also be expression relevant?!, when rendered="condition" evaluates to true-->
+									<h:outputLabel value="Value residue:" />
+									<!-- render Money OUT -->
+									<h:outputLabel id="lblValueReside"
+										value="#{houseOwning.valueResidue.amount}" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- E N D _ N E S T E D _ S E C T I O N  -->
+							<br />
+
+							<!-- E N D _ N E S T E D _ S E C T I O N  -->
+						</h:panelGroup>
+					</h:panelGroup>
+					<br />
+					<!-- hasMaintLoan boolean  -->
+					<h:outputLabel
+						value="Did you enter a loan for maintenance/reconstruction?" />
+						<!-- render boolean -->
+					<h:selectBooleanCheckbox id="chkHasMaintLoan"
+						value="#{houseOwning.hasMaintLoan}">
+						<f:ajax execute="chkHasMaintLoan" render="output3" />
+					</h:selectBooleanCheckbox>
+					<br />
+					<!-- end hasMaintLoan boolean  -->
+					<br />
+				</h:panelGroup>
+			</h:panelGroup>
+			<!-- E N D _ M A I N _ S E C T I O N  -->
+			<!-- rendering will be triggered by components bounded to conditions which are used in expressions (group0Visible = houseOwning.hasSoldHouse && houseOwning.hasBoughtHouse)-->
+			<h:panelGroup id="grp_state">
+				<br />
+************** S T A T E **************
+<br />
+				State houseOwning.group0Visible :	<h:outputText id="output0"
+					value="#{houseOwning.group0Visible}"></h:outputText>
+				<br />
+				<!-- evaluation part, every expression has one -->
+				<h:panelGroup id="output">
+					<!-- just showing nested components, can also be expression relevant?! -->
+					State houseOwning.hasSoldHouse :	<h:outputText id="output1"
+						value="#{houseOwning.hasSoldHouse}" />
+					<br />				
+					State houseOwning.hasBoughtHouse : <h:outputText id="output2"
+						value="#{houseOwning.hasBoughtHouse}" />
+					<br />
+					State houseOwning.privateDebt :<h:outputText id="output121"
+						value="#{houseOwning.privateDebt.amount}" />
+					<br />
+					State houseOwning.sellingPrice :<h:outputText id="output122"
+						value="#{houseOwning.sellingPrice.amount}" />
+					<br />
+					State houseOwning.valueResidueVisible : <h:outputText id="output124"
+						value="#{houseOwning.valueResidueVisible}" />
+					<br />
+					State houseOwning.valueResidue :<h:outputText id="output123"
+						value="#{houseOwning.valueResidue.amount}" />
+					<br />
+				</h:panelGroup>
+			</h:panelGroup>
+			<br />
+			State houseOwning.hasMaintLoan : <h:outputText id="output3"
+				value="#{houseOwning.hasMaintLoan}" />
+
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>
+</html>

@@ -13,6 +13,8 @@ right=1.5cm]{geometry}
 \usepackage{listings}
 \usepackage{paralist}
 \usepackage{color}
+\usepackage{wrapfig}
+\usepackage{textcomp}
 
 
 \definecolor{darkblue}{rgb}{0,0,.5}
@@ -76,7 +78,9 @@ menucolor=darkblue, urlcolor=darkblue}
     morekeywords={returns,generate,as,import,with,grammar}
 }
 \lstdefinelanguage {Xtend}[]{Java} {
-    morekeywords={def,dispatch,override,val,IF,ENDIF,FOR,ENDFOR,BEFORE,AFTER,SEPARATOR,typeof,@Inject,extension}
+    morekeywords={def,dispatch,override,val,var,IF,ENDIF,FOR,ENDFOR,BEFORE,AFTER,SEPARATOR,typeof,@Inject,extension},
+    literate={«}{\guillemotleft}{1}
+    		 {»}{\guillemotright}{1} 
 %    otherkeywords={+=,=,\{,\}}
 }
 \lstdefinelanguage {Mwe2}[]{Java} {
@@ -89,7 +93,9 @@ menucolor=darkblue, urlcolor=darkblue}
     morekeywords={form,\:}
 }
 \lstdefinelanguage {QLS}[]{Java} {
-    morekeywords={page, section, uses, question, font-style, font-color, font-type, widget, navigation, CheckBox, Radio,\:}
+    morekeywords={page, section, uses, question, font\-style, font\-color,
+    font\-family, font\-weight, widget, navigation, CheckBox, Radio,\:, \-},
+    alsoletter={-}
 }
 \lstdefinelanguage {Xbase}[]{Java} {
     morekeywords={val,var,\:}
@@ -120,6 +126,7 @@ Generate-Domain-model-Language}
 \newpage
 
 \renewcommand{\contentsname}{Table Of Contents}
+\setcounter{tocdepth}{4}
 \tableofcontents
 
 \newpage

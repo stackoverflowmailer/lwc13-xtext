@@ -17,7 +17,8 @@ public class JSFOutputConfigurationProvider extends OutputConfigurationProvider 
         .getOutputConfigurations();
 
     OutputConfiguration webContent = new OutputConfiguration(WEB_CONTENT);
-    webContent.setDescription("Read-only Output Folder for forms");
+    webContent
+        .setDescription("Read-only Output Folder for web generated application artifacts");
     webContent.setOutputDirectory("./WebContent");
     webContent.setOverrideExistingResources(true);
     webContent.setCreateOutputDirectory(true);

@@ -16,10 +16,11 @@ import org.eclipse.xtext.example.qls.qlsDsl.Section
 import org.eclipse.xtext.example.ql.generator.JSFGenerator
 import org.eclipse.xtext.example.qls.qlsDsl.QuestionStyling
 import org.eclipse.xtext.example.ql.generator.JSFOutputConfigurationProvider
+import org.eclipse.xtext.example.ql.QlDslExtensions
 
 class QlsDslGenerator implements IGenerator {
   @Inject extension JSFOutputConfigurationProvider
-  @Inject extension JSFGenerator
+  @Inject extension QlDslExtensions
   
   override void doGenerate(Resource input, IFileSystemAccess fsa) {
 	if (input.URI.fileExtension!="qls")
@@ -97,20 +98,6 @@ class QlsDslGenerator implements IGenerator {
 	
   def getId(StyleInformation styleInfo) {
 	val question = (styleInfo.eContainer as QuestionStyling).question
-	val form = EcoreUtil2::getContainerOfType(question, typeof(Form))
-	"#"+form.id+ "\\:lbl"+question.id.toFirstUpper
-  }
-
-  def dispatch getForm(Section section) {
-	if (section.form != null) {
-	  section.form
-	}
-	else {
-	  section.eContainer.form
-	}
-  }
-	
-  def dispatch getForm(Page page) {
-	page.form
+	"#"+question.form.id+ "\\:lbl"+question.id.toFirstUpper
   }
 }
