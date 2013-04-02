@@ -6,7 +6,8 @@ The language QLS should allow for defining the following information:
 \begin{itemize}
   \item Grouping of question forms into pages, sections and subsections
   \item Navigation links between pages
-  \item Styling of question texts by defining font style, font type and color
+  \item Styling of question texts by defining font style, font weight, font
+  family and color
   \item Defining the appearance of a question by specifying the widget type to render
 \end{itemize}
 
@@ -15,9 +16,8 @@ The following shows an example model that we want to be able to define with QLS:
 \begin{lstlisting}[language=QLS]
 page HouseOwningPage {
 	section house uses Box1HouseOwning {
-		question hasBoughtHouse [widget: CheckBox]
+		question hasBoughtHouse [font-style: "italic"]
 		question valueResidue [
-			font-style:  "italic"
 			font-weight: "bold" 
 			font-color:  "#2233FF"
 			font-family: "Arial"
@@ -42,10 +42,11 @@ one for the question form \texttt{Box1HouseOwning} which was defined in chapter
 be rendered inside a page or a section is specified by the \texttt{uses} keyword.
 This definition must be unambiguously, e.g. if there is a form included by a page,
 it is not allowed to refer to another form in one of its containing sections.
-This restriction is ensured by implementing a corresponding validation which will be covered
-in chapter (TODO). In a section (or page) the styling information for the questions of the included
-form can be defined as in lines 3-9 and 13. The \texttt{navigation} keyword allows to define the order in which the pages are to
-be displayed by specifying which page should appear next.
+This restriction is ensured by implementing a corresponding validation. How this
+can be done is covered in section \ref{sec:validation}. In a section (or page)
+the styling information for the questions of the included form can be defined as
+in lines 3-9 and 11. The \texttt{navigation} keyword allows to define the order
+in which the pages are to be displayed by specifying which page should appear next.
 
 Before we can write the corresponding Xtext grammar, we need to create the DSL 
 projects for QLS as we have done for the Questionnaire language. For this, refer
@@ -199,9 +200,12 @@ public class QlsDslScopeProvider extends AbstractDeclarativeScopeProvider {
 
 The method \texttt{scope\_QuestionStyling\_question} is always invoked whenever the visible
 elements for the attribute \texttt{question} in the grammar rule \texttt{QuestionStyling} 
-need to be computed. Here, we just use a recursive algorithm to get the form declaration
-of the parent section or page which is mandatory. With the helper method \texttt{getAllContentsOfType}
-all questions defined in this form are collected and a scope containing these questions is returned.
+need to be computed. This is for example the case when the content assist needs
+to compute the elements to be proposed. The method's implementation is quite
+simple. We use a recursive algorithm to get the form declaration of the
+parent section or page which is mandatory. With the helper method
+\texttt{getAllContentsOfType} all questions defined in this form are collected
+and a scope containing these questions is returned.
 
 Now it's time to play around with the QLS language and to test its features. For this,
 switch to the test project in the runtime environment (see also section \ref{sec:TestingQL})

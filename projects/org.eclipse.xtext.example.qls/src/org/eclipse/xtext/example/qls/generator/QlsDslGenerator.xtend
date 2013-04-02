@@ -102,7 +102,7 @@ class QlsDslGenerator implements IGenerator {
 	"#"+form.id+ "\\:lbl"+question.id.toFirstUpper
   }
 
-  def dispatch getForm(Section section) {
+  def dispatch Form getForm(Section section) {
 	if (section.form != null) {
 	  section.form
 	}
