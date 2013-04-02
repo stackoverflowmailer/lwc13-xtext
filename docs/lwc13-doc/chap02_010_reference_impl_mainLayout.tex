@@ -1,12 +1,13 @@
 \subsubsection{Main Layout}
 \label{subsec:referenceMainLayout} 
 
-The logical entry to the web application is the \texttt{welcome-file}
-(\texttt{WebContent/index.xhtml}) declared in
+The logical entry to the web application is the welcome file
+\texttt{WebContent/index.xhtml} declared in
 \texttt{WebContent/WEB-INF/web.xml}. The \texttt{index.xhtml} composes the
 main layout with page contents and will later be helpful to integrate the
-generated artifacts with the web applications layout by use of JSF xhtml templating.
-\footnote{\url{http://docs.oracle.com/javaee/6/javaserverfaces/2.1/docs/vdldocs/facelets/}}
+generated artifacts with the web application's layout by using JSF's XHTML
+templating
+\footnote{\url{http://docs.oracle.com/javaee/6/javaserverfaces/2.1/docs/vdldocs/facelets/}}.
 
 \begin{lstlisting}[language=HTML]
 <?xml version='1.0' encoding='UTF-8' ?>
@@ -25,13 +26,12 @@ generated artifacts with the web applications layout by use of JSF xhtml templat
   </ui:composition>
 
 </body>
-
 </html>
 \end{lstlisting}
  
 Subpages of the application should use the \texttt{index.xhtml} placed in
 \texttt{WebContent/} itself as their template and overwrite the content section
-with custom output by the same pattern.
+with custom output via the same pattern.
 
 \begin{lstlisting}[language=HTML] 
 	<ui:composition template="/index.xhtml">
@@ -42,21 +42,20 @@ with custom output by the same pattern.
 \end{lstlisting}
 
 Everything between the opening and closing \texttt{facelet:define} tag within
-the subpage will be passed into a \texttt{facelet:insert} section with
-\texttt{name = content} defined in the template
-(here:\texttt{defaultLayout.xhtml}) or one of its parent templates when the html
-output is rendered by the JSF framework.
+the subpage will be passed into a corresponding \texttt{facelet:insert} section
+(\texttt{name} attribute is set to \texttt{''content''}) defined in the template
+(here: \texttt{defaultLayout.xhtml}) or one of its parent templates when the HTML output is rendered by the JSF framework.
 
-\paragraph{Default template}
-$\;$ \\
-We keep the main layout definition and the page contents seperated from each
-other. The \texttt{WebContent/index.xhtml} creates the main composition of the
-applications structural layout and content of pages as described in section
+\subsubsection*{Default template}
+
+We keep the main layout definition and the page contents separated from each
+other. The \texttt{WebContent/index.xhtml} defines the main composition of the
+application's structural layout and content of pages as described in section
 \ref{subsec:referenceMainLayout}. Layout template defintions should be placed in
-a folder \newline \texttt{WebContent/resources/*templateName*} in our web
+a folder \texttt{WebContent/resources/*templateName*} in our web
 application.
 
-To change the main layout it is just necesarry to change the \texttt{template}
+To change the main layout it is just necessary to change the \texttt{template}
 reference of the \newline\texttt{facelets:composite} in
 \texttt{WebContent/index.xhtml}.\newline
 
@@ -68,13 +67,14 @@ reference of the \newline\texttt{facelets:composite} in
 \end{lstlisting}
 
 The reference application is shipped with a default template placed in \newline
-\texttt{WebContent/resources/default/}.\newline Its a very simple one which
-provides a skeleton \newline \texttt{/templates/defaultLayout.xhtml} \newline
-with mainly 3 sections (header, content, footer) where clients can add custom content.
+\texttt{WebContent/resources/default/}. It is a very simple one
+providing only a skeleton \newline \texttt{/templates/defaultLayout.xhtml} with
+basically 3 sections (header, content, footer) where clients can add custom
+content.
 
 The current web application expects a defined \texttt{facelets:insert}
 section with name 'content' within the template or one of its parents for proper
-composition. In our refernence implementation it is declared in \newline
+composition. In our reference implementation it is declared in
 \texttt{/resources/default/templates/defaultLayout.xhtml}.
 
 \begin{lstlisting}[language=HTML]
