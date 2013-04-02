@@ -107,7 +107,7 @@ itself can be written. Here again we use Xtend and some of its language concepts
 \begin{lstlisting}[language=Xtend]
 class QlsDslGenerator implements IGenerator {
   @Inject extension JsfOutputConfigurationProvider
-  @Inject extension JSFGenerator
+  @Inject extension QlDslExtensions
   
   override void doGenerate(Resource input, IFileSystemAccess fsa) {
     if (input.URI.fileExtension!="qls")
@@ -188,19 +188,6 @@ class QlsDslGenerator implements IGenerator {
     val question = (styleInfo.eContainer as QuestionStyling).question
     val form = EcoreUtil2::getContainerOfType(question, typeof(Form))
     "#"+form.id+ "\\:lbl"+question.id.toFirstUpper
-  }
-
-  def dispatch Form getForm(Section section) {
-    if (section.form != null) {
-      section.form
-    }
-    else {
-      section.eContainer.form
-    }
-  }
-	
-  def dispatch getForm(Page page) {
-    page.form
   }
 }
 
