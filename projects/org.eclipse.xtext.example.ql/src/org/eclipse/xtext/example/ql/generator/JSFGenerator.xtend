@@ -4,7 +4,6 @@ import java.util.List
 import javax.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-
 import org.eclipse.xtext.common.types.JvmPrimitiveType
 import org.eclipse.xtext.example.ql.qlDsl.ConditionalQuestionGroup
 import org.eclipse.xtext.example.ql.qlDsl.Form
@@ -41,6 +40,7 @@ class JSFGenerator implements IGenerator{
             fsa.generateFile(fileName,WEB_CONTENT, content)
             
             //the base form which can be included in other pages
+            resDepth
             val contentBase = generate_FormBase(form)
             val fileNameBase = "generated/forms/"+form.name+"Base.xhtml"
             fsa.generateFile(fileNameBase,WEB_CONTENT, contentBase)
@@ -80,7 +80,7 @@ class JSFGenerator implements IGenerator{
 
       <ui:composition template="/index.xhtml">
         <ui:define name="content">
-        <h1> «form.name» Form </h1>        
+        <h2> «form.name» Form </h2>        
           <ui:include src="«form.name»Base.xhtml" />	
         </ui:define>
       </ui:composition>
@@ -96,7 +96,7 @@ class JSFGenerator implements IGenerator{
         xmlns:ui="http://java.sun.com/jsf/facelets">
       <ui:composition template="/index.xhtml">
         <ui:define name="content">
-        <h1> Form Index </h1>
+        <h2> Form Index </h2>
         «FOR elem: forms SEPARATOR "<br/>"»
           <h:outputLink value="«elem.name».jsf">«elem.name»</h:outputLink>
         «ENDFOR»
@@ -107,31 +107,59 @@ class JSFGenerator implements IGenerator{
 	
   def Object generateFormElement(FormElement element)
   '''<!-- generateFormElement(FormElement element) -->
-	«IF element.isReferenced»
+	«IF element.isReferencing»
 		<h:panelGroup id="«element.renderGroupId»">
 			<h:panelGroup id="grp_«element.id»Visible"
 				rendered="#{«element.formName».«element.id»Visible}">
 	«ENDIF»
-			 	«element.generate»
-	«IF element.isReferenced»
+			 			«element.generate»
+	«IF element.isReferencing»
 	     	 </h:panelGroup>
 	     </h:panelGroup>
 	«ENDIF»
 	'''
+	
+/*prototype*/
+var int depth = 0;
+def void incDepth(){
+	depth = depth +1
+}
+def void decDepth(){
+	depth = depth -1
+}
+def void resDepth(){
+	depth = 0
+}
+
+def dispatch css(FormElement group){
+	'''lvl«depth»Conditional highlight_content'''
+}
+def dispatch css(Question group){
+	'''ym-grid'''
+}
+def cssLbl(Question group){
+	'''lvl«depth»Lbl  ym-gl'''
+}
+def cssElem(Question group){
+	'''lvl«depth»Elem  ym-gl'''
+}
+/*prototype*/
 
   def dispatch generate(ConditionalQuestionGroup group) 
   '''<!-- generate (ConditionalQuestionGroup group) -->
-  	<div class="ym-grid ym-g50 highlight_content">
+					<div class="«group.css»">
+					«incDepth»
       «FOR elem: group.element»
-        «elem.generateFormElement»
+      «elem.generateFormElement»
       «ENDFOR»
-     </div>
+      				«decDepth»
+					</div>
    '''
    
   def dispatch generate (Question question) 
   '''<!-- generate (Question question) -->
-  <div class="ym-grid">
-    <h:outputLabel styleClass="ym-g33 ym-gl" id="lbl«question.id.toFirstUpper»" value="«question.label»"/>
+  <div class="«question.css»">
+    <h:outputLabel styleClass="«question.cssLbl»" id="lbl«question.id.toFirstUpper»" value="«question.label»"/>
     «switch(question.type.type){
         JvmPrimitiveType: {
           switch (question.type.simpleName.toLowerCase){
@@ -141,21 +169,16 @@ class JSFGenerator implements IGenerator{
         default : '''		«generateQuestionText(question)»'''
       }»
    </div>
-     <br/>
   '''
-	def boolean isReferenced(FormElement element) {
-		element.expression != null
-	}
-
 
   def generateQuestionBoolean(Question question) '''
-    <h:selectBooleanCheckbox styleClass="ym-g50 ym-gl" id="q«question.id»" value="#{«question.formName+'.'+question.name»}">
+    <h:selectBooleanCheckbox styleClass="«question.cssElem»" id="q«question.id»" value="#{«question.formName+'.'+question.name»}">
       <f:ajax event="click" render="«question.getRenderSequence»"/>
     </h:selectBooleanCheckbox>
   '''
 
   def generateQuestionText(Question question) '''
-    <h:inputText styleClass="ym-g33 ym-gl" id="q_«question.id»" value="#{«question.formName+'.'+question.name»}"«IF question.expression!=null» readonly="true"«ENDIF»>
+    <h:inputText styleClass="«question.cssElem»" id="q_«question.id»" value="#{«question.formName+'.'+question.name»}"«IF question.expression!=null» readonly="true"«ENDIF»>
       <f:ajax event="blur" render="«question.getRenderSequence»"/>
       «generateConverter(question)»
     </h:inputText>
@@ -180,6 +203,13 @@ class JSFGenerator implements IGenerator{
     } else
       ""
   }
+  
+  	/**
+	 * Determines if the given FormElement is calculated depending on other FormElements. 
+	 */
+	def boolean isReferencing(FormElement element) {
+		element.expression != null
+	}
   
   // enumeration of class names which do not need a converter
   // see http://www.javabeat.net/2007/11/using-converters-in-jsf/
