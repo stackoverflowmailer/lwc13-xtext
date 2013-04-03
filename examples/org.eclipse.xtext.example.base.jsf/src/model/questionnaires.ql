@@ -11,13 +11,16 @@ form HouseOwning {
 		sellingPrice: "Price the house was sold for    :" Money
 		privateDebt: "Private debts for the sold house: " Money
 		valueResidue: "Value residue: " Money (sellingPrice - privateDebt) 
-		test1: "my test" boolean  
-		test2: "my test2" boolean
-		if(sellingPrice > privateDebt){
+		enableResult:"enable result calculation?" boolean		
+		if(enableResult){
+			if(sellingPrice > privateDebt){
+				test2: "my test2" boolean
 			valuePlus: "won " Money (valueResidue)
-		}
-		if(sellingPrice < privateDebt){
+			}
+			if(sellingPrice < privateDebt){
+				test1: "my test" boolean  
 			valueMinus: "lost " Money (valueResidue)
+			}
 		}
 	}                 
 	hasMaintLoan: "Did you enter a loan for maintenance/reconstruction?" boolean
