@@ -10,7 +10,7 @@ import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
 
-class QlsDslScopeProvider extends AbstractDeclarativeScopeProvider {
+class QlsDslScopeProviderXtend extends AbstractDeclarativeScopeProvider {
 	
   @Inject extension QlsDslExtensions
 	

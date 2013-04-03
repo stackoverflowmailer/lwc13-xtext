@@ -24,6 +24,20 @@ public class TypeFactory {
   }
 
   public static Money createMoney() {
-    return new Money(new BigDecimal(0));
+    return new Money(null);
+  }
+
+  public static Money createMoney(String value) {
+    if (value == "" || value == null)
+      return createMoney();
+
+    BigDecimal amount = new BigDecimal(value);
+    return createMoney(amount);
+  }
+
+  public static Money createMoney(BigDecimal value) {
+    Money money = createMoney();
+    money.setAmount(value.setScale(2));
+    return money;
   }
 }
