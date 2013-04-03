@@ -15,14 +15,12 @@ public class MoneyConverter implements Converter {
 
   @Override
   public Object getAsObject(FacesContext ctx, UIComponent ui, String value) {
-    Money money = TypeFactory.createMoney();
-    money.setAmount(new BigDecimal(value.isEmpty() ? "0" : value));
-    return money;
+    return TypeFactory.createMoney(value);
   }
 
   @Override
   public String getAsString(FacesContext ctx, UIComponent ui, Object value) {
-    return ((Money) value).getAmount().toString();
+    BigDecimal amount = ((Money) value).getAmount();
+    return amount == null ? "" : amount.toString();
   }
-
 }
