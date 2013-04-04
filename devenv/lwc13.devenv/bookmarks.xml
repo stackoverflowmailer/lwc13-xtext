@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bookmarks>
+   <site url="http://download.eclipse.org/releases/juno/" selected="true" name="Eclipse Juno"/>
+   <site url="http://texlipse.sourceforge.net/" selected="true" name="TeXclipse"/>
+   <site url="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/" selected="true" name="Xtext Releases"/>
+</bookmarks>
