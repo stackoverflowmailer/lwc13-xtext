@@ -1,0 +1,26 @@
+<settings>
+	<mirrors>
+		<mirror>
+			<id>nexus.mirror</id>
+			<name>Local Mirror</name>
+			<url>http://localhost:9000/nexus/content/groups/public</url>
+			<mirrorOf>external:*</mirrorOf>
+		</mirror>
+	</mirrors>
+	<activeProfiles>
+		<activeProfile>external-repositories</activeProfile>
+	</activeProfiles>
+	<profiles>
+		<profile>
+			<id>external-repositories</id>
+			<repositories>
+				<repository>
+					<id>nexus-p2</id>
+					<layout>p2</layout>
+					<url>http://localhost:9000/nexus/content/groups/p2.public/</url>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
+</settings>
+

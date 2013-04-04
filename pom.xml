@@ -13,7 +13,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho-version>0.16.0</tycho-version>
+		<tycho-version>0.17.0</tycho-version>
 	</properties>
 
 	<build>
@@ -138,7 +138,7 @@
 				<plugin>
 					<groupId>org.eclipse.xtend</groupId>
 					<artifactId>xtend-maven-plugin</artifactId>
-					<version>2.3.1</version>
+					<version>2.4.0</version>
 					<executions>
 						<execution>
 							<goals>
@@ -157,7 +157,7 @@
 						<dependency>
 							<groupId>org.eclipse.xtend</groupId>
 							<artifactId>org.eclipse.xtend.lib</artifactId>
-							<version>2.3.1</version>
+							<version>2.4.0</version>
 							<type>pom</type>
 						</dependency>
 					</dependencies>
@@ -206,37 +206,6 @@
 			<properties>
 				<ui.test.vmargs>-Xmx512m -XX:MaxPermSize=256m</ui.test.vmargs>
 			</properties>
-		</profile>
-		<profile>
-			<id>modules-all</id>
-			<modules>
-				<module>projects/org.eclipse.xtext.example.ql</module>
-				<module>projects/org.eclipse.xtext.example.ql.tests</module>
-				<module>projects/org.eclipse.xtext.example.ql.ui</module>
-				<module>projects/org.eclipse.xtext.example.qls</module>
-				<module>projects/org.eclipse.xtext.example.qls.tests</module>
-				<module>projects/org.eclipse.xtext.example.qls.ui</module>
-				<module>projects/org.eclipse.xtext.example.ql.feature</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>modules-dsl</id>
-			<modules>
-				<module>projects/org.eclipse.xtext.example.ql</module>
-				<module>projects/org.eclipse.xtext.example.ql.tests</module>
-				<module>projects/org.eclipse.xtext.example.ql.ui</module>
-				<module>projects/org.eclipse.xtext.example.qls</module>
-				<module>projects/org.eclipse.xtext.example.qls.tests</module>
-				<module>projects/org.eclipse.xtext.example.qls.ui</module>
-				<module>projects/org.eclipse.xtext.example.ql.feature</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>modules-examples</id>
-			<modules>
-				<module>examples/JSF-QL</module>
-				<module>examples/org.eclipse.xtext.example.base.jsf</module>
-			</modules>
 		</profile>
 	</profiles>
 
