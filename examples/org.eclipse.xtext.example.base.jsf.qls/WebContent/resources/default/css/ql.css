@@ -1,0 +1,38 @@
+[readonly]{
+	background-color:#D3D3D3 !important;
+	color:#303030 !important;
+	border:none !important;
+}
+
+.lvl0Lbl{
+	 width: 33.333%;
+	 margin: 1em 0 1em 0 !important; 
+}
+.lvl0Elem{
+	width: 50%;
+	margin: 1em 0 1em 0 !important; 
+}
+.lvl0Conditional{
+	width: 70%;
+	margin: 1em 0 2em 0 !important; 
+}
+
+.lvl1Lbl{
+	width: 60%;
+}
+.lvl1Elem{
+	width: 33.333%;
+}
+.lvl1Conditional{
+	width: 95%;
+}
+
+.lvl2Lbl{
+	width: 40%;
+}
+.lvl2Elem{
+	width: 60%;
+}
+.lvl2Conditional{
+	width: 95%;
+}
