@@ -4,12 +4,10 @@
 package org.eclipse.xtext.example.ql;
 
 import org.eclipse.xtext.example.ql.customizing.JvmModelAssociatorCustom;
-import org.eclipse.xtext.example.ql.customizing.QlScopeProvider;
 import org.eclipse.xtext.example.ql.generator.JSFOutputConfigurationProvider;
 import org.eclipse.xtext.example.ql.generator.Root;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
-import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider;
 
 import com.google.inject.Binder;
@@ -21,10 +19,10 @@ import com.google.inject.Singleton;
  */
 public class QlDslRuntimeModule extends
     org.eclipse.xtext.example.ql.AbstractQlDslRuntimeModule {
-  @Override
-  public Class<? extends IScopeProvider> bindIScopeProvider() {
-    return QlScopeProvider.class;
-  }
+  // @Override
+  // public Class<? extends IScopeProvider> bindIScopeProvider() {
+  // return QlScopeProvider.class;
+  // }
 
   @Override
   public Class<? extends IGenerator> bindIGenerator() {

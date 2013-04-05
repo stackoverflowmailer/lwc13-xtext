@@ -10,94 +10,11 @@ manual:Scoping}}, several articles\footnote{e.g.
 
 The Xtext framework already provides default implementations to solve scoping
 and linking. In the case of Xbase based languages the
-\texttt{XbaseScopeProvider} is configured by default as implementation of the
-\texttt{IScopeProvider} interface. We have to extend its behavior to recognize
-the current \texttt{Form} instance as variable "\texttt{this}" within an
-expression. By this, Question fields are noticed as variables in expressions,
-which allows us to use the required expressions.
+\texttt{XbaseBatchScopeProvider} is configured by default as implementation of
+the \texttt{IScopeProvider} interface.
 
-Create the class \texttt{QlScopeProvider} in package \texttt{org.eclipse.xtext.example.ql.customizing}:\footnote{url{http://tinyurl.com/bd7kggk}}
-\begin{lstlisting}[language=Java]
-package org.eclipse.xtext.example.ql.customizing;
-
-import java.util.Iterator;
-
-import javax.inject.Inject;
-
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.common.types.JvmType;
-import org.eclipse.xtext.example.ql.qlDsl.Form;
-import org.eclipse.xtext.resource.EObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.impl.SingletonScope;
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
-import org.eclipse.xtext.xbase.scoping.LocalVariableScopeContext;
-import org.eclipse.xtext.xbase.scoping.XbaseScopeProvider;
-
-import com.google.common.collect.Iterables;
-
-/**
- * Adds local variable bindings for expressions.
- */
-@SuppressWarnings("restriction")
-public class QlScopeProvider extends XbaseScopeProvider {
-  @Inject
-  private IJvmModelAssociations associations;
-
-  @Override
-  protected IScope createLocalVarScope(IScope parentScope,
-      LocalVariableScopeContext scopeContext) {
-    // search the Form instance of the current context by traversing
-    // the containment hierarchy
-    Form qlForm = EcoreUtil2.getContainerOfType(scopeContext.getContext(),
-        Form.class);
-    if (qlForm != null) {
-      // form found => get the JvmType representative of the Form
-      JvmType jvmTypeOfForm = getJvmType(qlForm);
-      // bind the EClass' JvmType as variable 'this' by creating
-      // a scope that consists of only one element, and delegate
-      // to the default implementation as outer scope
-      IScope result = new SingletonScope(EObjectDescription.create(
-          XbaseScopeProvider.THIS, jvmTypeOfForm), super.createLocalVarScope(
-          parentScope, scopeContext));
-      return result;
-
-    }
-    return super.createLocalVarScope(parentScope, scopeContext);
-  }
-
-  /**
-   * Find the JvmType associated with an object
-   * 
-   * @param context
-   *          Some model object
-   * @return The JvmType associated with the object, usually derived by the
-   *         IJvmModelInferrer. Returns <code>null</code> if the object is not
-   *         associated to an JvmType.
-   */
-  private final JvmType getJvmType(EObject context) {
-    Iterable<JvmType> jvmTypes = Iterables.filter(
-        associations.getJvmElements(context), JvmType.class);
-    Iterator<JvmType> it = jvmTypes.iterator();
-    JvmType result = it.hasNext() ? it.next() : null;
-    return result;
-  }
-
-}
-\end{lstlisting}
-
-Whenever a default implementation must be exchanged by a custom one, this has to be added or overridden in the respective Guice module.
-In the case of the scope provider, this has to be added to the \texttt{QlDslRuntimeModule} class. Open this class and add the binding:
-
-\begin{lstlisting}[language=Java]
-public class QlDslRuntimeModule extends
-    org.eclipse.xtext.example.ql.AbstractQlDslRuntimeModule {
-  @Override
-  public Class<? extends IScopeProvider> bindIScopeProvider() {
-    return QlScopeProvider.class;
-  }
-  ...
-}
-\end{lstlisting}
+For our use case, the default behavior is already sufficient. Through the
+JVM model inference the implicit \texttt{``this''} variable is already bound to the class
+representing the form, and thus the fields representing the question elements
+are known as callable features.
 
