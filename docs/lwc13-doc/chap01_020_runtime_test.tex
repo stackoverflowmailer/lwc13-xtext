@@ -31,14 +31,6 @@ empty workspace. Close the Welcome window.
 In the Runtime Workspace create a new Plug-in Project with name
 ``QLTest''.\footnote{As before, uncheck the options on the second wizard page.}
 
-First, we will create a dependency to the library plugin. Open the
-\texttt{META-INF/MANIFEST.MF} file and switch to page Dependencies. In the \emph{Required
-Plug-ins} section, add a dependency to \texttt{org.eclipse.xtext.example.ql.lib}.
-
-\includegraphics[width=8cm]{./images/chapter01/AddDependency_01.png}
-
-\includegraphics[width=10cm]{./images/chapter01/AddDependency_02.png}
-
 The DSL has to support custom datatypes like \texttt{Money}, which must be
 defined. Select the \texttt{/src} folder and create a new Java class \texttt{Money} in package
 \texttt{types}:
