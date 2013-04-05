@@ -10,10 +10,7 @@ import org.eclipse.xtext.example.qls.qlsDsl.QuestionnaireStyleModel
 import org.eclipse.xtext.example.qls.qlsDsl.Page
 import com.google.inject.Inject
 import org.eclipse.xtext.example.qls.qlsDsl.StyleInformation
-import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.example.ql.qlDsl.Form
 import org.eclipse.xtext.example.qls.qlsDsl.Section
-import org.eclipse.xtext.example.ql.generator.JSFGenerator
 import org.eclipse.xtext.example.qls.qlsDsl.QuestionStyling
 import org.eclipse.xtext.example.ql.generator.JSFOutputConfigurationProvider
 import org.eclipse.xtext.example.ql.QlDslExtensions
