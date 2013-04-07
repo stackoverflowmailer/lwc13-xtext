@@ -96,8 +96,9 @@ class JSFGenerator implements IGenerator{
 
 After this we have the possibility to use the \texttt{WEB\_CONTENT} outlet
 constant as described in section \ref{sec:outputConfigurationProvider}.\newline
-The following paragraphs will describe the different extensions of the JSFGenerator
-which are responsible to generate the JSF artifacts described in
+
+The following section \ref{sec:jsfGenerator} will describe the different
+extensions of the JSFGenerator which are responsible to generate the JSF artifacts described in
 \ref{subsec:referenceImpl}. In a real world project it can be a good decision to
 seperate different artifacts in different \texttt{Xtend} files. Our sample is a
 very simple one, so we will add a new extension definition derived from the
@@ -112,11 +113,11 @@ logic to generate a single artifact.
       <html xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://java.sun.com/jsf/html"
         xmlns:ui="http://java.sun.com/jsf/facelets">
-     ...
+     	... artifact content
       </html>
   '''
 \end{lstlisting}
 
 To get a valid xhtml page we have to generate the DOCTYPE
-and HTML tag into each xhtml file what was replaced in the following
-listings to focus on what matters.
+and HTML tag into each XHTML file. It was replaced in the 
+listings of the following sections to focus on what matters.
