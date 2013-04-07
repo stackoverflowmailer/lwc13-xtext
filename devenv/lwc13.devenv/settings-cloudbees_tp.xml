@@ -7,21 +7,9 @@
 			<id>external-repositories</id>
 			<repositories>
 				<repository>
-					<id>Eclipse Juno</id>
+					<id>QL Targetplatform Repository</id>
 					<layout>p2</layout>
-					<url>http://download.eclipse.org/releases/juno</url>
-				</repository>
-				<repository>
-					<id>Eclipse Orbit</id>
-					<layout>p2</layout>
-					<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/
-					</url>
-				</repository>
-				<repository>
-					<id>Eclipse Xtext</id>
-					<layout>p2</layout>
-					<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/
-					</url>
+					<url>https://kthoms.ci.cloudbees.com/job/lwc13-targetplatform/lastSuccessfulBuild/artifact/devenv/lwc13.devenv/target/repository/final/</url>
 				</repository>
 			</repositories>
 			<pluginRepositories>

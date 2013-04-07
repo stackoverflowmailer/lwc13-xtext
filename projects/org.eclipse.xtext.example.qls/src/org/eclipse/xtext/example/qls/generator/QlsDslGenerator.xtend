@@ -10,10 +10,7 @@ import org.eclipse.xtext.example.qls.qlsDsl.QuestionnaireStyleModel
 import org.eclipse.xtext.example.qls.qlsDsl.Page
 import com.google.inject.Inject
 import org.eclipse.xtext.example.qls.qlsDsl.StyleInformation
-import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.example.ql.qlDsl.Form
 import org.eclipse.xtext.example.qls.qlsDsl.Section
-import org.eclipse.xtext.example.ql.generator.JSFGenerator
 import org.eclipse.xtext.example.qls.qlsDsl.QuestionStyling
 import org.eclipse.xtext.example.ql.generator.JSFOutputConfigurationProvider
 import org.eclipse.xtext.example.ql.QlDslExtensions
@@ -43,10 +40,10 @@ class QlsDslGenerator implements IGenerator {
   def generateCssFile(Page page) '''
     «FOR styleInfo: page.eAllContents.filter(typeof(StyleInformation)).toList»
 		«styleInfo.id» {
-		  «IF styleInfo.fontColor != null»color: «styleInfo.fontColor»;«ENDIF»
-		  «IF styleInfo.fontFamily != null»font-family: «styleInfo.fontFamily»;«ENDIF»
-		  «IF styleInfo.fontStyle != null»font-style: «styleInfo.fontStyle»;«ENDIF»
-		  «IF styleInfo.fontWeight != null»font-weight: «styleInfo.fontWeight»;«ENDIF»
+		  «IF styleInfo.fontColor != null»color: «styleInfo.fontColor» !important;«ENDIF»
+		  «IF styleInfo.fontFamily != null»font-family: «styleInfo.fontFamily» !important;«ENDIF»
+		  «IF styleInfo.fontStyle != null»font-style: «styleInfo.fontStyle» !important;«ENDIF»
+		  «IF styleInfo.fontWeight != null»font-weight: «styleInfo.fontWeight» !important;«ENDIF»
 		}
    «ENDFOR»
   '''

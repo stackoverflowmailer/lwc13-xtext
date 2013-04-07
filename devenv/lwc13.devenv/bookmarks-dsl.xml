@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bookmarks>
+   <site url="https://kthoms.ci.cloudbees.com/job/lwc13-dsl/lastSuccessfulBuild/artifact/projects/org.eclipse.xtext.example.ql.repository/target/repository/" selected="true" name="QL DSL Repository"/>
+   <site url="https://kthoms.ci.cloudbees.com/job/lwc13-targetplatform/lastSuccessfulBuild/artifact/devenv/lwc13.devenv/target/repository/final/" selected="true" name="QL Targetplatform Repository"/>
+</bookmarks>

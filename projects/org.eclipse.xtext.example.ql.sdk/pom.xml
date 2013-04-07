@@ -9,6 +9,6 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>org.eclipse.xtext.example.ql.feature</artifactId>
+	<artifactId>org.eclipse.xtext.example.ql.sdk</artifactId>
 	<packaging>eclipse-feature</packaging>
 </project>
