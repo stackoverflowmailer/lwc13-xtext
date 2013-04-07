@@ -14,7 +14,6 @@ import org.eclipse.xtext.example.ql.qlDsl.Form
 class QlDslExtensions {
 	@Inject extension IJvmModelAssociations
 
-
   /**
    * Computes the FormElements which are accessed by the expression of a Question.
    */
@@ -23,11 +22,8 @@ class QlDslExtensions {
       return emptyList
     // The JvmField which is inferred from a Question
     val JvmField field = q.jvmElements.filter(typeof(JvmField)).head
-
     // Get all FormElements which have an expression 
-    val form = getForm(q)
-    val allFormContents =  org::eclipse::xtend::typesystem::emf::EcoreUtil2::allContents(form)
-    val Iterable<FormElement> allFormElementsWithExpression = allFormContents
+    val Iterable<FormElement> allFormElementsWithExpression = q.form.eAllContents
       .filter(typeof(FormElement))
       .filter[it.expression!=null]
       .toSet
@@ -36,18 +32,14 @@ class QlDslExtensions {
    val result = allFormElementsWithExpression.filter[
     	//TODO if there is a 'this' used in the expression, the following logic will fail!
     	val exp = it.expression
-    	if(exp instanceof XFeatureCall){
+    	if (exp instanceof XFeatureCall) {
     		// a simple expression e.g. '(XFeatureCall)'
-    		(exp as XFeatureCall) .feature.simpleName == field.simpleName	
-    	}else{
+    		(exp as XFeatureCall).feature.simpleName == field.simpleName	
+    	} else {
     		// a complex expression e.g. '(XFeatureCall1 - XFeatureCall2)'
-	        val featureCalls =  org::eclipse::xtend::typesystem::emf::EcoreUtil2::allContents(exp)
-	        val xfeaturecalls = featureCalls.filter(typeof(XFeatureCall))
+	        val xfeaturecalls = exp.eAllContents.filter(typeof(XFeatureCall))
 	        xfeaturecalls.exists[
-	        	val feaID = feature.simpleName
-	        	val fieID = field.simpleName
-	        	val equal = feaID==fieID
-	        	equal
+	        	feature.simpleName == field.simpleName
 	        ]
     	}
     
@@ -67,17 +59,20 @@ class QlDslExtensions {
   }
   
   /**
- * Get all ConditionalGroups underneath the given context.
- */
+   * Get all ConditionalGroups underneath the given context.
+   */
   def private allConditionalGroups (EObject ctx) {
     ctx.form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
   }
 
+  /**
+   * Get the parent form's name
+   */
   def getFormName(FormElement elem){ 
     elem.form.name.toFirstLower
   }
 
-/**
+  /**
    * Get the Form container of the given question. 
    */
   def getForm(EObject question) {
@@ -92,13 +87,5 @@ class QlDslExtensions {
       Question: elem.expression
       ConditionalQuestionGroup: elem.condition
     }
-  }  
-  
-	/**
-	 * Returns the JvmField that was inferred from the Question element
-	 */
-	def getJvmField (Question q) {
-		q.jvmElements.filter(typeof(JvmField)).head
-	}
-	
+  }
 }

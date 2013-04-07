@@ -1,2 +1,100 @@
-\paragraph{QlDslExtensions} 
-$\;$ \\ TODO
+\subsubsection*{QlDslExtensions}
+
+When implementing a generator, often some basic logic concerning the
+information extraction from the model needs to be implemented. We extracted this
+functionality into an own Xtend class for modularity and reuse purposes. All of
+these functions are used in the JSF Generator and some of them are even called
+in the QLS generator which will be described in chapter \ref{sec:QLSGenerator} 
+later on. The created Xtend class is called \texttt{QlDslExtension.xtend}:
+
+\begin{lstlisting}[language=Xtend]
+class QlDslExtensions {
+	@Inject extension IJvmModelAssociations
+
+  /**
+   * Computes the FormElements which are accessed by the expression of a Question.
+   */
+  def Iterable<FormElement> getDependentElementsWithExpression (Question q) {
+    if (q.expression != null)
+      return emptyList
+    // The JvmField which is inferred from a Question
+    val JvmField field = q.jvmElements.filter(typeof(JvmField)).head
+    // Get all FormElements which have an expression 
+    val Iterable<FormElement> allFormElementsWithExpression = q.form.eAllContents
+      .filter(typeof(FormElement))
+      .filter[it.expression!=null]
+      .toSet
+      
+   // search the expressions of the form elements which call the JvmField field in a feature call
+   val result = allFormElementsWithExpression.filter[
+    	val exp = it.expression
+    	if (exp instanceof XFeatureCall) {
+    		// a simple expression e.g. '(XFeatureCall)'
+    		(exp as XFeatureCall).feature.simpleName == field.simpleName	
+    	} else {
+    		// a complex expression e.g. '(XFeatureCall1 - XFeatureCall2)'
+	        val xfeaturecalls = exp.eAllContents.filter(typeof(XFeatureCall))
+	        xfeaturecalls.exists[
+	        	feature.simpleName == field.simpleName
+	        ]
+    	}
+    
+	]
+    return result
+  }
+
+ /**
+  * Creates an id for the given domain object. 
+  */
+  def String getId (EObject o) {
+    switch (o) {
+      ConditionalQuestionGroup: "group"+allConditionalGroups(o).indexOf(o)
+      Question: o.name
+      Form: o.name.toLowerCase
+    }
+  }
+  
+  /**
+   * Get all ConditionalGroups underneath the given context.
+   */
+  def private allConditionalGroups (EObject ctx) {
+    ctx.form.eAllContents.filter(typeof(ConditionalQuestionGroup)).toList
+  }
+
+  /**
+   * Get the parent form's name
+   */
+  def getFormName(FormElement elem){ 
+    elem.form.name.toFirstLower
+  }
+
+  /**
+   * Get the Form container of the given question. 
+   */
+  def getForm(EObject question) {
+	EcoreUtil2::getContainerOfType(question, typeof(Form)) as Form
+  }
+
+  /**
+   * Returns the expression assigned to a FormElement, dependent on subtype for FormElement. 
+   */
+  def getExpression (FormElement elem) {
+    switch (elem) {
+      Question: elem.expression
+      ConditionalQuestionGroup: elem.condition
+    }
+  }
+}
+\end{lstlisting}
+
+Besides several small helper functions which can be basically read by
+themselves, the method \texttt{getDependentElementsWithExpression} needs some
+more explanation. For a given question, this method return all other
+form elements - questions or conditional groups - which use the question in
+their expression. This method is used to define which parts of the web page need
+to be updated when a particular question is answered by the user. For this,
+first the JVM field in the backing bean associated with the input question is
+fetched (line 11). Afterwards all form elements which contain an expression
+(line 13-16) are filtered in a way that only the ones remain whose expression
+contains the JVM fields name (19-32). The result of this filtering is the
+method's return value (line 33).
