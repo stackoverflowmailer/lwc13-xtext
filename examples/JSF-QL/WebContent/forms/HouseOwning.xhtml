@@ -11,10 +11,6 @@
 	<ui:define name="content">
 
 		<h:form id="houseOwningForm">
-			<!-- B E G I N _ M A I N _ S E C T I O N  -->
-			<h:panelGroup id="grp_houseOwningForm">
-				<!-- evaluation part, every expression has one -->
-				<h:panelGroup id="grp_houseOwningForm_nested">
 
 					<!-- hasSoldHouse boolean  -->
 					<div class="ym-grid">
@@ -24,7 +20,7 @@
 						<h:selectBooleanCheckbox styleClass="ym-g50 ym-gl"
 							id="chkHasSoldHouse" value="#{houseOwning.hasSoldHouse}">
 							<f:ajax execute="chkHasSoldHouse"
-								render="grp_state grp_hasSoldHouse_hasBoughtHouse" />
+								render="grp_hasSoldHouse_hasBoughtHouse" />
 						</h:selectBooleanCheckbox>
 					</div>
 					<br />
@@ -38,7 +34,7 @@
 						<h:selectBooleanCheckbox styleClass="ym-g50 ym-gl"
 							id="cgkHasBoughtHouse" value="#{houseOwning.hasBoughtHouse}">
 							<f:ajax execute="cgkHasBoughtHouse"
-								render="grp_state grp_hasSoldHouse_hasBoughtHouse" />
+								render="grp_hasSoldHouse_hasBoughtHouse" />
 						</h:selectBooleanCheckbox>
 					</div>
 					<br />
@@ -60,7 +56,7 @@
 								<h:inputText styleClass="ym-g33 ym-gl" id="inSellingPrice"
 									value="#{houseOwning.sellingPrice.amount}">
 									<f:ajax event="keyup" execute="inSellingPrice"
-										render="grp_state grp_ValueReside" />
+										render="grp_ValueReside" />
 								</h:inputText>
 								<br />
 								<!-- end sellingPrice boolean  -->
@@ -72,7 +68,7 @@
 								<h:inputText styleClass="ym-g33 ym-gl" id="inPrivateDebt"
 									value="#{houseOwning.privateDebt.amount}">
 									<f:ajax event="keyup" execute="inPrivateDebt"
-										render="grp_state grp_ValueReside" />
+										render="grp_ValueReside" />
 								</h:inputText>
 								<br />
 								<!-- end privateDebt boolean  -->
@@ -102,51 +98,12 @@
 					<!-- render boolean -->
 					<h:selectBooleanCheckbox styleClass="ym-g50 ym-gl" id="chkHasMaintLoan"
 						value="#{houseOwning.hasMaintLoan}">
-						<f:ajax execute="chkHasMaintLoan" render="output3" />
+						<f:ajax execute="chkHasMaintLoan" render="" />
 					</h:selectBooleanCheckbox>
 					<br />
 					</div>
 					<!-- end hasMaintLoan boolean  -->
 					<br />
-				</h:panelGroup>
-			</h:panelGroup>
-			<!-- E N D _ M A I N _ S E C T I O N  -->
-			<!-- rendering will be triggered by components bounded to conditions which are used in expressions (group0Visible = houseOwning.hasSoldHouse && houseOwning.hasBoughtHouse)-->
-			<h:panelGroup id="grp_state">
-				<br />
-************** S T A T E **************<br/>
-just to show the beans state
-<br />
-				State houseOwning.group0Visible :	<h:outputText id="output0"
-					value="#{houseOwning.group0Visible}"></h:outputText>
-				<br />
-				<!-- evaluation part, every expression has one -->
-				<h:panelGroup id="output">
-					<!-- just showing nested components, can also be expression relevant?! -->
-					State houseOwning.hasSoldHouse :	<h:outputText id="output1"
-						value="#{houseOwning.hasSoldHouse}" />
-					<br />				
-					State houseOwning.hasBoughtHouse : <h:outputText id="output2"
-						value="#{houseOwning.hasBoughtHouse}" />
-					<br />
-					State houseOwning.privateDebt :<h:outputText id="output121"
-						value="#{houseOwning.privateDebt.amount}" />
-					<br />
-					State houseOwning.sellingPrice :<h:outputText id="output122"
-						value="#{houseOwning.sellingPrice.amount}" />
-					<br />
-					State houseOwning.valueResidueVisible : <h:outputText
-						id="output124" value="#{houseOwning.valueResidueVisible}" />
-					<br />
-					State houseOwning.valueResidue :<h:outputText id="output123"
-						value="#{houseOwning.valueResidue.amount}" />
-					<br />
-				</h:panelGroup>
-			</h:panelGroup>
-			<br />
-			State houseOwning.hasMaintLoan : <h:outputText id="output3"
-				value="#{houseOwning.hasMaintLoan}" />
-
 		</h:form>
 	</ui:define>
 
