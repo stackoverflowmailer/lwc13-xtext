@@ -43,8 +43,8 @@ AJAX\footnote{\url{https://en.wikipedia.org/wiki/Ajax\_(programming)}}.
 In the following listings and screenshots you can see how the different parts
 of the questionaire are defined and how they are rendered. 
 
-The following represents a question which can be ansered by yes OR no. The
-label and checkbox are grouped by using a so called \texttt{div} to make create a close relation
+The following represents a question which can be answered by yes OR no. The
+label and checkbox are grouped by using a so called \texttt{div} to create a close relation
 between them.
 
 \begin{lstlisting}[language=HTML]
@@ -74,7 +74,8 @@ Did you sell a house in 2010?
 The JSF \texttt{html:selectBooleanCheckbox} will be translated in a more complex
 \texttt{HTML:input} tag. The most interesting thing is the action definition
 \texttt{onclick} which lets JSF do some magic via AJAX to trigger partial page
-reloads.
+reloads. The base functionality is provided by the JSF framework and some
+JavaScript libraries.
 
 \begin{lstlisting}[language=HTML]
 <input id="houseOwningForm:chkHasSoldHouse" 
@@ -88,12 +89,27 @@ reloads.
 \end{lstlisting}
     
 On client side the browser renders the question well grouped by use of some CSS
-classes already mentioned in section \ref{sec:template}.
+framework classes already mentioned in section \ref{sec:template}. 
 
- \includegraphics[width=5cm]{./images/chapter02/referenceimpl_forms_bool.png}
+\begin{center}
+ \includegraphics[width=10cm]{./images/chapter02/referenceimpl_forms_bool.png}
+\end{center}
 
+The folllowing \texttt{css classes} out of
+\texttt{WebContent/resources/default/css/base.css} are responsible for the shown
+layout.
 
-\begin{lstlisting}[language=HTML]
+\begin{itemize}
+  \item ym-grid - defines that childs should be grouped in a table
+  \item ym-g*number - defines the width of an element
+  \item ym-gl - defines that the element should float to the left of its
+  container
+\end{itemize}
+
+Other question types are following the same pattern of a label and a porper
+input element to interact with the application.
+
+\begin{lstlisting}[language=XHTML]
 <div class="ym-grid">
 
 	<h:outputLabel styleClass="ym-g60 ym-gl"
@@ -108,6 +124,12 @@ classes already mentioned in section \ref{sec:template}.
 </div>
 \end{lstlisting}
 
+As you can see in the figure above the definition of an JSF
+\texttt{html:inputText} tag is also very easy. With \texttt{\#\{\ldots\}} it is
+possible to access a bean an its values. In our sample we access a porperty
+\texttt{amount} of a porperty \texttt{sellingPrice} of a bean with name
+\texttt{houseOwning}. :)
+
 \begin{lstlisting}[language=HTML]
 <input id="houseOwningForm:inSellingPrice" 
 	class="ym-g33 ym-gl" 
@@ -120,7 +142,9 @@ classes already mentioned in section \ref{sec:template}.
 </input>
 \end{lstlisting}
 
- \includegraphics[width=5cm]{./images/chapter02/referenceimpl_forms_text.png}
+\begin{center}
+ \includegraphics[width=10cm]{./images/chapter02/referenceimpl_forms_text.png}
+\end{center}
 
 \paragraph{Bean}
 
