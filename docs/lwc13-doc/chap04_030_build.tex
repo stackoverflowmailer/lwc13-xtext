@@ -90,9 +90,9 @@ settings for a set of project modules into a so-called Parent POM. This pom.xml
 fil is placed in the root of the
 repository\footnote{\url{http://code.google.com/a/eclipselabs.org/p/lwc13-xtext/source/browse/pom.xml}}.
 
-The parent POM is responsible for different things:
+The Parent POM is responsible for different things:
 \begin{itemize}
-\item Definition of the common groupId and version
+\item Definition of the common group identifier and version
 \begin{lstlisting}[language=XML]
   <groupId>org.eclipse.xtext.example.ql</groupId>
   <version>1.0.0-SNAPSHOT</version>
@@ -405,7 +405,7 @@ Last but not least the xtend-maven-plugin is configured:
 
 This plugin compiles the Xtend files to Java files. It does some fancy stuff,
 since Xtend files might have references to Java classes which are not compiled
-or might even not compilable before Xtend classes are compiled. The plugin
+or might even be not compilable before Xtend classes are compiled. The plugin
 therefore scans Xtend files for Java type references and precompiles stub
 classes. These stubs are not complete, but enough for Xtend to enable cross
 referencing these classes. Later, when Xtend has created the Java sources, they
