@@ -8,9 +8,8 @@ already generated, one for the base content of the form site and a wrapper
 referencing this base XHTML. Hence a page maps to an XHTML file which is
 composed of all specified forms. The second information in QLS is styling
 information. As usual in web development, styling is expressed in the CSS format
-in our tool. To sum up:
+in our tool. To sum up the actions, for each page:
 
-For each page:
 \begin{itemize}
   \item Generate one CSS file
   \item Generate one XHTML file wiring all form XHTMLs together and reference
@@ -57,9 +56,9 @@ the first actual page to be presented.
 
 The page \emph{HouseOwningPage} contains two sections using the forms \emph{HouseOwning} 
 and \emph{GarageOwning}, thus the generated file
-\texttt{pages/HouseOwningPage.xhtml} composes the two base files
+\texttt{pages/HouseOwningPage.xhtml} wires the two base files
 \texttt{forms/HouseOwningBase.xhtml} and \texttt{forms/GarageOwningBase.xhtml}
-together: \newline
+together: \newline \newline
 
 \begin{lstlisting}[language=HTML]
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -106,7 +105,7 @@ in CSS, hence they need to be escaped.
 
 Now that the intended artifacts to be generated are clearified, the code generator
 itself can be written. Here again we use Xtend (see section \ref{sec:Xtend}):
-
+\newline \newline
 \begin{lstlisting}[language=Xtend]
 class QlsDslGenerator implements IGenerator {
   @Inject extension JsfOutputConfigurationProvider
@@ -206,3 +205,18 @@ file names and delegates to other methods for defining the generated files'
 contents (\texttt{generateCssFile}, \texttt{generateXhtmlFile},
 \texttt{generateIndexPage}). We won't go into details here. Instead let's test
 the generated application.
+
+For this, you can basically follow the instructions given in section
+\ref{sec:TestingQLApplication}. To see some genrated pages you first need to
+define a QLS model. To start the application you can use the
+\texttt{index.xhtml} file in folder \texttt{WebContent/generated/pages}.
+Right-click on this file and press \emph{Run As / Run On Server / Finish}. Using
+the example models in this chapter a web application similar to the one on the
+following screenshot will be generated. You can change the style model and
+refresh the browser page to see the result immediately.
+
+\begin{center}
+\includegraphics[width=17cm]{./images/chapter03/qls_application.png}
+\end{center}
+
+
