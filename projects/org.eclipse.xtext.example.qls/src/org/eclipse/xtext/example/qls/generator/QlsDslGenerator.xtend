@@ -59,20 +59,22 @@ class QlsDslGenerator implements IGenerator {
 	    <ui:define name="content">
 	      <h:outputStylesheet library="default/css/generated" name="«page.name».css"  />
 	      «IF page.form != null»
-	      <div><ui:include src="/generated/forms/«page.form.name»Base.xhtml" /></div>
+	      <div class="highlight_section"><ui:include src="/generated/forms/«page.form.name»Base.xhtml" /></div>
 	      «ELSE»
 	        «FOR section: page.eAllContents.toList.filter(typeof(Section)).toList SEPARATOR '<p/>'»
-	        <div><ui:include src="/generated/forms/«section.form.name»Base.xhtml" /></div>
+	        <div class="highlight_section"><ui:include src="/generated/forms/«section.form.name»Base.xhtml" /></div>
 	        «ENDFOR»
 	      «ENDIF»
-	  
-	  	  <div>
-	  	  «IF page.navigation != null»
-	  	    «FOR nextPage: page.navigation.nextPage»
-	  	    <h:outputLink value="«nextPage.name».jsf">«nextPage.name»</h:outputLink>
-	  	    «ENDFOR»
+	      «IF page.navigation != null»
+		  <form>
+		    <div class="highlight_section ym-grid">
+		      <h:outputLabel styleClass="lvl1Lbl  ym-gl" id="lblNavigation" value="Next pages:"/>
+	  	      «FOR nextPage: page.navigation.nextPage»
+		  <h:outputLink styleClass="lvl1Lbl  ym-gl" value="«nextPage.name».jsf">«nextPage.name»</h:outputLink>
+	  	      «ENDFOR»
+		    </div>
+		  </form>
 	  	  «ENDIF»
-		  </div>
 	    </ui:define>
 	  </ui:composition>
 	</html>

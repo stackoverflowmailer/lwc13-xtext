@@ -97,6 +97,12 @@ hr {
 	line-height: 1.5em;
 }
 
+#content div .highlight_section {
+	border: 1px dashed #CCC;
+	padding: 0.4em;
+	line-height: 1.5em;
+}
+
 #content form input[type="radio"],#content form input[type="checkbox"] {
 	width: auto;
 }
