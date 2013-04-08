@@ -14,15 +14,15 @@ can be realized with Xtext.
 \subsubsection{Extending the Java Validator class}
 With the first translation of the Xtext grammar, the generator has already
 created the necessary infrastructure to implement custom validation rules.
-Look into the package \texttt{org.eclipse.xtext.example.ql.validation}, you will
-find a Java class \texttt{QlDslJavaValidator}. The class extends the
+Look into the package \newline\texttt{org.eclipse.xtext.example.ql.validation},
+you will find a Java class \texttt{QlDslJavaValidator}. The class extends the
 \texttt{AbstractQlDslJavaValidator} class, which is regenerated each time the
 grammar is translated. Thus, the generation gap pattern is applied here again.
 It is safe to extend the \texttt{QlDslJavaValidator} class manually.
 
 But instead of implementing the constraints in Java, we will use Xtend again.
 For easier integration, our Xtend based validator class will be inserted into
-the class hierarchy of QlDslJavaValidator.
+the class hierarchy of \newline\texttt{QlDslJavaValidator}.
 
 Create an Xtend class \texttt{QlDslXtendValidator}, and extend it from
 \texttt{AbstractQlDslJavaValidator}.

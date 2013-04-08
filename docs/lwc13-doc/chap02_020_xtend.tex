@@ -30,11 +30,11 @@ In Xtend - since it is based on Xbase - everything is an expression, meaning tha
 it has a return type. Consequently, the last expression of a method defines the
 return value and also the return type of the method.
 
-In line 3 a so-called extension method is used. Recall that the String class in 
+In line 3 a so-called \emph{extension method} is used. Recall that the \texttt{String} class in 
 Java does not provide a method \texttt{toFirstUpper}. Xtend allows for extending
 closed types without changing them (maybe you already guess where Xtend got its
 name from).
-You can easily write your own extensions, e.g. for the Integer type:
+You can easily write your own extensions, e.g. for the \texttt{Integer} type:
 
 \begin{lstlisting}[language=Xtend]
   def square(Integer input) {
@@ -101,13 +101,14 @@ i.e. for \texttt{a} the method in lines 1-3 and for \texttt{b} the one in lines
 Xtend offers the possibility to define \emph{Rich Strings} (also called \emph{templates})
 which is especially useful when writing code generators. Rich Strings allow for
 writing complex Strings with line breaks and indentations without the need for
-concatenating special characters like \texttt{'\textbackslash n'} or \texttt{'\textbackslash t'}. A rich String
+concatenating special characters like \texttt{'\textbackslash n'} or \texttt{'\textbackslash t'}. A Rich String
 construct starts and ends with triple single quotes
-(\textquotesingle\textquotesingle\textquotesingle) Within such a String code
-pieces which themself return a String can be inserted (surrounded by guillemots
-\texttt{\guillemotleft\guillemotright}).
-There are also logical structures like \texttt{for} loops or \texttt{if-else}
-statements supported:
+(\textquotesingle\textquotesingle\textquotesingle) Within such a Rich String
+code pieces which themself return a String can be inserted (surrounded by guillemots
+\texttt{\guillemotleft\guillemotright}). If you wonder where you can find these
+guillemot brackets on your keyboard, they are bound to CTRL+< and CTRL+> in the
+Xtend editor. There are also logical structures like \texttt{for} loops or
+\texttt{if-else} statements supported:
 
 \begin{lstlisting}[language=Xtend]
   def htmlContent(List<String> contents) '''

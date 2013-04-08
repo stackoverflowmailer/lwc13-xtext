@@ -1,25 +1,27 @@
 \subsubsection{Reference Forms}
 \label{subsec:referenceForms}
 The basic structure of our web application was described in the previous
-sections. This was the part of the application which wa very general and can be
-reused for any other application. Following we will describe the specific
-content which enables the questionaire application specified in the LWC 2013
+sections. This was the part of the application which was very general and can be
+reused for any other application. In the following we will describe the specific
+content which enables the questionnaire application specified in the LWC 2013
 task description. 
 
 \begin{wrapfigure}[14]{l}{0.3\textwidth}
  \includegraphics[width=5cm]{./images/chapter02/referenceimpl_forms.png}
 \end{wrapfigure}
 
-The questionaire content basically consist of 3 main artifacts:
+The questionnaire content basically consist of 3 main artifacts:
 
 \begin{itemize}
 \item \texttt{WebContent/forms/index.xhtml} - a link for each form will be
 available here, it uses \texttt{WebContent/index.xhtml} as template and will be
 the template for concrete forms in our application
 \item \texttt{WebContent/forms/HouseOwning.xhtml} - this file will implement the
-questionaire form, it uses \texttt{WebContent/forms/index.xhtml} as its template
-\item \texttt{src/forms/HouseOwning.java} - the so called BackingBean which
-holds the state of a questionaire form
+questionnaire form, it uses \newline\texttt{WebContent/forms/index.xhtml} as its
+template
+\item \texttt{src/forms/HouseOwning.java} - the so called
+\emph{BackingBean}\footnote{\url{http://docs.oracle.com/javaee/5/tutorial/doc/bnaqm.html}}
+which holds the state of a questionnaire form
 \end{itemize}
 
 Within the reference application there are 3 additional artifacts which can be
@@ -36,12 +38,12 @@ instances of custom type Money)
 
 \paragraph{Form} $\;$ \\
 The form of our reference application consists of different areas where each
-defines a single element of the questionaire. Each question has a label and an input element. Whenever the user
-changes a value of an input element the page should reload partly by using
+defines a single element of the questionnaire. Each question has a label and an
+input element. Whenever the user changes a value of an input element the page should reload partly by using
 AJAX\footnote{\url{https://en.wikipedia.org/wiki/Ajax\_(programming)}}.
 
 In the following listings and screenshots you can see how the different parts
-of the questionaire are defined and how they are rendered. 
+of the questionnaire are defined and how they are rendered. 
 
 The following represents a question which can be answered by yes OR no. The
 label and checkbox are grouped by using a so called \texttt{div} to create a close relation
@@ -95,18 +97,18 @@ framework classes already mentioned in section \ref{sec:template}.
  \includegraphics[width=10cm]{./images/chapter02/referenceimpl_forms_bool.png}
 \end{center}
 
-The folllowing \texttt{css classes} out of
+The following CSS classes out of
 \texttt{WebContent/resources/default/css/base.css} are responsible for the shown
 layout.
 
 \begin{itemize}
-  \item ym-grid - defines that childs should be grouped in a table
-  \item ym-g*number - defines the width of an element
-  \item ym-gl - defines that the element should float to the left of its
+  \item \texttt{ym-grid} - defines that childs should be grouped in a table
+  \item \texttt{ym-g*number} - defines the width of an element
+  \item \texttt{ym-gl} - defines that the element should float to the left of its
   container
 \end{itemize}
 
-Other question types are following the same pattern of a label and a porper
+Other question types are following the same pattern of a label and a proper
 input element to interact with the application.
 
 \begin{lstlisting}[language=XHTML]
@@ -126,8 +128,8 @@ input element to interact with the application.
 
 As you can see in the figure above the definition of an JSF
 \texttt{html:inputText} tag is also very easy. With \texttt{\#\{\ldots\}} it is
-possible to access a bean an its values. In our sample we access a porperty
-\texttt{amount} of a porperty \texttt{sellingPrice} of a bean with name
+possible to access a bean an its values. In our sample we access a property
+\texttt{amount} of a property \texttt{sellingPrice} of a bean with name
 \texttt{houseOwning}. :)
 
 \begin{lstlisting}[language=HTML]
