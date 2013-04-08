@@ -5,7 +5,7 @@ import types.Money
  
 form HouseOwning {     
 	hasSoldHouse: "Did you sell a house in 2010?" boolean
-	hasBoughtHouse: "Did you by a house in 2010?" boolean  
+	hasBoughtHouse: "Did you buy a house in 2010?" boolean  
 	   
 	if (hasSoldHouse && hasBoughtHouse) {                   
 		sellingPrice: "Price the house was sold for    :" Money
